@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:contentInsetStartWithNavigation="0dp"
+        app:layout_scrollFlags="scroll|snap"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"></android.support.v7.widget.Toolbar>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="@dimen/change_avatar_size"
+            android:layout_height="@dimen/change_avatar_size"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/MarginThirty">
+
+            <ImageView
+                android:id="@+id/imgAvatar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/default_user" />
+
+            <ImageView
+                android:id="@+id/imgSelectImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_margin="@dimen/MarginFive"
+                android:background="@drawable/drawable_circle"
+                android:padding="@dimen/MarginFive"
+                android:src="@drawable/ic_settings" />
+        </RelativeLayout>
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/MarginThirty"
+            android:background="@color/colorAccent"
+            android:padding="@dimen/MarginTen"
+            android:text="Status and mobile number"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/textMediumExtra" />
+
+        <TextView
+            android:id="@+id/txtStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorAccent"
+            android:padding="@dimen/MarginTen"
+            android:text="Nothing impossible..."
+            android:textSize="@dimen/textMedium1" />
+
+        <TextView
+            android:id="@+id/txtnumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorAccent"
+            android:padding="@dimen/MarginTen"
+            android:text="9904841033"
+            android:textSize="@dimen/textMedium1" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/MarginThirty"
+            android:background="@color/colorAccent"
+            android:padding="@dimen/MarginTen"
+            android:text="Your name"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/textMediumExtra" />
+
+        <TextView
+            android:id="@+id/txtname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorAccent"
+            android:drawableRight="@drawable/ic_edit"
+            android:gravity="center_vertical"
+            android:padding="@dimen/MarginTen"
+            android:text="Jabbar"
+            android:textSize="@dimen/textMedium1" />
+
+    </LinearLayout>
+
+</LinearLayout>

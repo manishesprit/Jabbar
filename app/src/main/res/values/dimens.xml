@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="textSmall">12dp</dimen>
+    <dimen name="textMedium">14dp</dimen>
+    <dimen name="textMedium1">16dp</dimen>
+    <dimen name="textMediumExtra">18dp</dimen>
+    <dimen name="textLarge">22dp</dimen>
+    <dimen name="textLargeExtra">24dp</dimen>
+
+    <dimen name="MarginThree">3dp</dimen>
+    <dimen name="MarginFive">5dp</dimen>
+    <dimen name="MarginSaven">7dp</dimen>
+    <dimen name="MarginTen">10dp</dimen>
+    <dimen name="MarginFifteen">15dp</dimen>
+    <dimen name="MarginTwety">20dp</dimen>
+    <dimen name="MarginThirty">30dp</dimen>
+
+    <dimen name="avatar">50dp</dimen>
+    <dimen name="change_avatar_size">150dp</dimen>
+</resources>
