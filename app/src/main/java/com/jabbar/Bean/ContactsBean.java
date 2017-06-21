@@ -12,6 +12,7 @@ public class ContactsBean {
     public int isFavorite;
     public String status;
     public String avatar;
-
+    public String name;
+    public String last_seen;
 
 }

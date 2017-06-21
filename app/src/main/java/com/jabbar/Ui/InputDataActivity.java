@@ -20,7 +20,6 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.jabbar.API.SendMobileAPI;
 import com.jabbar.R;
 import com.jabbar.Utils.GetLocation;
 import com.jabbar.Utils.Log;
@@ -130,19 +129,21 @@ public class InputDataActivity extends AppCompatActivity implements View.OnClick
                     Toast.makeText(InputDataActivity.this, "please enter mobile number fix 10 digit", Toast.LENGTH_SHORT).show();
                 } else {
                     if (Utils.isOnline(InputDataActivity.this)) {
-                        progressDialog.show();
-                        new SendMobileAPI(InputDataActivity.this, getEdtnumber().getText().toString().trim(), new Utils.MyListener() {
-                            @Override
-                            public void OnResponse(Boolean result, String res) {
-                                progressDialog.dismiss();
-                                if (result) {
-                                    startActivity(new Intent(InputDataActivity.this, VerifyCodeActivity.class).putExtra("session_id", res).putExtra("number", getEdtnumber().getText().toString().trim()));
-                                    finish();
-                                } else {
-                                    Toast.makeText(InputDataActivity.this, "Error send code.Try again", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        }).execute();
+                        startActivity(new Intent(InputDataActivity.this, VerifyCodeActivity.class).putExtra("session_id", "").putExtra("number", getEdtnumber().getText().toString().trim()));
+                        finish();
+//                        progressDialog.show();
+//                        new SendMobileAPI(InputDataActivity.this, getEdtnumber().getText().toString().trim(), new Utils.MyListener() {
+//                            @Override
+//                            public void OnResponse(Boolean result, String res) {
+//                                progressDialog.dismiss();
+//                                if (result) {
+//                                    startActivity(new Intent(InputDataActivity.this, VerifyCodeActivity.class).putExtra("session_id", res).putExtra("number", getEdtnumber().getText().toString().trim()));
+//                                    finish();
+//                                } else {
+//                                    Toast.makeText(InputDataActivity.this, "Error send code.Try again", Toast.LENGTH_SHORT).show();
+//                                }
+//                            }
+//                        }).execute();
                     }
                 }
                 break;

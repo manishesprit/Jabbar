@@ -11,6 +11,7 @@ import android.support.v4.app.ActivityCompat;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -66,10 +67,16 @@ public class Utils {
     }
 
     public static Retrofit getRetrofit() {
+
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.connectTimeout(Config.TIMEOUT_CONNECTION, TimeUnit.MILLISECONDS);
+        httpClient.addInterceptor(logging);
         Retrofit.Builder builder = new Retrofit.Builder().baseUrl(Config.HOST).addConverterFactory(GsonConverterFactory.create());
         Retrofit retrofit = builder.client(httpClient.build()).build();
+
         return retrofit;
     }
 

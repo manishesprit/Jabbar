@@ -11,12 +11,12 @@ import com.jabbar.Utils.ResponseListener;
 import com.jabbar.Utils.Utils;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.http.Body;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;
 
 
@@ -28,7 +28,7 @@ public class GetFavoriteAPI {
     public Context context;
     public ResponseListener responseListener;
 
-    public GetFavoriteAPI(final Context context, final ResponseListener responseListener, int friendid) {
+    public GetFavoriteAPI(final Context context, final ResponseListener responseListener) {
         this.context = context;
         this.responseListener = responseListener;
         HashMap<String, String> mParams = new HashMap<String, String>();
@@ -38,7 +38,7 @@ public class GetFavoriteAPI {
         Log.print("======GetFavoriteAPI====" + mParams);
 
         GetFavoriteRoutAPI apiMethod = Utils.getRetrofit().create(GetFavoriteRoutAPI.class);
-        Call<FavoriteListBean> call = apiMethod.getBean(mParams);
+        Call<FavoriteListBean> call = apiMethod.getBean(String.valueOf(Pref.getValue(context, Config.PREF_USERID, 0)), Pref.getValue(context, Config.PREF_LOCATION, "0,0"));
 
         call.enqueue(new Callback<FavoriteListBean>() {
             @Override
@@ -68,8 +68,9 @@ public class GetFavoriteAPI {
     }
 
     public interface GetFavoriteRoutAPI {
+        @FormUrlEncoded
         @POST(Config.API_GET_FAVORITE)
-        Call<FavoriteListBean> getBean(@Body Map<String, String> params);
+        Call<FavoriteListBean> getBean(@Field("userid") String userid, @Field("location") String location);
 
     }
 }

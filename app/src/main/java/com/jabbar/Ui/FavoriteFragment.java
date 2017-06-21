@@ -1,6 +1,7 @@
 package com.jabbar.Ui;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -21,12 +22,15 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.jabbar.Bean.ContactBean;
+import com.jabbar.API.GetFavoriteAPI;
+import com.jabbar.Bean.ContactsBean;
 import com.jabbar.Bll.UserBll;
 import com.jabbar.R;
 import com.jabbar.Utils.Config;
 import com.jabbar.Utils.GetLocation;
 import com.jabbar.Utils.Pref;
+import com.jabbar.Utils.ResponseListener;
+import com.jabbar.Utils.Utils;
 
 import java.util.ArrayList;
 
@@ -44,13 +48,17 @@ public class FavoriteFragment extends Fragment implements OnMapReadyCallback, Go
     MapView mMapView;
     private GoogleMap googleMap;
     private GetLocation getLocation;
-    public ArrayList<ContactBean> contactFavoriteBeanArrayList;
+    public ArrayList<ContactsBean> contactFavoriteBeanArrayList;
     private LatLng currentLatLong;
-
+    private ProgressDialog progressDialog;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        progressDialog = new ProgressDialog(getContext());
+        progressDialog.setMessage("Loading...");
+
 
     }
 
@@ -125,14 +133,14 @@ public class FavoriteFragment extends Fragment implements OnMapReadyCallback, Go
     public void AddMarker() {
 
         contactFavoriteBeanArrayList = new UserBll(getContext()).geBuddiestList(true);
-        for (ContactBean contactBean : contactFavoriteBeanArrayList) {
+        for (ContactsBean contactsBean : contactFavoriteBeanArrayList) {
             Marker marker = googleMap.addMarker(new MarkerOptions()
-                    .position(new LatLng(Double.parseDouble(contactBean.location.split("_")[0]), Double.parseDouble(contactBean.location.split("_")[1])))
-                    .title(contactBean.name)
-                    .snippet(contactBean.status)
+                    .position(new LatLng(Double.parseDouble(contactsBean.location.split("_")[0]), Double.parseDouble(contactsBean.location.split("_")[1])))
+                    .title(contactsBean.name)
+                    .snippet(contactsBean.status)
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
 
-            marker.setTag(String.valueOf(contactBean.id));
+            marker.setTag(String.valueOf(contactsBean.userid));
 
         }
     }
@@ -149,12 +157,24 @@ public class FavoriteFragment extends Fragment implements OnMapReadyCallback, Go
 
     @Override
     public void getLoc(boolean b) {
-        currentLatLong = new LatLng(Double.parseDouble(Pref.getValue(getContext(), Config.PREF_LOCATION, "").split(",")[0]), Double.parseDouble(Pref.getValue(getContext(), Config.PREF_LOCATION, "").split(",")[0]));
+
+        currentLatLong = new LatLng(Double.parseDouble(Pref.getValue(getContext(), Config.PREF_LOCATION, "").split(",")[0]), Double.parseDouble(Pref.getValue(getContext(), Config.PREF_LOCATION, "").split(",")[1]));
         Marker MyLoc = googleMap.addMarker(new MarkerOptions().position(currentLatLong).icon(BitmapDescriptorFactory.fromResource(R.drawable.current_location)));
 
-        CameraPosition cameraPosition = new CameraPosition.Builder().target(MyLoc.getPosition()).zoom(12).build();
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(MyLoc.getPosition()).zoom(10).build();
         googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
-        AddMarker();
+        if (Utils.isOnline(getContext())) {
+            progressDialog.show();
+            new GetFavoriteAPI(getContext(), new ResponseListener() {
+                @Override
+                public void onResponce(String tag, int result, Object obj) {
+                    progressDialog.dismiss();
+
+                }
+            });
+        } else {
+            Toast.makeText(getContext(), "No Internet", Toast.LENGTH_SHORT).show();
+        }
     }
 }

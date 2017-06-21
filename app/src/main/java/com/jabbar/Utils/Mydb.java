@@ -63,8 +63,8 @@ public class Mydb extends SQLiteOpenHelper {
         Log.print("=======level====" + Pref.getValue(context, Config.PREF_DB_LEVEL, 0));
         SQLiteDatabase db = this.getWritableDatabase();
 
-        db.execSQL("CREATE TABLE IF NOT EXISTS user_tb (user_id INTEGER,name TEXT,number TEXT,status TEXT,avatar TEXT,location TEXT,last_seen TEXT,favorite INTEGER DEFAULT 0)");
-        db.execSQL("insert into user_tb (user_id,name,number,status,avatar,location,last_seen,favorite) values (1,'Manish rathod','9904841033','nothing','','24.258503_72.190672','09:40',1)");
+        db.execSQL("CREATE TABLE IF NOT EXISTS user_tb (userid INTEGER,name TEXT,mobile_number TEXT,status TEXT,avatar TEXT,location TEXT,last_seen TEXT,is_favorite INTEGER DEFAULT 0)");
+        db.execSQL("insert into user_tb (userid,name,mobile_number,status,avatar,location,last_seen,favorite) values (1,'Manish rathod','9904841033','nothing','','24.258503_72.190672','09:40',1)");
         int level = Pref.getValue(context, Config.PREF_DB_LEVEL, 0) + 1;
         Pref.setValue(context, Config.PREF_DB_LEVEL, level);
         doUpdate1();

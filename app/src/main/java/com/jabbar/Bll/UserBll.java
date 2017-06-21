@@ -3,7 +3,7 @@ package com.jabbar.Bll;
 import android.content.Context;
 import android.database.Cursor;
 
-import com.jabbar.Bean.ContactBean;
+import com.jabbar.Bean.ContactsBean;
 import com.jabbar.Utils.Log;
 import com.jabbar.Utils.Mydb;
 
@@ -21,17 +21,22 @@ public class UserBll {
         this.context = context;
     }
 
-    public ArrayList<ContactBean> geBuddiestList(boolean isFavorite) {
+    public void Verify(ContactsBean contactBean) {
+
+    }
+
+    public ArrayList<ContactsBean> geBuddiestList(boolean isFavorite) {
         Mydb mydb = null;
         String sql = null;
         Cursor cursor = null;
-        ArrayList<ContactBean> contactBeanArrayList = null;
+        ArrayList<ContactsBean> contactBeanArrayList = null;
+        ContactsBean contactsBean;
 
         try {
             if (isFavorite) {
-                sql = "SELECT user_id,name,number,status,avatar,location,last_seen,favorite from user_tb";
+                sql = "SELECT userid,name,mobile_number,status,avatar,location,last_seen,is_favorite from user_tb";
             } else {
-                sql = "SELECT user_id,name,number,status,avatar,location,last_seen,favorite from user_tb where favorite=1";
+                sql = "SELECT userid,name,mobile_number,status,avatar,location,last_seen,is_favorite from user_tb where is_favorite=1";
             }
             Log.print("===========Business_Hours====" + sql);
             contactBeanArrayList = new ArrayList<>();
@@ -41,7 +46,15 @@ public class UserBll {
             if (cursor != null && cursor.getCount() > 0) {
 
                 while (cursor.moveToNext()) {
-                    contactBeanArrayList.add(new ContactBean(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getString(6), cursor.getInt(7)));
+                    contactsBean = new ContactsBean();
+                    contactsBean.userid = cursor.getInt(0);
+                    contactsBean.name = cursor.getString(1);
+                    contactsBean.mobile_number = cursor.getString(2);
+                    contactsBean.status = cursor.getString(3);
+                    contactsBean.avatar = cursor.getString(4);
+                    contactsBean.location = cursor.getString(5);
+                    contactsBean.last_seen = cursor.getString(6);
+                    contactBeanArrayList.add(contactsBean);
                 }
 
             }

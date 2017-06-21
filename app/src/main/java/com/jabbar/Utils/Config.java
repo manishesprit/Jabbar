@@ -23,7 +23,7 @@ public class Config {
     public static final String API_GET_CONTACT_LIST = "get_contact_list.php";
     public static String TAG_GET_CONTACT_LIST = "TAG_GET_CONTACT_LIST";
 
-    public static final String API_AUTHENTICATION = "authentication.php";
+    public static final String API_AUTHENTICATION = "authentication_buddies.php";
     public static String TAG_AUTHENTICATION = "TAG_AUTHENTICATION";
 
 
@@ -39,6 +39,7 @@ public class Config {
 
     public static String PREF_USERID = "PREF_USERID";
     public static String PREF_NAME = "PREF_NAME";
+    public static String PREF_MOBILE_NUMBER = "PREF_MOBILE_NUMBER";
     public static String PREF_AVATAR = "PREF_AVATAR";
     public static String PREF_STATUS = "PREF_STATUS";
     public static String PREF_PRIVACY = "PREF_PRIVACY";

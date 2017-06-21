@@ -15,7 +15,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
-import com.jabbar.Bean.ContactBean;
+import com.jabbar.Bean.ContactsBean;
 import com.jabbar.R;
 
 import java.util.ArrayList;
@@ -23,10 +23,10 @@ import java.util.ArrayList;
 
 public class BuddiesAdapter extends RecyclerView.Adapter<BuddiesAdapter.MyHolder> {
 
-    private ArrayList<ContactBean> contactBeanArrayList;
+    private ArrayList<ContactsBean> contactBeanArrayList;
     private Context context;
 
-    public BuddiesAdapter(Context context, ArrayList<ContactBean> contactBeanArrayList) {
+    public BuddiesAdapter(Context context, ArrayList<ContactsBean> contactBeanArrayList) {
         this.context = context;
         this.contactBeanArrayList = contactBeanArrayList;
     }

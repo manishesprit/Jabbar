@@ -42,6 +42,7 @@
             android:background="@drawable/drawable_round_box"
             android:digits="0123456789"
             android:hint="Enter code"
+            android:text="1234"
             android:imeOptions="actionDone"
             android:inputType="number"
             android:padding="10dp"
