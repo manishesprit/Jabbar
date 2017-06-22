@@ -17,6 +17,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.http.Body;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;
 
 
@@ -40,7 +42,7 @@ public class UpdateStatusAPI {
         Log.print("======UpdateStatusAPI====" + mParams);
 
         UpdateStatusRoutAPI apiMethod = Utils.getRetrofit().create(UpdateStatusRoutAPI.class);
-        Call<ResponseBean> call = apiMethod.getBean(mParams);
+        Call<ResponseBean> call = apiMethod.getBean( String.valueOf(Pref.getValue(context, Config.PREF_USERID, 0)),status,Pref.getValue(context, Config.PREF_UDID, ""),Pref.getValue(context, Config.PREF_LOCATION, "0,0"));
 
         call.enqueue(new Callback<ResponseBean>() {
             @Override
@@ -71,8 +73,9 @@ public class UpdateStatusAPI {
     }
 
     public interface UpdateStatusRoutAPI {
+        @FormUrlEncoded
         @POST(Config.API_UPDATE_STATUS)
-        Call<ResponseBean> getBean(@Body Map<String, String> params);
+        Call<ResponseBean> getBean(@Field("userid") String userid,@Field("status") String status,@Field("udid") String udid,@Field("location") String location);
 
     }
 }

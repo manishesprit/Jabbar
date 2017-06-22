@@ -17,6 +17,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.http.Body;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;
 
 
@@ -40,7 +42,7 @@ public class ChangeFavoriteAPI {
         Log.print("======ChangeFavoriteAPI====" + mParams);
 
         ChangeFavoriteRoutAPI apiMethod = Utils.getRetrofit().create(ChangeFavoriteRoutAPI.class);
-        Call<ChangeFavoriteBean> call = apiMethod.getBean(mParams);
+        Call<ChangeFavoriteBean> call = apiMethod.getBean( String.valueOf(Pref.getValue(context, Config.PREF_USERID, 0)),String.valueOf(friendid),Pref.getValue(context, Config.PREF_UDID, ""), Pref.getValue(context, Config.PREF_LOCATION, "0,0"));
 
         call.enqueue(new Callback<ChangeFavoriteBean>() {
             @Override
@@ -70,8 +72,9 @@ public class ChangeFavoriteAPI {
     }
 
     public interface ChangeFavoriteRoutAPI {
+        @FormUrlEncoded
         @POST(Config.API_CHANGE_FAVORITE)
-        Call<ChangeFavoriteBean> getBean(@Body Map<String, String> params);
+        Call<ChangeFavoriteBean> getBean(@Field("userid") String userid,@Field("friendid") String friendid,@Field("udid") String udid,@Field("location") String location);
 
     }
 }

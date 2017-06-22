@@ -8,10 +8,12 @@ import android.os.Build;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 
+import com.jabbar.Bean.ContactsBean;
+
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -53,6 +55,19 @@ public class Utils {
         }
     }
 
+    public static ArrayList<ContactsBean> getUpdateNameList(ArrayList<ContactsBean> contactsBeanArrayList, ArrayList<ContactsBean> contactsBeanArrayList_old) {
+
+        for (int i = 0; i < contactsBeanArrayList.size(); i++) {
+            for (int j = 0; j < contactsBeanArrayList_old.size(); j++) {
+                if (contactsBeanArrayList.get(i).mobile_number.equalsIgnoreCase(contactsBeanArrayList_old.get(j).mobile_number)) {
+                    contactsBeanArrayList.get(i).name = contactsBeanArrayList_old.get(j).name;
+                    break;
+                }
+            }
+        }
+        return contactsBeanArrayList;
+    }
+
     public static boolean HasPermission(Context context, String... permissions) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
@@ -68,12 +83,12 @@ public class Utils {
 
     public static Retrofit getRetrofit() {
 
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+//        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+//        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.connectTimeout(Config.TIMEOUT_CONNECTION, TimeUnit.MILLISECONDS);
-        httpClient.addInterceptor(logging);
+//        httpClient.addInterceptor(logging);
         Retrofit.Builder builder = new Retrofit.Builder().baseUrl(Config.HOST).addConverterFactory(GsonConverterFactory.create());
         Retrofit retrofit = builder.client(httpClient.build()).build();
 

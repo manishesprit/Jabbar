@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.provider.ContactsContract;
 
 import com.jabbar.Bean.ContactsBean;
+import com.jabbar.Bll.UserBll;
 import com.jabbar.Utils.Config;
 import com.jabbar.Utils.Log;
 import com.jabbar.Utils.Pref;
@@ -29,6 +30,7 @@ public class UpdateContact extends AsyncTask<String, String, Boolean> {
         this.context = context;
         this.contactListener = contactListener;
     }
+
 
     @Override
     protected Boolean doInBackground(String... params) {
@@ -60,7 +62,7 @@ public class UpdateContact extends AsyncTask<String, String, Boolean> {
                     if (mobilePhone != null && mobilePhone.toString().length() > 9) {
                         Log.print("===displayName, mobilePhone===" + displayName + "----" + mobilePhone);
                         ContactsBean contactsBean = new ContactsBean();
-                        contactsBean.mobile_number = mobilePhone.length() < 11 ? mobilePhone : (mobilePhone.substring((mobilePhone.length() - 10), mobilePhone.length()));
+                        contactsBean.mobile_number = mobilePhone.length() <= 10 ? mobilePhone : (mobilePhone.substring((mobilePhone.length() - 10), mobilePhone.length()));
                         contactsBean.name = displayName;
 
                         if (!contactsBean.mobile_number.equalsIgnoreCase(Pref.getValue(context, Config.PREF_MOBILE_NUMBER, ""))) {
@@ -82,16 +84,20 @@ public class UpdateContact extends AsyncTask<String, String, Boolean> {
 
         if (contactListener != null) {
             if (contactBeanArrayList != null) {
-                Collections.sort(contactBeanArrayList, new Comparator<ContactsBean>() {
-                    @Override
-                    public int compare(ContactsBean o1, ContactsBean o2) {
-                        return o1.name.compareToIgnoreCase(o2.name);
-                    }
-                });
+//                Collections.sort(contactBeanArrayList, new Comparator<ContactsBean>() {
+//                    @Override
+//                    public int compare(ContactsBean o1, ContactsBean o2) {
+//                        return o1.name.compareToIgnoreCase(o2.name);
+//                    }
+//                });
 
                 contactListener.OnSuccess(s, contactBeanArrayList);
             } else {
                 contactListener.OnSuccess(s, null);
+            }
+        } else {
+            if (contactBeanArrayList != null) {
+                new UserBll(context).UpdateDirectContact(contactBeanArrayList);
             }
         }
     }

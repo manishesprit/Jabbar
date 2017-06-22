@@ -21,7 +21,70 @@ public class UserBll {
         this.context = context;
     }
 
+    public void InsertContact(ArrayList<ContactsBean> contactsBeanArrayList) {
+        Mydb mydb = null;
+        String sql = null;
+        try {
+            mydb = new Mydb(this.context);
+            mydb.rowquery("delete from user_tb");
+
+            for (ContactsBean contactsBean : contactsBeanArrayList) {
+                sql = "insert into user_tb (userid,name,mobile_number,status,avatar,location,last_seen,favorite) values (" + contactsBean.userid + ",'" + contactsBean.name + "','" + contactsBean.mobile_number + "','" + contactsBean.status + "','" + contactsBean.avatar + "','" + contactsBean.location + "','" + contactsBean.last_seen + "'," + contactsBean.isFavorite + ")";
+                mydb.rowquery(sql);
+            }
+
+        } catch (Exception e) {
+
+        } finally {
+            sql = null;
+            mydb.close();
+            mydb = null;
+            System.gc();
+        }
+    }
+
+    public void UpdateDirectContact(ArrayList<ContactsBean> contactsBeanArrayList) {
+        Mydb mydb = null;
+        String sql = null;
+        try {
+            mydb = new Mydb(this.context);
+            for (ContactsBean contactsBean : contactsBeanArrayList) {
+                sql = "update user_tb  set name='" + contactsBean.name + "' where mobile_number='" + contactsBean.mobile_number + "'";
+                mydb.rowquery(sql);
+            }
+
+        } catch (Exception e) {
+            Log.print("=======Exception=======" + e.toString());
+        } finally {
+            sql = null;
+            mydb.close();
+            mydb = null;
+            System.gc();
+        }
+    }
+
     public void Verify(ContactsBean contactBean) {
+        Mydb mydb = null;
+        String sql = null;
+        Cursor cursor = null;
+        try {
+            sql = "SELECT userid from user_tb where userid=" + contactBean.userid;
+            mydb = new Mydb(this.context);
+            cursor = mydb.query(sql);
+
+            if (cursor != null) {
+                if (cursor.getCount() > 0) {
+
+                } else {
+                    sql = "insert into user_tb (userid,name,mobile_number,status,avatar,location,last_seen,favorite) values (" + contactBean.userid + ")";
+                }
+            }
+        } catch (Exception e) {
+
+        }
+    }
+
+    public void UpdateData() {
 
     }
 

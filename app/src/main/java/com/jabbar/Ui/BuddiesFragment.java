@@ -11,29 +11,26 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.jabbar.API.GetContactAPI;
 import com.jabbar.Adapter.BuddiesAdapter;
 import com.jabbar.Bean.ContactsBean;
 import com.jabbar.Bll.UserBll;
 import com.jabbar.R;
+import com.jabbar.Utils.Config;
 import com.jabbar.Utils.Log;
+import com.jabbar.Utils.ResponseListener;
 
 import java.util.ArrayList;
 
-
-/**
- * Created by hardikjani on 6/13/17.
- */
-
-public class BuddiesFragment extends Fragment {
+public class BuddiesFragment extends Fragment implements UpdateContact.ContactListener, ResponseListener {
 
 
     private View mView;
-    private ArrayList<ContactsBean> contactsBeanArrayList;
+    public ArrayList<ContactsBean> contactsBeanArrayList;
     private RecyclerView rlFriendList;
     private BuddiesAdapter buddiesAdapter;
     private LinearLayoutManager mLayoutManager;
     private ProgressBar progress_refresh;
-    private UpdateContact updateContact;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -66,17 +63,27 @@ public class BuddiesFragment extends Fragment {
         if (progress_refresh.getVisibility() == View.GONE) {
 
             progress_refresh.setVisibility(View.VISIBLE);
-            updateContact = new UpdateContact(getContext(), new UpdateContact.ContactListener() {
-                @Override
-                public void OnSuccess(boolean b, ArrayList<ContactsBean> contactsBeanArrayList) {
-                    progress_refresh.setVisibility(View.GONE);
-                    if (b) {
+            new UpdateContact(getContext(), this);
+        }
+    }
 
-                    } else {
-                        Toast.makeText(getContext(), "Sync fail. Try again", Toast.LENGTH_LONG).show();
-                    }
-                }
-            });
+    @Override
+    public void OnSuccess(boolean b, ArrayList<ContactsBean> contactsBeanArrayList) {
+        if (b && contactsBeanArrayList.size() > 0) {
+            new GetContactAPI(getContext(), this, contactsBeanArrayList);
+        } else {
+            progress_refresh.setVisibility(View.GONE);
+            Toast.makeText(getContext(), "Sync fail. Try again", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    public void onResponce(String tag, int result, Object obj) {
+        progress_refresh.setVisibility(View.GONE);
+        if (tag.equalsIgnoreCase(Config.TAG_GET_CONTACT_LIST) && result == 0) {
+            contactsBeanArrayList.clear();
+            contactsBeanArrayList.addAll(new UserBll(getContext()).geBuddiestList(false));
+            buddiesAdapter.notifyDataSetChanged();
         }
     }
 }

@@ -48,6 +48,19 @@ public class Mydb extends SQLiteOpenHelper {
         return cur;
     }
 
+    public void rowquery(String statement){
+        SQLiteDatabase db = this.getReadableDatabase();
+        try {
+            Log.print("===statment===" + statement);
+            db.rawQuery(statement, null);
+        } catch (Exception e) {
+            Log.print(e.toString());
+        } finally {
+            db.close();
+            db = null;
+        }
+    }
+
     public void Update() {
 
         int level = Pref.getValue(context, Config.PREF_DB_LEVEL, 0);
