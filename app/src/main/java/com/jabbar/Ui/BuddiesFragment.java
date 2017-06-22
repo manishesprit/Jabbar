@@ -11,14 +11,17 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.jabbar.API.ChangeFavoriteAPI;
 import com.jabbar.API.GetContactAPI;
 import com.jabbar.Adapter.BuddiesAdapter;
 import com.jabbar.Bean.ContactsBean;
 import com.jabbar.Bll.UserBll;
+import com.jabbar.MyClickListener;
 import com.jabbar.R;
 import com.jabbar.Utils.Config;
 import com.jabbar.Utils.Log;
 import com.jabbar.Utils.ResponseListener;
+import com.jabbar.Utils.Utils;
 
 import java.util.ArrayList;
 
@@ -31,6 +34,7 @@ public class BuddiesFragment extends Fragment implements UpdateContact.ContactLi
     private BuddiesAdapter buddiesAdapter;
     private LinearLayoutManager mLayoutManager;
     private ProgressBar progress_refresh;
+    private int Clickpos = -1;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -39,7 +43,11 @@ public class BuddiesFragment extends Fragment implements UpdateContact.ContactLi
     }
 
     public void OnUpdate() {
-        Toast.makeText(getContext(), "OnUpdate MyFriendFragment", Toast.LENGTH_SHORT).show();
+        Log.print("=====UpdateContact====");
+        if (progress_refresh.getVisibility() == View.GONE) {
+            progress_refresh.setVisibility(View.VISIBLE);
+            new UpdateContact(getContext(), this, true).execute();
+        }
     }
 
     @Override
@@ -52,7 +60,7 @@ public class BuddiesFragment extends Fragment implements UpdateContact.ContactLi
         mLayoutManager = new LinearLayoutManager(getContext());
         rlFriendList.setLayoutManager(mLayoutManager);
         contactsBeanArrayList = new UserBll(getContext()).geBuddiestList(false);
-        buddiesAdapter = new BuddiesAdapter(getContext(), contactsBeanArrayList);
+        buddiesAdapter = new BuddiesAdapter(getContext(), contactsBeanArrayList, myClickListener);
         rlFriendList.setAdapter(buddiesAdapter);
 
     }
@@ -61,16 +69,23 @@ public class BuddiesFragment extends Fragment implements UpdateContact.ContactLi
     public void UpdateContact() {
         Log.print("=====UpdateContact====");
         if (progress_refresh.getVisibility() == View.GONE) {
-
             progress_refresh.setVisibility(View.VISIBLE);
-            new UpdateContact(getContext(), this);
+            new UpdateContact(getContext(), this, false).execute();
         }
     }
 
     @Override
-    public void OnSuccess(boolean b, ArrayList<ContactsBean> contactsBeanArrayList) {
+    public void OnSuccess(boolean b, ArrayList<ContactsBean> contactsBeanArrayList, boolean OnlySync) {
         if (b && contactsBeanArrayList.size() > 0) {
-            new GetContactAPI(getContext(), this, contactsBeanArrayList);
+            if (OnlySync) {
+                progress_refresh.setVisibility(View.GONE);
+                new UserBll(getContext()).UpdateDirectContact(contactsBeanArrayList);
+                contactsBeanArrayList.clear();
+                contactsBeanArrayList.addAll(new UserBll(getContext()).geBuddiestList(false));
+                buddiesAdapter.notifyDataSetChanged();
+            } else {
+                new GetContactAPI(getContext(), this, contactsBeanArrayList);
+            }
         } else {
             progress_refresh.setVisibility(View.GONE);
             Toast.makeText(getContext(), "Sync fail. Try again", Toast.LENGTH_LONG).show();
@@ -80,10 +95,34 @@ public class BuddiesFragment extends Fragment implements UpdateContact.ContactLi
     @Override
     public void onResponce(String tag, int result, Object obj) {
         progress_refresh.setVisibility(View.GONE);
+
         if (tag.equalsIgnoreCase(Config.TAG_GET_CONTACT_LIST) && result == 0) {
             contactsBeanArrayList.clear();
             contactsBeanArrayList.addAll(new UserBll(getContext()).geBuddiestList(false));
             buddiesAdapter.notifyDataSetChanged();
+        } else if (tag.equalsIgnoreCase(Config.TAG_CHANGE_FAVORITE) && result == 0) {
+            new UserBll(getContext()).updateFavoriteContact(contactsBeanArrayList.get(Clickpos).userid, (int) obj);
+            contactsBeanArrayList.get(Clickpos).isFavorite = (int) obj;
+            buddiesAdapter.notifyDataSetChanged();
+
+        } else {
+            Toast.makeText(getContext(), obj.toString(), Toast.LENGTH_LONG).show();
         }
+        Clickpos = -1;
     }
+
+    public MyClickListener myClickListener = new MyClickListener() {
+        @Override
+        public void onClick(int pos) {
+            if (Utils.isOnline(getContext())) {
+                if (progress_refresh.getVisibility() == View.GONE) {
+                    progress_refresh.setVisibility(View.VISIBLE);
+                    Clickpos = pos;
+                    new ChangeFavoriteAPI(getContext(), BuddiesFragment.this, contactsBeanArrayList.get(pos).userid);
+                }
+            } else {
+                Toast.makeText(getContext(), "No internet. Try again", Toast.LENGTH_LONG).show();
+            }
+        }
+    };
 }

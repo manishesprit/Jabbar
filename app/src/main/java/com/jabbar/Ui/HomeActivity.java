@@ -61,6 +61,7 @@ public class HomeActivity extends BaseActivity {
                     if (favoriteFragment == null) {
                         favoriteFragment = (FavoriteFragment) adapter.getItem(0);
                     }
+                    favoriteFragment.UpdateFavorite(true);
                 }
                 if (position == 1 && adapter != null) {
                     if (buddiesFragment == null) {
@@ -121,7 +122,7 @@ public class HomeActivity extends BaseActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == PERMISSION_CODE && grantResults.length == 2) {
-            favoriteFragment.UpdateFavorite();
+            favoriteFragment.UpdateFavorite(false);
         } else {
             Toast.makeText(this, "Location Permission is required", Toast.LENGTH_SHORT).show();
         }
@@ -143,7 +144,7 @@ public class HomeActivity extends BaseActivity {
 
             case R.id.menu_refresh:
                 if (viewPager.getCurrentItem() == 0) {
-                    favoriteFragment.UpdateFavorite();
+                    favoriteFragment.UpdateFavorite(false);
                 } else {
                     buddiesFragment.UpdateContact();
                 }

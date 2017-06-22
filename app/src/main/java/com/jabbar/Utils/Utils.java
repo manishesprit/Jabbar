@@ -2,14 +2,25 @@ package com.jabbar.Utils;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Build;
+import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
+import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.jabbar.Bean.ContactsBean;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
@@ -83,12 +94,9 @@ public class Utils {
 
     public static Retrofit getRetrofit() {
 
-//        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-//        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.connectTimeout(Config.TIMEOUT_CONNECTION, TimeUnit.MILLISECONDS);
-//        httpClient.addInterceptor(logging);
         Retrofit.Builder builder = new Retrofit.Builder().baseUrl(Config.HOST).addConverterFactory(GsonConverterFactory.create());
         Retrofit retrofit = builder.client(httpClient.build()).build();
 
@@ -99,5 +107,87 @@ public class Utils {
         String udid = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
         Pref.setValue(context, Config.PREF_UDID, udid);
         return udid;
+    }
+
+    public static LatLng getLocationFromString(String s) {
+        return new LatLng(Double.parseDouble(s.split(",")[0]), Double.parseDouble(s.split(",")[1]));
+    }
+
+    public static boolean isGotoCrop(Context context, Uri imgDestination, int minWidth, int minHeight) {
+        boolean isGoto = false;
+        try {
+            Bitmap bm = MediaStore.Images.Media.getBitmap(context.getContentResolver(), imgDestination);
+            if (bm.getWidth() > minWidth && bm.getHeight() > minHeight) {
+                isGoto = true;
+
+            } else {
+                Toast.makeText(context, "Minimum image dimension must be " + minWidth + " X " + minHeight, Toast.LENGTH_LONG).show();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("inside camear" + e.toString());
+        }
+        return isGoto;
+    }
+
+    public static int getCameraPhotoOrientation(Context context, Uri imageUri, String imagePath) {
+        int rotate = 0;
+        try {
+            context.getContentResolver().notifyChange(imageUri, null);
+            File imageFile = new File(imagePath);
+
+            ExifInterface exif = new ExifInterface(imageFile.getAbsolutePath());
+            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+
+            switch (orientation) {
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    rotate = 270;
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    rotate = 180;
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    rotate = 90;
+                    break;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return rotate;
+    }
+
+    public static Bitmap rotateBitmap(Bitmap b, int degrees) {
+
+        Matrix m = new Matrix();
+        if (degrees != 0) {
+            // clockwise
+            m.postRotate(degrees, (float) b.getWidth() / 2,
+                    (float) b.getHeight() / 2);
+        }
+        try {
+            Bitmap b2 = Bitmap.createBitmap(b, 0, 0, b.getWidth(),
+                    b.getHeight(), m, true);
+            if (b != b2) {
+                b.recycle();
+                b = b2;
+            }
+        } catch (OutOfMemoryError ex) {
+            // We have no memory to rotate. Return the original bitmap.
+        }
+        return b;
+    }
+
+
+    public static void ConvertImage(Context context, Bitmap bitmap, String name) {
+        try {
+            File imageFile = new File(context.getApplicationInfo().dataDir, name);
+            OutputStream os;
+            os = new FileOutputStream(imageFile);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
+            os.flush();
+            os.close();
+        } catch (Exception e) {
+        }
     }
 }

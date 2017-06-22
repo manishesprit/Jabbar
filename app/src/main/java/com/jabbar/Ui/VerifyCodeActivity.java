@@ -16,7 +16,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.jabbar.API.AuthenticationAPI;
-import com.jabbar.API.VerifyCodeAPI;
 import com.jabbar.R;
 import com.jabbar.Utils.Log;
 import com.jabbar.Utils.ResponseListener;
@@ -66,31 +65,45 @@ public class VerifyCodeActivity extends AppCompatActivity implements View.OnClic
                     if (Utils.isOnline(VerifyCodeActivity.this)) {
                         progressDialog.show();
 
-                        new VerifyCodeAPI(VerifyCodeActivity.this, getEdtcode().getText().toString().trim(), getIntent().getStringExtra("session_id"), new Utils.MyListener() {
+                        new AuthenticationAPI(VerifyCodeActivity.this, new ResponseListener() {
                             @Override
-                            public void OnResponse(Boolean result, final String res) {
-
-                                if (result) {
-                                    new AuthenticationAPI(VerifyCodeActivity.this, new ResponseListener() {
-                                        @Override
-                                        public void onResponce(String tag, int result, Object obj) {
-                                            progressDialog.dismiss();
-                                            if (tag.equalsIgnoreCase(TAG_AUTHENTICATION) && result == API_SUCCESS) {
-                                                startActivity(new Intent(VerifyCodeActivity.this, HomeActivity.class));
-                                                finish();
-                                            } else {
-                                                Toast.makeText(VerifyCodeActivity.this, obj.toString(), Toast.LENGTH_SHORT).show();
-                                            }
-
-                                        }
-                                    }, getIntent().getStringExtra("number"));
-
+                            public void onResponce(String tag, int result, Object obj) {
+                                progressDialog.dismiss();
+                                if (tag.equalsIgnoreCase(TAG_AUTHENTICATION) && result == API_SUCCESS) {
+                                    startActivity(new Intent(VerifyCodeActivity.this, HomeActivity.class));
+                                    finish();
                                 } else {
-                                    progressDialog.dismiss();
-                                    Toast.makeText(VerifyCodeActivity.this, "Error send code.Try again", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(VerifyCodeActivity.this, obj.toString(), Toast.LENGTH_SHORT).show();
                                 }
+
                             }
-                        }).execute();
+                        }, getIntent().getStringExtra("number"));
+
+//                        new VerifyCodeAPI(VerifyCodeActivity.this, getEdtcode().getText().toString().trim(), getIntent().getStringExtra("session_id"), new Utils.MyListener() {
+//                            @Override
+//                            public void OnResponse(Boolean result, final String res) {
+//
+//                                if (result) {
+//                                    new AuthenticationAPI(VerifyCodeActivity.this, new ResponseListener() {
+//                                        @Override
+//                                        public void onResponce(String tag, int result, Object obj) {
+//                                            progressDialog.dismiss();
+//                                            if (tag.equalsIgnoreCase(TAG_AUTHENTICATION) && result == API_SUCCESS) {
+//                                                startActivity(new Intent(VerifyCodeActivity.this, HomeActivity.class));
+//                                                finish();
+//                                            } else {
+//                                                Toast.makeText(VerifyCodeActivity.this, obj.toString(), Toast.LENGTH_SHORT).show();
+//                                            }
+//
+//                                        }
+//                                    }, getIntent().getStringExtra("number"));
+//
+//                                } else {
+//                                    progressDialog.dismiss();
+//                                    Toast.makeText(VerifyCodeActivity.this, "Error send code.Try again", Toast.LENGTH_SHORT).show();
+//                                }
+//                            }
+//                        }).execute();
                     } else {
                         Toast.makeText(VerifyCodeActivity.this, "No Internet", Toast.LENGTH_SHORT).show();
                     }

@@ -144,6 +144,8 @@ public class InputDataActivity extends AppCompatActivity implements View.OnClick
 //                                }
 //                            }
 //                        }).execute();
+                    }else {
+                        Toast.makeText(InputDataActivity.this, "no internet.Try again", Toast.LENGTH_SHORT).show();
                     }
                 }
                 break;

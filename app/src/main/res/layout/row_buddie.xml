@@ -46,8 +46,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
+        android:background="?attr/selectableItemBackground"
+        android:padding="@dimen/MarginFive"
         android:layout_centerVertical="true"
-        android:src="@drawable/ic_star"
-        android:visibility="gone" />
+        android:src="@drawable/ic_star_unfill"
+        android:visibility="visible" />
 
 </RelativeLayout>

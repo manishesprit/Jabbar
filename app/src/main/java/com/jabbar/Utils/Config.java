@@ -11,6 +11,8 @@ public class Config {
 
     public static String HOST = "https://manishpaytm001.000webhostapp.com/jabbar/";
 
+    public static String AVATAR_HOST = HOST + "avatar/";
+
     public static final String API_CHANGE_FAVORITE = "change_favorite.php";
     public static String TAG_CHANGE_FAVORITE = "TAG_CHANGE_FAVORITE";
 
@@ -25,6 +27,9 @@ public class Config {
 
     public static final String API_AUTHENTICATION = "authentication_buddies.php";
     public static String TAG_AUTHENTICATION = "TAG_AUTHENTICATION";
+
+    public static final String API_CHANGE_AVATAR = "change_avatar.php";
+    public static final String TAG_CHANGE_AVATAR = "TAG_CHANGE_AVATAR";
 
 
     public static int TIMEOUT_CONNECTION = 20000;

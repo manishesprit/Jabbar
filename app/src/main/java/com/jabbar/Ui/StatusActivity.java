@@ -4,18 +4,18 @@ import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.jabbar.R;
+import com.jabbar.Utils.Config;
+import com.jabbar.Utils.Pref;
 
 
 public class StatusActivity extends BaseActivity {
 
     private Toolbar toolbar;
-    private TextView imgUpdate;
-    private RecyclerView recyclerviewStatus;
+    private RecyclerView recyclerview_status;
+    private TextView txtStatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,9 +23,11 @@ public class StatusActivity extends BaseActivity {
         setContentView(R.layout.activity_status);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        imgUpdate = (TextView) findViewById(R.id.imgUpdate);
-        recyclerviewStatus = (RecyclerView) findViewById(R.id.recyclerview_status);
+        txtStatus = (TextView) findViewById(R.id.txtStatus);
+        recyclerview_status = (RecyclerView) findViewById(R.id.recyclerview_status);
         setToolbar(toolbar, true);
+
+        txtStatus.setText(Pref.getValue(this, Config.PREF_STATUS, ""));
 
     }
 
@@ -37,12 +39,4 @@ public class StatusActivity extends BaseActivity {
         return true;
     }
 
-
-    private EditText getEdtStatus() {
-        return (EditText) findViewById(R.id.edtStatus);
-    }
-
-    private CheckBox getCheckboxShare() {
-        return (CheckBox) findViewById(R.id.checkboxShare);
-    }
 }

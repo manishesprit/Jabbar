@@ -16,7 +16,9 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.jabbar.Bean.ContactsBean;
+import com.jabbar.MyClickListener;
 import com.jabbar.R;
+import com.jabbar.Utils.Config;
 
 import java.util.ArrayList;
 
@@ -25,10 +27,12 @@ public class BuddiesAdapter extends RecyclerView.Adapter<BuddiesAdapter.MyHolder
 
     private ArrayList<ContactsBean> contactBeanArrayList;
     private Context context;
+    public MyClickListener myClickListener;
 
-    public BuddiesAdapter(Context context, ArrayList<ContactsBean> contactBeanArrayList) {
+    public BuddiesAdapter(Context context, ArrayList<ContactsBean> contactBeanArrayList, MyClickListener myClickListener) {
         this.context = context;
         this.contactBeanArrayList = contactBeanArrayList;
+        this.myClickListener = myClickListener;
     }
 
     @Override
@@ -48,6 +52,18 @@ public class BuddiesAdapter extends RecyclerView.Adapter<BuddiesAdapter.MyHolder
             holder.txtstatus.setVisibility(View.GONE);
         }
 
+        if (contactBeanArrayList.get(position).isFavorite == 1) {
+            holder.imgfavorite.setImageResource(R.drawable.ic_star_fill);
+        } else {
+            holder.imgfavorite.setImageResource(R.drawable.ic_star_unfill);
+        }
+
+        holder.imgfavorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                myClickListener.onClick(position);
+            }
+        });
 
         holder.rlRow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,7 +71,7 @@ public class BuddiesAdapter extends RecyclerView.Adapter<BuddiesAdapter.MyHolder
             }
         });
 
-        Glide.with(context).load("").asBitmap().placeholder(R.drawable.default_user).error(R.drawable.default_user).into(new BitmapImageViewTarget(holder.imgAvatar) {
+        Glide.with(context).load(Config.AVATAR_HOST+contactBeanArrayList.get(position).avatar).asBitmap().placeholder(R.drawable.default_user).error(R.drawable.default_user).into(new BitmapImageViewTarget(holder.imgAvatar) {
             @Override
             public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                 super.onResourceReady(resource, glideAnimation);

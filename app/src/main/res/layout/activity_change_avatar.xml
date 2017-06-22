@@ -61,7 +61,7 @@
             android:layout_height="wrap_content"
             android:background="@color/colorAccent"
             android:padding="@dimen/MarginTen"
-            android:text="Nothing impossible..."
+            android:text=""
             android:textSize="@dimen/textMedium1" />
 
         <TextView
@@ -91,7 +91,7 @@
             android:drawableRight="@drawable/ic_edit"
             android:gravity="center_vertical"
             android:padding="@dimen/MarginTen"
-            android:text="Jabbar"
+            android:text="Your name"
             android:textSize="@dimen/textMedium1" />
 
     </LinearLayout>

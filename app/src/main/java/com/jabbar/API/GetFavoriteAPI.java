@@ -2,6 +2,7 @@ package com.jabbar.API;
 
 import android.content.Context;
 
+import com.google.gson.Gson;
 import com.jabbar.Bean.FavoriteListBean;
 import com.jabbar.R;
 import com.jabbar.Utils.Config;
@@ -9,6 +10,8 @@ import com.jabbar.Utils.Log;
 import com.jabbar.Utils.Pref;
 import com.jabbar.Utils.ResponseListener;
 import com.jabbar.Utils.Utils;
+
+import org.json.JSONObject;
 
 import java.util.HashMap;
 
@@ -44,6 +47,12 @@ public class GetFavoriteAPI {
             @Override
             public void onResponse(Call<FavoriteListBean> call, Response<FavoriteListBean> response) {
 
+                try {
+                    JSONObject jsonObject = new JSONObject(new Gson().toJson(response).toString()).getJSONObject("body");
+                    Log.print("=====jsonObject=====" + jsonObject.toString());
+                } catch (Exception e) {
+
+                }
                 if (response.code() == 200) {
                     if (response.body().code == 0) {
                         responseListener.onResponce(Config.TAG_GET_FAVORITE, Config.API_SUCCESS, response.body());

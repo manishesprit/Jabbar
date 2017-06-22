@@ -24,17 +24,17 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.jabbar.API.GetFavoriteAPI;
 import com.jabbar.Bean.ContactsBean;
+import com.jabbar.Bean.FavoriteListBean;
 import com.jabbar.Bll.UserBll;
 import com.jabbar.R;
-import com.jabbar.Utils.Config;
 import com.jabbar.Utils.GetLocation;
-import com.jabbar.Utils.Pref;
 import com.jabbar.Utils.ResponseListener;
 import com.jabbar.Utils.Utils;
 
 import java.util.ArrayList;
 
 import static com.jabbar.Ui.InputDataActivity.PERMISSION_CODE;
+import static com.jabbar.Utils.Config.TAG_GET_FAVORITE;
 
 
 /**
@@ -62,9 +62,13 @@ public class FavoriteFragment extends Fragment implements OnMapReadyCallback, Go
 
     }
 
-    public void UpdateFavorite() {
-        Toast.makeText(getContext(), "OnUpdate MyMapFragment", Toast.LENGTH_SHORT).show();
-        setMarker();
+    public void UpdateFavorite(boolean onlyDbUpdate) {
+        if (onlyDbUpdate) {
+            AddMarker();
+        } else {
+            Toast.makeText(getContext(), "OnUpdate MyMapFragment", Toast.LENGTH_SHORT).show();
+            setMarker();
+        }
     }
 
     @Override
@@ -115,7 +119,8 @@ public class FavoriteFragment extends Fragment implements OnMapReadyCallback, Go
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
 
-        setMarker();
+//        setMarker();
+        AddMarker();
     }
 
     public void setMarker() {
@@ -131,16 +136,21 @@ public class FavoriteFragment extends Fragment implements OnMapReadyCallback, Go
     }
 
     public void AddMarker() {
-
+        googleMap.clear();
         contactFavoriteBeanArrayList = new UserBll(getContext()).geBuddiestList(true);
-        for (ContactsBean contactsBean : contactFavoriteBeanArrayList) {
-            Marker marker = googleMap.addMarker(new MarkerOptions()
-                    .position(new LatLng(Double.parseDouble(contactsBean.location.split("_")[0]), Double.parseDouble(contactsBean.location.split("_")[1])))
-                    .title(contactsBean.name)
-                    .snippet(contactsBean.status)
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+        if (contactFavoriteBeanArrayList != null && contactFavoriteBeanArrayList.size() > 0) {
+            for (int i = 0; i < contactFavoriteBeanArrayList.size(); i++) {
+                Marker marker = googleMap.addMarker(new MarkerOptions()
+                        .position(new LatLng(Double.parseDouble(contactFavoriteBeanArrayList.get(i).location.split(",")[0]), Double.parseDouble(contactFavoriteBeanArrayList.get(i).location.split(",")[1])))
+                        .title(contactFavoriteBeanArrayList.get(i).name)
+                        .snippet(contactFavoriteBeanArrayList.get(i).status)
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
 
-            marker.setTag(String.valueOf(contactsBean.userid));
+                marker.setTag(contactFavoriteBeanArrayList.get(i));
+
+            }
+            CameraPosition cameraPosition = new CameraPosition.Builder().target(Utils.getLocationFromString(contactFavoriteBeanArrayList.get(contactFavoriteBeanArrayList.size() - 1).location)).zoom(10).build();
+            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
         }
     }
@@ -149,7 +159,11 @@ public class FavoriteFragment extends Fragment implements OnMapReadyCallback, Go
     public boolean onMarkerClick(Marker marker) {
 
         if (googleMap != null) {
-            Toast.makeText(getContext(), "User id " + marker.getTag(), Toast.LENGTH_SHORT).show();
+            ContactsBean contactsBean = (ContactsBean) marker.getTag();
+            if (contactsBean != null) {
+                Toast.makeText(getContext(), "Hi! " + contactsBean.name, Toast.LENGTH_SHORT).show();
+            }
+
         }
         return false;
     }
@@ -158,11 +172,12 @@ public class FavoriteFragment extends Fragment implements OnMapReadyCallback, Go
     @Override
     public void getLoc(boolean b) {
 
-        currentLatLong = new LatLng(Double.parseDouble(Pref.getValue(getContext(), Config.PREF_LOCATION, "").split(",")[0]), Double.parseDouble(Pref.getValue(getContext(), Config.PREF_LOCATION, "").split(",")[1]));
-        Marker MyLoc = googleMap.addMarker(new MarkerOptions().position(currentLatLong).icon(BitmapDescriptorFactory.fromResource(R.drawable.current_location)));
 
-        CameraPosition cameraPosition = new CameraPosition.Builder().target(MyLoc.getPosition()).zoom(10).build();
-        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+//        currentLatLong = new LatLng(Double.parseDouble(Pref.getValue(getContext(), Config.PREF_LOCATION, "").split(",")[0]), Double.parseDouble(Pref.getValue(getContext(), Config.PREF_LOCATION, "").split(",")[1]));
+//        Marker MyLoc = googleMap.addMarker(new MarkerOptions().position(currentLatLong).icon(BitmapDescriptorFactory.fromResource(R.drawable.current_location)));
+//
+//        CameraPosition cameraPosition = new CameraPosition.Builder().target(MyLoc.getPosition()).zoom(10).build();
+//        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
         if (Utils.isOnline(getContext())) {
             progressDialog.show();
@@ -170,7 +185,13 @@ public class FavoriteFragment extends Fragment implements OnMapReadyCallback, Go
                 @Override
                 public void onResponce(String tag, int result, Object obj) {
                     progressDialog.dismiss();
-
+                    if (tag.equalsIgnoreCase(TAG_GET_FAVORITE) && result == 0) {
+                        FavoriteListBean favoriteListBean = (FavoriteListBean) obj;
+                        if (favoriteListBean != null && favoriteListBean.favorite_list != null && favoriteListBean.favorite_list.size() > 0) {
+                            new UserBll(getContext()).UpdateFavoriteContact(favoriteListBean.favorite_list);
+                            AddMarker();
+                        }
+                    }
                 }
             });
         } else {

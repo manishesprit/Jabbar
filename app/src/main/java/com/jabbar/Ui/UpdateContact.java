@@ -12,8 +12,6 @@ import com.jabbar.Utils.Log;
 import com.jabbar.Utils.Pref;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
 /**
  * Created by hardikjani on 6/17/17.
@@ -25,10 +23,12 @@ public class UpdateContact extends AsyncTask<String, String, Boolean> {
     public Context context;
     public ContactListener contactListener;
     public ArrayList<ContactsBean> contactBeanArrayList;
+    public boolean OnlySync = true;
 
-    public UpdateContact(Context context, ContactListener contactListener) {
+    public UpdateContact(Context context, ContactListener contactListener, boolean OnlySync) {
         this.context = context;
         this.contactListener = contactListener;
+        this.OnlySync = OnlySync;
     }
 
 
@@ -48,29 +48,31 @@ public class UpdateContact extends AsyncTask<String, String, Boolean> {
                 String displayName = "";
                 String mobilePhone = "";
 
-                if (dataCursor.moveToFirst()) {
-                    displayName = dataCursor.getString(dataCursor.getColumnIndex(ContactsContract.Data.DISPLAY_NAME));
-                    do {
-                        if (dataCursor.getString(dataCursor.getColumnIndex("mimetype")).equals(ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)) {
-                            if (dataCursor.getInt(dataCursor.getColumnIndex("data2")) == ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE) {
-                                mobilePhone = dataCursor.getString(dataCursor.getColumnIndex("data1"));
+                if (dataCursor != null) {
+                    if (dataCursor.moveToFirst()) {
+                        displayName = dataCursor.getString(dataCursor.getColumnIndex(ContactsContract.Data.DISPLAY_NAME));
+                        do {
+                            if (dataCursor.getString(dataCursor.getColumnIndex("mimetype")).equals(ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)) {
+                                if (dataCursor.getInt(dataCursor.getColumnIndex("data2")) == ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE) {
+                                    mobilePhone = dataCursor.getString(dataCursor.getColumnIndex("data1"));
+                                }
                             }
-                        }
 
-                    } while (dataCursor.moveToNext());
+                        } while (dataCursor.moveToNext());
 
-                    if (mobilePhone != null && mobilePhone.toString().length() > 9) {
-                        Log.print("===displayName, mobilePhone===" + displayName + "----" + mobilePhone);
-                        ContactsBean contactsBean = new ContactsBean();
-                        contactsBean.mobile_number = mobilePhone.length() <= 10 ? mobilePhone : (mobilePhone.substring((mobilePhone.length() - 10), mobilePhone.length()));
-                        contactsBean.name = displayName;
 
-                        if (!contactsBean.mobile_number.equalsIgnoreCase(Pref.getValue(context, Config.PREF_MOBILE_NUMBER, ""))) {
-                            checkduplicate(contactBeanArrayList, contactsBean);
+                        if (mobilePhone != null && mobilePhone.toString().length() > 9 && mobilePhone.replace("+", "").matches("\\d+(?:\\.\\d+)?")) {
+                            Log.print("===displayName, mobilePhone===" + displayName + "----" + mobilePhone);
+                            ContactsBean contactsBean = new ContactsBean();
+                            contactsBean.mobile_number = mobilePhone.length() <= 10 ? mobilePhone : (mobilePhone.substring((mobilePhone.length() - 10), mobilePhone.length()));
+                            contactsBean.name = displayName;
+
+                            if (!contactsBean.mobile_number.equalsIgnoreCase(Pref.getValue(context, Config.PREF_MOBILE_NUMBER, ""))) {
+                                checkduplicate(contactBeanArrayList, contactsBean);
+                            }
                         }
                     }
                 }
-
 
             } while (contactsCursor.moveToNext());
             return true;
@@ -84,16 +86,9 @@ public class UpdateContact extends AsyncTask<String, String, Boolean> {
 
         if (contactListener != null) {
             if (contactBeanArrayList != null) {
-//                Collections.sort(contactBeanArrayList, new Comparator<ContactsBean>() {
-//                    @Override
-//                    public int compare(ContactsBean o1, ContactsBean o2) {
-//                        return o1.name.compareToIgnoreCase(o2.name);
-//                    }
-//                });
-
-                contactListener.OnSuccess(s, contactBeanArrayList);
+                contactListener.OnSuccess(s, contactBeanArrayList,OnlySync);
             } else {
-                contactListener.OnSuccess(s, null);
+                contactListener.OnSuccess(s, null,OnlySync);
             }
         } else {
             if (contactBeanArrayList != null) {
@@ -104,7 +99,7 @@ public class UpdateContact extends AsyncTask<String, String, Boolean> {
 
 
     public interface ContactListener {
-        public void OnSuccess(boolean b, ArrayList<ContactsBean> contactsBeanArrayList);
+        public void OnSuccess(boolean b, ArrayList<ContactsBean> contactsBeanArrayList,boolean OnlySync);
     }
 
     public void checkduplicate(ArrayList<ContactsBean> contactBeanArrayList, ContactsBean contactBean) {

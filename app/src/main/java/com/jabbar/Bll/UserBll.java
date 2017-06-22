@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 
 import com.jabbar.Bean.ContactsBean;
+import com.jabbar.Bean.FavoriteBean;
 import com.jabbar.Utils.Log;
 import com.jabbar.Utils.Mydb;
 
@@ -22,71 +23,132 @@ public class UserBll {
     }
 
     public void InsertContact(ArrayList<ContactsBean> contactsBeanArrayList) {
-        Mydb mydb = null;
-        String sql = null;
         try {
-            mydb = new Mydb(this.context);
-            mydb.rowquery("delete from user_tb");
+
+            Mydb mydb = new Mydb(this.context);
+            mydb.execute("delete from user_tb");
+            mydb.close();
+            mydb = null;
+            System.gc();
 
             for (ContactsBean contactsBean : contactsBeanArrayList) {
-                sql = "insert into user_tb (userid,name,mobile_number,status,avatar,location,last_seen,favorite) values (" + contactsBean.userid + ",'" + contactsBean.name + "','" + contactsBean.mobile_number + "','" + contactsBean.status + "','" + contactsBean.avatar + "','" + contactsBean.location + "','" + contactsBean.last_seen + "'," + contactsBean.isFavorite + ")";
-                mydb.rowquery(sql);
+                insertContact(contactsBean);
+
             }
 
         } catch (Exception e) {
-
+            Log.print("=======InsertContact Exception========" + e.toString());
         } finally {
+
+        }
+    }
+
+
+    // Insert new records.
+    public void insertContact(ContactsBean contactsBean) {
+        Mydb dbHelper = null;
+        String sql = null;
+
+        try {
+            sql = "INSERT INTO user_tb (userid,name,mobile_number,status,avatar,location,last_seen,is_favorite)"
+                    + " VALUES (" + contactsBean.userid + ",'" + Mydb.getDBStr(contactsBean.name) + "','" + Mydb.getDBStr(contactsBean.mobile_number) + "','" + Mydb.getDBStr(contactsBean.status) + "','" + Mydb.getDBStr(contactsBean.avatar) + "','" + Mydb.getDBStr(contactsBean.location) + "','" + Mydb.getDBStr(contactsBean.last_seen) + "'," + contactsBean.isFavorite + ")";
+
+            dbHelper = new Mydb(this.context);
+
+            dbHelper.execute(sql);
+
+        } catch (Exception e) {
+            Log.print(this.getClass() + " :: insert()" + " " + e);
+        } finally {
+            if (dbHelper != null)
+                dbHelper.close();
+            // release
+            dbHelper = null;
             sql = null;
-            mydb.close();
-            mydb = null;
+            contactsBean = null;
+            System.gc();
+        }
+    }
+
+    public void updateContact(ContactsBean contactsBean) {
+        Mydb dbHelper = null;
+        String sql = null;
+        try {
+
+            dbHelper = new Mydb(this.context);
+            sql = "UPDATE user_tb SET  name = '" + Mydb.getDBStr(contactsBean.name) + "' WHERE  mobile_number= '" + contactsBean.mobile_number + "'";
+            dbHelper.execute(sql);
+
+
+        } catch (Exception e) {
+            Log.print(this.getClass() + " :: update()" + "===" + e);
+        } finally {
+            if (dbHelper != null)
+                dbHelper.close();
+            // release
+            dbHelper = null;
+            sql = null;
+            contactsBean = null;
+            System.gc();
+        }
+    }
+
+    public void updateFavoriteContact(int userid, int isFavorite) {
+        Mydb dbHelper = null;
+        String sql = null;
+        try {
+
+            dbHelper = new Mydb(this.context);
+            sql = "UPDATE user_tb SET  is_favorite = " + isFavorite + " WHERE  userid= '" + userid + "'";
+            dbHelper.execute(sql);
+
+
+        } catch (Exception e) {
+            Log.print(this.getClass() + " :: update()" + "===" + e);
+        } finally {
+            if (dbHelper != null)
+                dbHelper.close();
+            // release
+            dbHelper = null;
+            sql = null;
+            System.gc();
+        }
+    }
+
+    public void updateFavoriteContact(FavoriteBean favoriteBean) {
+        Mydb dbHelper = null;
+        String sql = null;
+        try {
+
+            dbHelper = new Mydb(this.context);
+            sql = "UPDATE user_tb SET location='" + favoriteBean.location + "',status='" + favoriteBean.status + "', is_favorite = 1 WHERE  userid= " + favoriteBean.userid + "";
+            dbHelper.execute(sql);
+
+
+        } catch (Exception e) {
+            Log.print(this.getClass() + " :: update()" + "===" + e);
+        } finally {
+            if (dbHelper != null)
+                dbHelper.close();
+            // release
+            dbHelper = null;
+            sql = null;
             System.gc();
         }
     }
 
     public void UpdateDirectContact(ArrayList<ContactsBean> contactsBeanArrayList) {
-        Mydb mydb = null;
-        String sql = null;
-        try {
-            mydb = new Mydb(this.context);
-            for (ContactsBean contactsBean : contactsBeanArrayList) {
-                sql = "update user_tb  set name='" + contactsBean.name + "' where mobile_number='" + contactsBean.mobile_number + "'";
-                mydb.rowquery(sql);
-            }
-
-        } catch (Exception e) {
-            Log.print("=======Exception=======" + e.toString());
-        } finally {
-            sql = null;
-            mydb.close();
-            mydb = null;
-            System.gc();
+        for (ContactsBean contactsBean : contactsBeanArrayList) {
+            updateContact(contactsBean);
         }
     }
 
-    public void Verify(ContactsBean contactBean) {
-        Mydb mydb = null;
-        String sql = null;
-        Cursor cursor = null;
-        try {
-            sql = "SELECT userid from user_tb where userid=" + contactBean.userid;
-            mydb = new Mydb(this.context);
-            cursor = mydb.query(sql);
-
-            if (cursor != null) {
-                if (cursor.getCount() > 0) {
-
-                } else {
-                    sql = "insert into user_tb (userid,name,mobile_number,status,avatar,location,last_seen,favorite) values (" + contactBean.userid + ")";
-                }
-            }
-        } catch (Exception e) {
-
+    public void UpdateFavoriteContact(ArrayList<FavoriteBean> favoriteBeanArrayList) {
+        for (FavoriteBean favoriteBean : favoriteBeanArrayList) {
+            updateFavoriteContact(favoriteBean);
         }
     }
 
-    public void UpdateData() {
-
-    }
 
     public ArrayList<ContactsBean> geBuddiestList(boolean isFavorite) {
         Mydb mydb = null;
@@ -97,17 +159,16 @@ public class UserBll {
 
         try {
             if (isFavorite) {
-                sql = "SELECT userid,name,mobile_number,status,avatar,location,last_seen,is_favorite from user_tb";
+                sql = "SELECT userid,name,mobile_number,status,avatar,location,last_seen,is_favorite from user_tb where is_favorite=1 ORDER BY NAME ASC";
             } else {
-                sql = "SELECT userid,name,mobile_number,status,avatar,location,last_seen,is_favorite from user_tb where is_favorite=1";
+                sql = "SELECT userid,name,mobile_number,status,avatar,location,last_seen,is_favorite from user_tb ORDER BY NAME ASC";
             }
-            Log.print("===========Business_Hours====" + sql);
             contactBeanArrayList = new ArrayList<>();
             mydb = new Mydb(this.context);
             cursor = mydb.query(sql);
 
             if (cursor != null && cursor.getCount() > 0) {
-
+                Log.print("====cursor=====" + cursor.getCount());
                 while (cursor.moveToNext()) {
                     contactsBean = new ContactsBean();
                     contactsBean.userid = cursor.getInt(0);
@@ -117,7 +178,9 @@ public class UserBll {
                     contactsBean.avatar = cursor.getString(4);
                     contactsBean.location = cursor.getString(5);
                     contactsBean.last_seen = cursor.getString(6);
+                    contactsBean.isFavorite = cursor.getInt(7);
                     contactBeanArrayList.add(contactsBean);
+                    Log.print("====mobile_number=====" + contactsBean.mobile_number + "=======name=======" + contactsBean.name);
                 }
 
             }

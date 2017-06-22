@@ -20,64 +20,60 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <RelativeLayout
+        <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <EditText
-                android:id="@+id/edtStatus"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/MarginTen"
-                android:background="@color/colorAccent"
-                android:gravity="top"
-                android:hint="Enter status"
-                android:lines="3"
-                android:padding="@dimen/MarginFive"
-                android:textSize="@dimen/textMediumExtra" />
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/MarginTen"
+            android:padding="@dimen/MarginTen"
+            card_view:cardCornerRadius="2dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/edtStatus"
-                android:gravity="right|center_vertical"
-                android:orientation="horizontal"
-                android:paddingRight="@dimen/MarginTen">
-
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="@dimen/MarginTen">
 
                 <TextView
-                    android:id="@+id/imgUpdate"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/colorPrimary"
-                    android:paddingBottom="@dimen/MarginSaven"
-                    android:paddingLeft="@dimen/MarginFifteen"
-                    android:paddingRight="@dimen/MarginFifteen"
-                    android:paddingTop="@dimen/MarginSaven"
-                    android:text="Update"
-                    android:textColor="@color/colorAccent"
+                    android:text="Current status"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="@dimen/textMedium1" />
 
-                <CheckBox
-                    android:id="@+id/checkboxShare"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:id="@+id/txtStatus"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Share with buddies" />
+                    android:layout_marginTop="@dimen/MarginTen"
+                    android:background="@color/colorAccent"
+                    android:drawableRight="@drawable/ic_edit"
+                    android:gravity="top"
+                    android:padding="@dimen/MarginFive"
+                    android:textColor="@color/color_title"
+                    android:textSize="@dimen/textMediumExtra" />
+
 
             </LinearLayout>
 
-        </RelativeLayout>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerview_status"
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="@dimen/MarginTen"></android.support.v7.widget.RecyclerView>
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/MarginTen"
+            android:padding="@dimen/MarginTen"
+            card_view:cardCornerRadius="2dp">
 
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerview_status"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="@dimen/MarginTen"></android.support.v7.widget.RecyclerView>
+        </android.support.v7.widget.CardView>
     </LinearLayout>
 
 </LinearLayout>

@@ -41,24 +41,20 @@ public class SendMobileAPI extends AsyncTask<String, Void, Boolean> {
             Request request = new Request.Builder().url(Utils.getSENDAPI(mobile)).build();
             Log.print("======url=====" + request.url());
             Response response = client.newCall(request).execute();
-            Log.print("======response=====" + response);
-            if (response.isSuccessful()) {
-                j_object = new JSONObject(response.body().string());
 
+            Log.print("======response=====" + response);
+            if (response.isSuccessful() && response.code() == 200) {
+                Log.print("=====response.code()=====" + response.code());
+                j_object = new JSONObject(response.body().string());
                 if (j_object != null) {
                     if (j_object.has("Status") && j_object.getString("Status").equalsIgnoreCase("Success")) {
-                        detail = j_object.getString("Details");
                         return true;
-                    } else {
-                        return false;
                     }
                 }
             }
-            return false;
-
         } catch (Exception e) {
-            return false;
         }
+        return false;
     }
 
     @Override

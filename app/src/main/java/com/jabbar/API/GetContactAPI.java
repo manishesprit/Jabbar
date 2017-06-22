@@ -2,6 +2,7 @@ package com.jabbar.API;
 
 import android.content.Context;
 
+import com.google.gson.Gson;
 import com.jabbar.Bean.ContactListBean;
 import com.jabbar.Bean.ContactsBean;
 import com.jabbar.Bll.UserBll;
@@ -12,14 +13,14 @@ import com.jabbar.Utils.Pref;
 import com.jabbar.Utils.ResponseListener;
 import com.jabbar.Utils.Utils;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;
@@ -50,6 +51,12 @@ public class GetContactAPI {
         call.enqueue(new Callback<ContactListBean>() {
             @Override
             public void onResponse(Call<ContactListBean> call, Response<ContactListBean> response) {
+
+                try {
+                    JSONObject jsonObject = new JSONObject(new Gson().toJson(response).toString()).getJSONObject("body");
+                    Log.print("=====jsonObject=====" + jsonObject.toString());
+                } catch (Exception e) {
+                }
 
                 if (response.code() == 200) {
                     if (response.body().code == 0) {

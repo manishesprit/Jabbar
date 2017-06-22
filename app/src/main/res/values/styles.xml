@@ -9,4 +9,32 @@
         <item name="android:windowBackground">@color/color_dark_white</item>
     </style>
 
+    <style name="headingTextDialog">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:tag">100</item>
+        <item name="android:textSize">@dimen/textLarge</item>
+        <item name="android:textColor">@color/color_title</item>
+        <item name="android:paddingLeft">@dimen/MarginTen</item>
+        <item name="android:paddingRight">@dimen/MarginTen</item>
+        <item name="android:paddingBottom">@dimen/MarginFifteen</item>
+        <item name="android:paddingTop">@dimen/MarginFifteen</item>
+    </style>
+
+
+    <style name="DialogListItem" parent="">
+        <item name="android:layout_width">@dimen/sheet_width</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingBottom">@dimen/MarginFifteen</item>
+        <item name="android:paddingTop">@dimen/MarginFifteen</item>
+        <item name="android:paddingLeft">@dimen/MarginTen</item>
+        <item name="android:paddingRight">@dimen/MarginTen</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
+        <item name="android:clickable">true</item>
+        <item name="android:tag">300</item>
+        <item name="android:textSize">@dimen/textMediumExtra</item>
+        <item name="android:textColor">@color/color_title</item>
+        <item name="android:drawablePadding">@dimen/MarginFive</item>
+    </style>
+
 </resources>
