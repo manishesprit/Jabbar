@@ -20,9 +20,12 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.jabbar.R;
+import com.jabbar.Utils.Config;
 import com.jabbar.Utils.GetLocation;
 import com.jabbar.Utils.Log;
+import com.jabbar.Utils.Pref;
 import com.jabbar.Utils.Utils;
 
 
@@ -37,7 +40,7 @@ public class InputDataActivity extends AppCompatActivity implements View.OnClick
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_input_data);
-
+        Utils.addActivities(this);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -46,6 +49,13 @@ public class InputDataActivity extends AppCompatActivity implements View.OnClick
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
         }
+
+        if (Pref.getValue(this, Config.PREF_PUSH_ID, "").equalsIgnoreCase("")) {
+            Pref.setValue(this, Config.PREF_PUSH_ID, FirebaseInstanceId.getInstance().getToken());
+            Log.print("=======PREF_PUSH_ID===========" + FirebaseInstanceId.getInstance().getToken());
+
+        }
+
 
         findViewById(R.id.btnVerify).setOnClickListener(this);
 
@@ -144,7 +154,7 @@ public class InputDataActivity extends AppCompatActivity implements View.OnClick
 //                                }
 //                            }
 //                        }).execute();
-                    }else {
+                    } else {
                         Toast.makeText(InputDataActivity.this, "no internet.Try again", Toast.LENGTH_SHORT).show();
                     }
                 }

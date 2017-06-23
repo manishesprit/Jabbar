@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "935330984509",
+    "firebase_url": "https://jabbar-104dd.firebaseio.com",
+    "project_id": "jabbar-104dd",
+    "storage_bucket": "jabbar-104dd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:935330984509:android:4146f1d198f1bb9b",
+        "android_client_info": {
+          "package_name": "com.jabbar"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "935330984509-oe6j7ajg2pqbghdqoi817g087f5blcvq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDnEoujknBYaA_IiUPumbFJPivOBUHEs6s"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

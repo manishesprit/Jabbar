@@ -1,5 +1,6 @@
 package com.jabbar.Utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -188,6 +189,26 @@ public class Utils {
             os.flush();
             os.close();
         } catch (Exception e) {
+        }
+    }
+
+    public static void addActivities(Activity _activity) {
+        if (Config.screen_al == null)
+            Config.screen_al = new ArrayList<Activity>();
+        if (_activity != null)
+            Config.screen_al.add(_activity);
+    }
+
+    public static void closeAllScreens() {
+        if (Config.screen_al != null && Config.screen_al.size() > 0) {
+
+            for (int i = 0; i < Config.screen_al.size(); i++) {
+                Activity _activity = Config.screen_al.get(i);
+
+                if (_activity != null) {
+                    _activity.finish();
+                }
+            }
         }
     }
 }

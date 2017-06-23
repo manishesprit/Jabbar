@@ -10,9 +10,14 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
-    <!--&lt;!&ndash; To auto-complete the email text field in the login form with the user's emails &ndash;&gt;-->
-    <!--<uses-permission android:name="android.permission.GET_ACCOUNTS" />-->
-    <!--<uses-permission android:name="android.permission.READ_PROFILE" />-->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="com.jabbar.permission.C2D_MESSAGE" />
+
+    <permission
+        android:name="com.rs.timepass.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
 
     <application
         android:allowBackup="true"
@@ -72,6 +77,11 @@
             android:label="@string/status"
             android:screenOrientation="portrait"></activity>
 
+        <activity
+            android:name=".Ui.AuthenticationAlertActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Dialog" />
+
 
         <receiver android:name=".Utils.IncomingSmsReceiver">
             <intent-filter>
@@ -79,6 +89,37 @@
             </intent-filter>
         </receiver>
 
+        <!--PUSH NOTIFICATION-->
+
+        <receiver
+            android:name="com.google.android.gms.gcm.GcmReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <category android:name="com.example.gcm" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".GCM.MyFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".GCM.MyInstanceIDListenerService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.gms.iid.InstanceID" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".GCM.RegistrationIntentService"
+            android:exported="true"></service>
+
+        <!-- END PUSH NOTIFICATION-->
     </application>
 
 

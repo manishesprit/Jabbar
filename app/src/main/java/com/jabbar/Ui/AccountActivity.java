@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.jabbar.R;
+import com.jabbar.Utils.Utils;
 
 
 public class AccountActivity extends BaseActivity implements View.OnClickListener {
@@ -23,7 +24,7 @@ public class AccountActivity extends BaseActivity implements View.OnClickListene
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account);
-
+        Utils.addActivities(this);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         txtPrivacy = (TextView) findViewById(R.id.txtPrivacy);
         txtProfile = (TextView) findViewById(R.id.txtProfile);

@@ -18,7 +18,7 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-
+        Utils.addActivities(this);
         Utils.getDeviceID(this);
 
         Mydb mydb = new Mydb(this);

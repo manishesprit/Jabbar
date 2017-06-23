@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.jabbar.R;
 import com.jabbar.Utils.Config;
 import com.jabbar.Utils.Pref;
+import com.jabbar.Utils.Utils;
 
 
 public class StatusActivity extends BaseActivity {
@@ -21,7 +22,7 @@ public class StatusActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_status);
-
+        Utils.addActivities(this);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         txtStatus = (TextView) findViewById(R.id.txtStatus);
         recyclerview_status = (RecyclerView) findViewById(R.id.recyclerview_status);

@@ -15,9 +15,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.jabbar.API.AuthenticationAPI;
 import com.jabbar.R;
+import com.jabbar.Utils.Config;
 import com.jabbar.Utils.Log;
+import com.jabbar.Utils.Pref;
 import com.jabbar.Utils.ResponseListener;
 import com.jabbar.Utils.Utils;
 
@@ -34,7 +37,7 @@ public class VerifyCodeActivity extends AppCompatActivity implements View.OnClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verify_code);
-
+        Utils.addActivities(this);
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Loading...");
 
@@ -49,7 +52,11 @@ public class VerifyCodeActivity extends AppCompatActivity implements View.OnClic
 
         findViewById(R.id.btnVerify).setOnClickListener(this);
 
+        if (Pref.getValue(this, Config.PREF_PUSH_ID, "").equalsIgnoreCase("")) {
+            Pref.setValue(this, Config.PREF_PUSH_ID, FirebaseInstanceId.getInstance().getToken());
+            Log.print("=======PREF_PUSH_ID===========" + FirebaseInstanceId.getInstance().getToken());
 
+        }
         Log.print("======onCreate=====");
     }
 

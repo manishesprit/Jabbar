@@ -1,6 +1,10 @@
 package com.jabbar.Utils;
 
+import android.app.Activity;
+
 import com.google.android.gms.maps.model.LatLng;
+
+import java.util.ArrayList;
 
 /**
  * Created by hardikjani on 6/8/17.
@@ -37,6 +41,7 @@ public class Config {
     public static int API_SUCCESS = 0;
     public static int API_FAIL = 1;
 
+    public static ArrayList<Activity> screen_al;
 
     public static final String DB_NAME = "jabbar.db";
     public static final String PREF_FILE = "jabbar";
@@ -50,6 +55,7 @@ public class Config {
     public static String PREF_PRIVACY = "PREF_PRIVACY";
     public static String PREF_DB_LEVEL = "PREF_DB_LEVEL";
     public static String PREF_UDID = "PREF_UDID";
+    public static String PREF_PUSH_ID = "PREF_PUSH_ID";
     public static String PREF_LOCATION = "PREF_LOCATION";
 
     public static LatLng currentLatLong;

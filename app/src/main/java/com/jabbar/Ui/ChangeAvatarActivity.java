@@ -58,7 +58,7 @@ public class ChangeAvatarActivity extends BaseActivity implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_avatar);
-
+        Utils.addActivities(this);
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Loading...");
 
