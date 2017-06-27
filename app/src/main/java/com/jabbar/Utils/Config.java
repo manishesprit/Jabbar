@@ -4,6 +4,7 @@ import android.app.Activity;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 /**
@@ -36,7 +37,10 @@ public class Config {
     public static final String TAG_CHANGE_AVATAR = "TAG_CHANGE_AVATAR";
 
 
-    public static int TIMEOUT_CONNECTION = 60;
+    public static final SimpleDateFormat WebDateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    public static final SimpleDateFormat AppDateFormatter = new SimpleDateFormat("dd,MMM yy HH:mm");
+
+    public static int TIMEOUT_CONNECTION = 180;
 
     public static int API_SUCCESS = 0;
     public static int API_FAIL = 1;

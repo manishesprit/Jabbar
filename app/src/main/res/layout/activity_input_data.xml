@@ -46,7 +46,6 @@
             android:inputType="number"
             android:padding="10dp"
             android:singleLine="true"
-            android:text="9904841033"
             android:textSize="@dimen/textLarge" />
 
         <TextView

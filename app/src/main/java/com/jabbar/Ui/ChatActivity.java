@@ -7,10 +7,12 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -21,31 +23,37 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.jabbar.Adapter.ChatAdpater;
 import com.jabbar.Bean.ContactsBean;
+import com.jabbar.Bean.MessageBean;
+import com.jabbar.Bll.MessageBll;
 import com.jabbar.R;
 import com.jabbar.Utils.Config;
+import com.jabbar.Utils.Log;
 import com.jabbar.Utils.Utils;
+
+import java.util.ArrayList;
 
 import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
 import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
 
 
-public class ChatActivity extends BaseActivity {
+public class ChatActivity extends BaseActivity implements View.OnClickListener {
 
     private LinearLayout rootView;
-    private RelativeLayout relMain;
-    private RecyclerView recyclerviewChat;
-    private RelativeLayout rel1;
+    private RecyclerView recyclerview_chat;
     private EmojiconEditText edit_msg;
     private ImageView img_emoji;
-    private RelativeLayout img_send;
+    private RelativeLayout rel_send;
     private ImageView imgSend;
-    private LinearLayout lin;
-
+    private LinearLayoutManager linearLayoutManager;
     EmojIconActions emojIcon;
     private TextView action_bar_title_1;
     private ImageView conversation_contact_photo;
     private ImageView imgBack;
+    private ChatAdpater chatAdpater;
+    private ArrayList<MessageBean> messageBeanArrayList;
+    private MessageBll messageBll;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,21 +61,24 @@ public class ChatActivity extends BaseActivity {
         setContentView(R.layout.activity_chat);
         Utils.addActivities(this);
         rootView = (LinearLayout) findViewById(R.id.root_view);
-        relMain = (RelativeLayout) findViewById(R.id.rel_main);
-        recyclerviewChat = (RecyclerView) findViewById(R.id.recyclerview_chat);
-        rel1 = (RelativeLayout) findViewById(R.id.rel1);
         edit_msg = (EmojiconEditText) findViewById(R.id.edit_msg);
         img_emoji = (ImageView) findViewById(R.id.img_emoji);
-        img_send = (RelativeLayout) findViewById(R.id.rel_send);
+        rel_send = (RelativeLayout) findViewById(R.id.rel_send);
         imgSend = (ImageView) findViewById(R.id.img_send);
-        lin = (LinearLayout) findViewById(R.id.lin);
 
+        recyclerview_chat = (RecyclerView) findViewById(R.id.recyclerview_chat);
+        linearLayoutManager = new LinearLayoutManager(this);
+        recyclerview_chat.setLayoutManager(linearLayoutManager);
+
+        messageBll = new MessageBll(this);
 
         ContactsBean contactsBean = (ContactsBean) getIntent().getSerializableExtra("data");
         if (contactsBean != null) {
 
             action_bar_title_1 = (TextView) findViewById(R.id.action_bar_title_1);
             conversation_contact_photo = (ImageView) findViewById(R.id.conversation_contact_photo);
+            imgBack = (ImageView) findViewById(R.id.imgBack);
+
             action_bar_title_1.setText(contactsBean.name);
 
             Glide.with(this).load(Config.AVATAR_HOST + contactsBean.avatar).asBitmap().placeholder(R.drawable.default_user).error(R.drawable.default_user).into(new BitmapImageViewTarget(conversation_contact_photo) {
@@ -79,8 +90,16 @@ public class ChatActivity extends BaseActivity {
                     conversation_contact_photo.setImageDrawable(circularBitmapDrawable);
                 }
             });
+
+            messageBeanArrayList = messageBll.geMessageList(contactsBean.userid);
+            chatAdpater = new ChatAdpater(this, messageBeanArrayList);
+            recyclerview_chat.setAdapter(chatAdpater);
+        } else {
+            finish();
         }
 
+        imgBack.setOnClickListener(this);
+        rel_send.setOnClickListener(this);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = this.getWindow();
@@ -126,4 +145,16 @@ public class ChatActivity extends BaseActivity {
         return true;
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.imgBack:
+                finish();
+                break;
+
+            case R.id.rel_send:
+                Log.print("======Msg=====" + edit_msg.getText().toString());
+                break;
+        }
+    }
 }

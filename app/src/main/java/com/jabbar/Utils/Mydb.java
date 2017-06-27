@@ -89,14 +89,14 @@ public class Mydb extends SQLiteOpenHelper {
         Log.print("=======level====" + Pref.getValue(context, Config.PREF_DB_LEVEL, 0));
         SQLiteDatabase db = this.getWritableDatabase();
 
-        db.execSQL("CREATE TABLE IF NOT EXISTS message_tb (id INTEGER,userid INTEGER,message TEXT,create_time TEXT)");
+        db.execSQL("CREATE TABLE IF NOT EXISTS message_tb (id INTEGER,userid INTEGER,friendid INTEGER,message TEXT,create_time TEXT)");
         db.execSQL("CREATE TABLE IF NOT EXISTS default_status (id INTEGER PRIMARY KEY AUTOINCREMENT,status TEXT)");
 
-        db.execSQL("INSERT INTO default_status (status) values ('Hi! i\'m using Jabbar')");
-        db.execSQL("INSERT INTO default_status (status) values ('No message, only call')");
-        db.execSQL("INSERT INTO default_status (status) values ('Right now i\'m busy')");
-        db.execSQL("INSERT INTO default_status (status) values ('I\'m sleeping now)");
-        db.execSQL("INSERT INTO default_status (status) values ('can\'t talk only message)");
+        db.execSQL("INSERT INTO default_status (status) values ('" + Mydb.getDBStr("Hi! i'm using Jabbar") + "')");
+        db.execSQL("INSERT INTO default_status (status) values ('" + Mydb.getDBStr("No message, only call") + "')");
+        db.execSQL("INSERT INTO default_status (status) values ('" + Mydb.getDBStr("Right now i'm busy") + "')");
+        db.execSQL("INSERT INTO default_status (status) values ('" + Mydb.getDBStr("can't talk only message") + "')");
+        db.execSQL("INSERT INTO default_status (status) values ('" + Mydb.getDBStr("I'm sleeping now") + "')");
 
 
         int level = Pref.getValue(context, Config.PREF_DB_LEVEL, 0) + 1;

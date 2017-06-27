@@ -7,6 +7,7 @@
     <color name="color_dark_white">#f2f2f2</color>
     <color name="color_title">#262626</color>
     <color name="color_title_sub">#737373</color>
-
+    <color name="yellow">#ffe1e6</color>
+    <color name="green">#d6f5d6</color>
     <color name="color_yellow">#ffcc00</color>
 </resources>
