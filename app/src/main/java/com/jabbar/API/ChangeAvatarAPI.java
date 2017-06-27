@@ -46,7 +46,7 @@ public class ChangeAvatarAPI extends AsyncTask<Void, Void, Integer> {
                 if (file.exists()) {
                     multipartReq.addFile("avatar", file.toString(), file.getName(), "image/jpeg");
                     multipartReq.addString("userid", String.valueOf(Pref.getValue(context, Config.PREF_USERID, 0)));
-                    multipartReq.addString("location", String.valueOf(Pref.getValue(context, Config.PREF_LOCATION, "")));
+                    multipartReq.addString("location", String.valueOf(Pref.getValue(context, Config.PREF_LOCATION, "0,0")));
                     Log.print("=========url=========" + Config.HOST + Config.API_CHANGE_AVATAR);
 
                     result = parse(multipartReq.execute(Config.HOST + Config.API_CHANGE_AVATAR));

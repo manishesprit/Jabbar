@@ -32,6 +32,8 @@ public class HomeActivity extends BaseActivity {
     private FavoriteFragment favoriteFragment;
     private BuddiesFragment buddiesFragment;
 
+    public static boolean isFavoriteUpdate = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,13 +64,15 @@ public class HomeActivity extends BaseActivity {
                     if (favoriteFragment == null) {
                         favoriteFragment = (FavoriteFragment) adapter.getItem(0);
                     }
-                    favoriteFragment.UpdateFavorite(true);
+                    if (isFavoriteUpdate) {
+                        isFavoriteUpdate = false;
+                        favoriteFragment.UpdateFavorite(true);
+                    }
                 }
                 if (position == 1 && adapter != null) {
                     if (buddiesFragment == null) {
                         buddiesFragment = (BuddiesFragment) adapter.getItem(1);
                     }
-                    buddiesFragment.OnUpdate();
                 }
 
             }
@@ -147,7 +151,7 @@ public class HomeActivity extends BaseActivity {
                 if (viewPager.getCurrentItem() == 0) {
                     favoriteFragment.UpdateFavorite(false);
                 } else {
-                    buddiesFragment.UpdateContact();
+                    buddiesFragment.OnUpdate();
                 }
                 break;
 

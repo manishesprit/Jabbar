@@ -36,7 +36,7 @@ public class Config {
     public static final String TAG_CHANGE_AVATAR = "TAG_CHANGE_AVATAR";
 
 
-    public static int TIMEOUT_CONNECTION = 20000;
+    public static int TIMEOUT_CONNECTION = 60;
 
     public static int API_SUCCESS = 0;
     public static int API_FAIL = 1;

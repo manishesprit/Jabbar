@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorAccent"
+    android:orientation="vertical"
+    android:padding="@dimen/MarginTwety">
+
+    <TextView
+        android:id="@+id/txtTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/MarginTen"
+        android:textColor="@color/colorPrimary"
+        android:textSize="@dimen/textLarge" />
+
+    <RadioGroup
+        android:id="@+id/rgprivacy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/rbtpublic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="@dimen/MarginFive"
+            android:text="Public"
+            android:textSize="@dimen/textMediumExtra" />
+
+        <RadioButton
+            android:id="@+id/rbtmy_contact"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="@dimen/MarginFive"
+            android:text="My contact"
+            android:textSize="@dimen/textMediumExtra" />
+
+        <RadioButton
+            android:id="@+id/rbtno_buddie"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="@dimen/MarginFive"
+            android:text="No buddie"
+            android:textSize="@dimen/textMediumExtra" />
+    </RadioGroup>
+
+</LinearLayout>

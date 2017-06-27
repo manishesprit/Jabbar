@@ -22,21 +22,16 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.jabbar.API.GetFavoriteAPI;
 import com.jabbar.Bean.ContactsBean;
-import com.jabbar.Bean.FavoriteListBean;
 import com.jabbar.Bll.UserBll;
 import com.jabbar.R;
 import com.jabbar.Utils.Config;
 import com.jabbar.Utils.GetLocation;
 import com.jabbar.Utils.Pref;
-import com.jabbar.Utils.ResponseListener;
-import com.jabbar.Utils.Utils;
 
 import java.util.ArrayList;
 
 import static com.jabbar.Ui.InputDataActivity.PERMISSION_CODE;
-import static com.jabbar.Utils.Config.TAG_GET_FAVORITE;
 
 
 /**
@@ -121,8 +116,7 @@ public class FavoriteFragment extends Fragment implements OnMapReadyCallback, Go
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
 
-//        setMarker();
-        AddMarker();
+        setMarker();
     }
 
     public void setMarker() {
@@ -151,13 +145,10 @@ public class FavoriteFragment extends Fragment implements OnMapReadyCallback, Go
                 marker.setTag(contactFavoriteBeanArrayList.get(i));
 
             }
-//            CameraPosition cameraPosition = new CameraPosition.Builder().target(Utils.getLocationFromString(contactFavoriteBeanArrayList.get(contactFavoriteBeanArrayList.size() - 1).location)).zoom(10).build();
-//            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
         }
 
-        currentLatLong = new LatLng(Double.parseDouble(Pref.getValue(getContext(), Config.PREF_LOCATION, "").split(",")[0]), Double.parseDouble(Pref.getValue(getContext(), Config.PREF_LOCATION, "").split(",")[1]));
-        Marker MyLoc = googleMap.addMarker(new MarkerOptions().position(currentLatLong).icon(BitmapDescriptorFactory.fromResource(R.drawable.current_location)));
+        currentLatLong = new LatLng(Double.parseDouble(Pref.getValue(getContext(), Config.PREF_LOCATION, "0,0").split(",")[0]), Double.parseDouble(Pref.getValue(getContext(), Config.PREF_LOCATION, "0,0").split(",")[1]));
+        Marker MyLoc = googleMap.addMarker(new MarkerOptions().position(currentLatLong).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
 
         CameraPosition cameraPosition = new CameraPosition.Builder().target(MyLoc.getPosition()).zoom(10).build();
         googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
@@ -178,24 +169,6 @@ public class FavoriteFragment extends Fragment implements OnMapReadyCallback, Go
 
     @Override
     public void getLoc(boolean b) {
-
-        if (Utils.isOnline(getContext())) {
-            progressDialog.show();
-            new GetFavoriteAPI(getContext(), new ResponseListener() {
-                @Override
-                public void onResponce(String tag, int result, Object obj) {
-                    progressDialog.dismiss();
-                    if (tag.equalsIgnoreCase(TAG_GET_FAVORITE) && result == 0) {
-                        FavoriteListBean favoriteListBean = (FavoriteListBean) obj;
-                        if (favoriteListBean != null && favoriteListBean.favorite_list != null && favoriteListBean.favorite_list.size() > 0) {
-                            new UserBll(getContext()).UpdateFavoriteContact(favoriteListBean.favorite_list);
-                            AddMarker();
-                        }
-                    }
-                }
-            });
-        } else {
-            Toast.makeText(getContext(), "No Internet", Toast.LENGTH_SHORT).show();
-        }
+        AddMarker();
     }
 }

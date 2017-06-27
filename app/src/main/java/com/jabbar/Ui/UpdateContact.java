@@ -37,7 +37,7 @@ public class UpdateContact extends AsyncTask<String, String, Boolean> {
 
         Cursor contactsCursor = context.getContentResolver().query(ContactsContract.Contacts.CONTENT_URI, null, null, null, ContactsContract.Contacts.DISPLAY_NAME + " ASC ");
 
-        if (contactsCursor.moveToFirst()) {
+        if (contactsCursor != null && contactsCursor.moveToFirst()) {
             contactBeanArrayList = new ArrayList<>();
 
             do {
@@ -75,6 +75,9 @@ public class UpdateContact extends AsyncTask<String, String, Boolean> {
                 }
 
             } while (contactsCursor.moveToNext());
+
+            contactsCursor.close();
+            contactsCursor = null;
             return true;
         }
         return false;
@@ -86,9 +89,9 @@ public class UpdateContact extends AsyncTask<String, String, Boolean> {
 
         if (contactListener != null) {
             if (contactBeanArrayList != null) {
-                contactListener.OnSuccess(s, contactBeanArrayList,OnlySync);
+                contactListener.OnSuccess(s, contactBeanArrayList, OnlySync);
             } else {
-                contactListener.OnSuccess(s, null,OnlySync);
+                contactListener.OnSuccess(s, null, OnlySync);
             }
         } else {
             if (contactBeanArrayList != null) {
@@ -99,7 +102,7 @@ public class UpdateContact extends AsyncTask<String, String, Boolean> {
 
 
     public interface ContactListener {
-        public void OnSuccess(boolean b, ArrayList<ContactsBean> contactsBeanArrayList,boolean OnlySync);
+        public void OnSuccess(boolean b, ArrayList<ContactsBean> contactsBeanArrayList, boolean OnlySync);
     }
 
     public void checkduplicate(ArrayList<ContactsBean> contactBeanArrayList, ContactsBean contactBean) {

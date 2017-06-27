@@ -1,10 +1,12 @@
 package com.jabbar.Bean;
 
+import java.io.Serializable;
+
 /**
  * Created by hardikjani on 6/19/17.
  */
 
-public class ContactsBean {
+public class ContactsBean implements Serializable {
 
     public int userid;
     public String mobile_number;

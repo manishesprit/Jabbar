@@ -143,12 +143,6 @@ public class UserBll {
         }
     }
 
-    public void UpdateFavoriteContact(ArrayList<FavoriteBean> favoriteBeanArrayList) {
-        for (FavoriteBean favoriteBean : favoriteBeanArrayList) {
-            updateFavoriteContact(favoriteBean);
-        }
-    }
-
 
     public ArrayList<ContactsBean> geBuddiestList(boolean isFavorite) {
         Mydb mydb = null;

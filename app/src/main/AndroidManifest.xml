@@ -78,6 +78,15 @@
             android:screenOrientation="portrait"></activity>
 
         <activity
+            android:name=".Ui.PrivacyActivity"
+            android:label="@string/status"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name=".Ui.ChatActivity"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
             android:name=".Ui.AuthenticationAlertActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Dialog" />

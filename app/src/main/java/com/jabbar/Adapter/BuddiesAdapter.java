@@ -1,6 +1,7 @@
 package com.jabbar.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
@@ -18,6 +19,7 @@ import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.jabbar.Bean.ContactsBean;
 import com.jabbar.MyClickListener;
 import com.jabbar.R;
+import com.jabbar.Ui.ChatActivity;
 import com.jabbar.Utils.Config;
 
 import java.util.ArrayList;
@@ -68,10 +70,11 @@ public class BuddiesAdapter extends RecyclerView.Adapter<BuddiesAdapter.MyHolder
         holder.rlRow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                context.startActivity(new Intent(context, ChatActivity.class).putExtra("data", contactBeanArrayList.get(position)));
             }
         });
 
-        Glide.with(context).load(Config.AVATAR_HOST+contactBeanArrayList.get(position).avatar).asBitmap().placeholder(R.drawable.default_user).error(R.drawable.default_user).into(new BitmapImageViewTarget(holder.imgAvatar) {
+        Glide.with(context).load(Config.AVATAR_HOST + contactBeanArrayList.get(position).avatar).asBitmap().placeholder(R.drawable.default_user).error(R.drawable.default_user).into(new BitmapImageViewTarget(holder.imgAvatar) {
             @Override
             public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                 super.onResourceReady(resource, glideAnimation);

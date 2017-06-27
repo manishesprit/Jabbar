@@ -97,7 +97,7 @@ public class Utils {
 
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        httpClient.connectTimeout(Config.TIMEOUT_CONNECTION, TimeUnit.MILLISECONDS);
+        httpClient.connectTimeout(Config.TIMEOUT_CONNECTION, TimeUnit.SECONDS);
         Retrofit.Builder builder = new Retrofit.Builder().baseUrl(Config.HOST).addConverterFactory(GsonConverterFactory.create());
         Retrofit retrofit = builder.client(httpClient.build()).build();
 

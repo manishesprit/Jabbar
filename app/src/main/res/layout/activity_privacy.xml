@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:contentInsetStartWithNavigation="0dp"
+        app:layout_scrollFlags="scroll|snap"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"></android.support.v7.widget.Toolbar>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorAccent"
+            android:padding="@dimen/MarginTen"
+            android:text="who can see your info"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/textMediumExtra" />
+
+        <LinearLayout
+            android:id="@+id/llStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorAccent"
+            android:orientation="vertical"
+            android:onClick="onClick"
+            android:clickable="true"
+            android:paddingTop="@dimen/MarginTen">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/MarginSaven"
+                android:paddingLeft="@dimen/MarginTen"
+                android:paddingRight="@dimen/MarginSaven"
+                android:paddingTop="@dimen/MarginSaven"
+                android:text="Status"
+                android:textColor="@color/color_title"
+                android:textSize="@dimen/textMediumExtra" />
+
+            <TextView
+                android:id="@+id/txtStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/MarginSaven"
+                android:paddingLeft="@dimen/MarginTen"
+                android:paddingRight="@dimen/MarginSaven"
+                android:text="Status"
+                android:textColor="@color/color_title_sub"
+                android:textSize="@dimen/textMedium1" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llProfile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorAccent"
+            android:orientation="vertical"
+            android:onClick="onClick"
+            android:clickable="true"
+            android:paddingTop="@dimen/MarginTen">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/MarginSaven"
+                android:paddingLeft="@dimen/MarginTen"
+                android:paddingRight="@dimen/MarginSaven"
+                android:paddingTop="@dimen/MarginSaven"
+                android:text="Profile"
+                android:textColor="@color/color_title"
+                android:textSize="@dimen/textMediumExtra" />
+
+            <TextView
+                android:id="@+id/txtProfile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/MarginSaven"
+                android:paddingLeft="@dimen/MarginTen"
+                android:paddingRight="@dimen/MarginSaven"
+                android:text="Status"
+                android:textColor="@color/color_title_sub"
+                android:textSize="@dimen/textMedium1" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llLastSeen"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorAccent"
+            android:onClick="onClick"
+            android:clickable="true"
+            android:orientation="vertical"
+            android:paddingTop="@dimen/MarginTen">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/MarginSaven"
+                android:paddingLeft="@dimen/MarginTen"
+                android:paddingRight="@dimen/MarginSaven"
+                android:paddingTop="@dimen/MarginSaven"
+                android:text="Last Seen"
+                android:textColor="@color/color_title"
+                android:textSize="@dimen/textMediumExtra" />
+
+            <TextView
+                android:id="@+id/txtLastSeen"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/MarginSaven"
+                android:paddingLeft="@dimen/MarginTen"
+                android:paddingRight="@dimen/MarginSaven"
+                android:text="Status"
+                android:textColor="@color/color_title_sub"
+                android:textSize="@dimen/textMedium1" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

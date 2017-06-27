@@ -38,6 +38,8 @@ public class AccountActivity extends BaseActivity implements View.OnClickListene
         txtStatus.setOnClickListener(this);
         txtAbout.setOnClickListener(this);
 
+
+
     }
 
 
@@ -53,7 +55,7 @@ public class AccountActivity extends BaseActivity implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.txtPrivacy:
-
+                startActivity(new Intent(AccountActivity.this, PrivacyActivity.class));
                 break;
 
             case R.id.txtProfile:
