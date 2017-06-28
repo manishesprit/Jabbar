@@ -1,6 +1,7 @@
 package com.jabbar.Ui;
 
 
+import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.jabbar.API.SendMessageAPI;
 import com.jabbar.Adapter.ChatAdpater;
 import com.jabbar.Bean.ContactsBean;
 import com.jabbar.Bean.MessageBean;
@@ -30,6 +32,8 @@ import com.jabbar.Bll.MessageBll;
 import com.jabbar.R;
 import com.jabbar.Utils.Config;
 import com.jabbar.Utils.Log;
+import com.jabbar.Utils.Pref;
+import com.jabbar.Utils.ResponseListener;
 import com.jabbar.Utils.Utils;
 
 import java.util.ArrayList;
@@ -54,6 +58,9 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
     private ChatAdpater chatAdpater;
     private ArrayList<MessageBean> messageBeanArrayList;
     private MessageBll messageBll;
+    private SendMessageAPI sendMessageAPI;
+    private ProgressDialog progressDialog;
+    private ContactsBean contactsBean;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,9 +77,12 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
         linearLayoutManager = new LinearLayoutManager(this);
         recyclerview_chat.setLayoutManager(linearLayoutManager);
 
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Sending...");
+
         messageBll = new MessageBll(this);
 
-        ContactsBean contactsBean = (ContactsBean) getIntent().getSerializableExtra("data");
+        contactsBean = (ContactsBean) getIntent().getSerializableExtra("data");
         if (contactsBean != null) {
 
             action_bar_title_1 = (TextView) findViewById(R.id.action_bar_title_1);
@@ -153,8 +163,26 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
                 break;
 
             case R.id.rel_send:
-                Log.print("======Msg=====" + edit_msg.getText().toString());
+                if (Utils.isOnline(this)) {
+                    Log.print("======Msg=====" + edit_msg.getText().toString());
+                    progressDialog.show();
+                    sendMessageAPI = new SendMessageAPI(this, responseListener, contactsBean.userid, edit_msg.getText().toString().trim());
+                }
                 break;
         }
     }
+
+    public ResponseListener responseListener = new ResponseListener() {
+        @Override
+        public void onResponce(String tag, int result, Object obj) {
+            progressDialog.dismiss();
+            if (tag.equalsIgnoreCase(Config.TAG_SEND_MESSAGE) && result == 0) {
+                MessageBean messageBean = (MessageBean) obj;
+                messageBean.userid = Pref.getValue(ChatActivity.this, Config.PREF_USERID, 0);
+                messageBean.friendid = contactsBean.userid;
+                messageBean.msg = edit_msg.getText().toString().trim();
+                messageBll.InsertMessage(messageBean);
+            }
+        }
+    };
 }

@@ -36,6 +36,9 @@ public class Config {
     public static final String API_CHANGE_AVATAR = "change_avatar.php";
     public static final String TAG_CHANGE_AVATAR = "TAG_CHANGE_AVATAR";
 
+    public static final String API_SEND_MESSAGE = "send_message.php";
+    public static String TAG_SEND_MESSAGE = "TAG_SEND_MESSAGE";
+
 
     public static final SimpleDateFormat WebDateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     public static final SimpleDateFormat AppDateFormatter = new SimpleDateFormat("dd,MMM yy HH:mm");

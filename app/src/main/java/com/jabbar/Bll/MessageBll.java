@@ -67,7 +67,7 @@ public class MessageBll {
                     messageBean.id = cursor.getInt(0);
                     messageBean.userid = cursor.getInt(1);
                     messageBean.friendid = cursor.getInt(2);
-                    messageBean.message = cursor.getString(3);
+                    messageBean.msg = cursor.getString(3);
                     messageBean.create_time = cursor.getString(4);
                     messageBeanArrayList.add(messageBean);
                 }
