@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,63 +9,93 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
+        android:background="?attr/colorPrimaryDark"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:layout_scrollFlags="scroll|enterAlways"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"></android.support.v7.widget.Toolbar>
 
-    <LinearLayout
+    <RelativeLayout
+        android:id="@+id/top"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="200dp"
+        android:layout_below="@+id/toolbar"
+        android:background="@color/colorPrimary"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:paddingBottom="@dimen/MarginThirty"
+            android:src="@drawable/ic_phone" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:padding="@dimen/MarginTen"
+            android:text="Mobile number"
+            android:textColor="@color/colorAccent"
+            android:textSize="@dimen/textLargeExtra"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/top"
         android:layout_gravity="center_vertical"
-        android:background="@color/colorAccent"
+        android:layout_marginTop="-40dp"
         android:orientation="vertical"
         android:padding="@dimen/MarginFive">
 
-        <TextView
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="20dp"
-            android:src="@drawable/splash_baner"
-            android:text="Mobile number"
-            android:textSize="@dimen/textLargeExtra" />
+        <ImageView
+            android:id="@+id/imgSm"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_alignParentRight="true"
+            android:padding="@dimen/MarginTen"
+            android:src="@drawable/ic_app_icon" />
 
-
-        <EditText
-            android:id="@+id/edtnumber"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/drawable_round_box"
-            android:digits="0123456789"
-            android:hint="Enter mobile number"
-            android:imeOptions="actionDone"
-            android:inputType="number"
-            android:padding="10dp"
-            android:singleLine="true"
-            android:textSize="@dimen/textLarge" />
+            android:layout_below="@+id/imgSm"
+            android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="2dp"
-            android:text="allow fix 10 digit number" />
 
-        <Button
-            android:id="@+id/btnVerify"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="50dp"
-            android:background="@drawable/drawable_round_button"
-            android:singleLine="true"
-            android:text="Verify &amp; Login"
-            android:textColor="#ffffff"
-            android:textStyle="bold" />
+            <EditText
+                android:id="@+id/edtnumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="20dp"
+                android:background="@color/colorAccent"
+                android:digits="0123456789"
+                android:hint="Mobile number"
+                android:imeOptions="actionDone"
+                android:inputType="number"
+                android:maxLength="10"
+                android:padding="10dp"
+                android:singleLine="true"
+                android:textSize="@dimen/textLarge" />
 
-    </LinearLayout>
-</LinearLayout>
+
+            <Button
+                android:id="@+id/btnVerify"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="50dp"
+                android:background="@drawable/drawable_round_button"
+                android:singleLine="true"
+                android:text="send code"
+                android:textColor="#ffffff"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+
+    </RelativeLayout>
+</RelativeLayout>

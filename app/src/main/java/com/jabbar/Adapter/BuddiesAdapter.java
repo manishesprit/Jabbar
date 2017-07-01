@@ -20,6 +20,7 @@ import com.jabbar.Bean.ContactsBean;
 import com.jabbar.MyClickListener;
 import com.jabbar.R;
 import com.jabbar.Ui.ChatActivity;
+import com.jabbar.Ui.ProfileActivity;
 import com.jabbar.Utils.Config;
 
 import java.util.ArrayList;
@@ -71,6 +72,13 @@ public class BuddiesAdapter extends RecyclerView.Adapter<BuddiesAdapter.MyHolder
             @Override
             public void onClick(View v) {
                 context.startActivity(new Intent(context, ChatActivity.class).putExtra("data", contactBeanArrayList.get(position)));
+            }
+        });
+
+        holder.imgAvatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                context.startActivity(new Intent(context, ProfileActivity.class).putExtra("data", contactBeanArrayList.get(position)));
             }
         });
 

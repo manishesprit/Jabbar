@@ -8,17 +8,17 @@
         android:id="@+id/imgBack"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/MarginFive"
         android:layout_centerVertical="true"
+        android:paddingLeft="@dimen/MarginFive"
         android:src="@drawable/ic_arrow_back" />
 
     <ImageView
         android:id="@+id/conversation_contact_photo"
         android:layout_width="?attr/actionBarSize"
         android:layout_height="?attr/actionBarSize"
-        android:layout_marginBottom="@dimen/MarginFive"
-        android:layout_marginTop="@dimen/MarginFive"
+        android:layout_marginBottom="@dimen/MarginSaven"
         android:layout_marginLeft="-5dp"
+        android:layout_marginTop="@dimen/MarginSaven"
         android:layout_toRightOf="@+id/imgBack"
         android:scaleType="fitCenter"
         android:src="@drawable/default_user" />

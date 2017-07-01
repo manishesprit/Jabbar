@@ -36,7 +36,6 @@
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
@@ -80,11 +79,19 @@
         <activity
             android:name=".Ui.PrivacyActivity"
             android:label="@string/status"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait">
+
+        </activity>
 
         <activity
             android:name=".Ui.ChatActivity"
             android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name=".Ui.ProfileActivity"
+            android:screenOrientation="portrait">
+
+        </activity>
 
         <activity
             android:name=".Ui.AuthenticationAlertActivity"

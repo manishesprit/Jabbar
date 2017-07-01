@@ -14,6 +14,8 @@ import java.util.ArrayList;
 public class Config {
 
 
+    //http://jabbar.rf.gd/Jabbar/change_avatar.php
+//    public static String HOST = "http://jabbar.rf.gd/Jabbar/";
     public static String HOST = "https://manishpaytm001.000webhostapp.com/jabbar/";
 
     public static String AVATAR_HOST = HOST + "avatar/";
@@ -39,11 +41,14 @@ public class Config {
     public static final String API_SEND_MESSAGE = "send_message.php";
     public static String TAG_SEND_MESSAGE = "TAG_SEND_MESSAGE";
 
+    public static final String API_CHANGE_PRIVACY = "change_privacy.php";
+    public static String TAG_CHANGE_PRIVACY = "TAG_CHANGE_PRIVACY";
+
 
     public static final SimpleDateFormat WebDateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     public static final SimpleDateFormat AppDateFormatter = new SimpleDateFormat("dd,MMM yy HH:mm");
 
-    public static int TIMEOUT_CONNECTION = 180;
+    public static int TIMEOUT_CONNECTION = 4;
 
     public static int API_SUCCESS = 0;
     public static int API_FAIL = 1;

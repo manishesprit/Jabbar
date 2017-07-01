@@ -28,7 +28,7 @@ public class MessageBll {
         String sql = null;
 
         try {
-            sql = "INSERT INTO message_tb (id,userid,friendid,message,create_time) values (" + messageBean.id + "," + messageBean.userid + "," + messageBean.friendid + ",'" + Mydb.getDBStr(messageBean.message) + "','" + messageBean.create_time + "')";
+            sql = "INSERT INTO message_tb (id,userid,friendid,message,create_time) values (" + messageBean.id + "," + messageBean.userid + "," + messageBean.friendid + ",'" + Mydb.getDBStr(messageBean.msg) + "','" + messageBean.create_time + "')";
             dbHelper = new Mydb(this.context);
             dbHelper.execute(sql);
 
@@ -54,7 +54,7 @@ public class MessageBll {
 
         try {
 
-            sql = "SELECT id,userid,friendid,message,create_time from message_tb where userid=" + Pref.getValue(context, Config.PREF_USERID, 0) + " AND friendid=" + friendid;
+            sql = "SELECT id,userid,friendid,message,create_time from message_tb where (userid=" + Pref.getValue(context, Config.PREF_USERID, 0) + " AND friendid=" + friendid + " ) OR (userid=" + friendid + " AND friendid=" + Pref.getValue(context, Config.PREF_USERID, 0) + ")";
 
             messageBeanArrayList = new ArrayList<>();
             mydb = new Mydb(this.context);

@@ -21,8 +21,14 @@ public class SplashActivity extends AppCompatActivity {
         Utils.addActivities(this);
         Utils.getDeviceID(this);
 
+
         Mydb mydb = new Mydb(this);
         mydb.Update();
+
+//        Pref.setValue(this, Config.PREF_USERID, 5);
+//        Pref.setValue(this, Config.PREF_AVATAR, "avatar_5.jpg");
+//        Pref.setValue(this, Config.PREF_MOBILE_NUMBER, "9904841033");
+
 
         new Handler().postDelayed(new Runnable() {
             @Override

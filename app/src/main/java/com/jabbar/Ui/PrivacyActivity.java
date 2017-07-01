@@ -1,6 +1,7 @@
 package com.jabbar.Ui;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v7.widget.Toolbar;
@@ -13,9 +14,12 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.jabbar.API.ChangePrivacyAPI;
 import com.jabbar.R;
 import com.jabbar.Utils.Config;
+import com.jabbar.Utils.Log;
 import com.jabbar.Utils.Pref;
+import com.jabbar.Utils.ResponseListener;
 import com.jabbar.Utils.Utils;
 
 
@@ -36,6 +40,7 @@ public class PrivacyActivity extends BaseActivity implements View.OnClickListene
     public int profile_privacy = 0;
     public int last_seen_privacy = 0;
 
+    private ProgressDialog progressDialog;
     private Dialog dialog;
 
     @Override
@@ -45,6 +50,9 @@ public class PrivacyActivity extends BaseActivity implements View.OnClickListene
         Utils.addActivities(this);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setToolbar(toolbar, true);
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Loading...");
 
         llStatus = (LinearLayout) findViewById(R.id.llStatus);
         txtStatus = (TextView) findViewById(R.id.txtStatus);
@@ -141,21 +149,41 @@ public class PrivacyActivity extends BaseActivity implements View.OnClickListene
 
                 if (checkedId == R.id.rbtpublic && current_privacy != 0) {
                     privacy[privacyType] = String.valueOf(0);
-                    setPrivacy();
                 } else if (checkedId == R.id.rbtmy_contact && current_privacy != 1) {
                     privacy[privacyType] = String.valueOf(1);
-                    setPrivacy();
                 } else if (checkedId == R.id.rbtno_buddie && current_privacy != 2) {
                     privacy[privacyType] = String.valueOf(2);
-                    setPrivacy();
                 }
-
+                Log.print("========= privacy.toString()======" + Utils.ConvertArrayToString(privacy));
+                CallAPI();
                 dialog.dismiss();
             }
         });
 
         dialog.show();
     }
+
+    public void CallAPI() {
+        if (Utils.isOnline(PrivacyActivity.this)) {
+            progressDialog.show();
+            new ChangePrivacyAPI(PrivacyActivity.this, responseListener, Utils.ConvertArrayToString(privacy));
+        } else {
+
+        }
+    }
+
+    private ResponseListener responseListener = new ResponseListener() {
+        @Override
+        public void onResponce(String tag, int result, Object obj) {
+            progressDialog.dismiss();
+            if (tag.equalsIgnoreCase(Config.TAG_CHANGE_PRIVACY) && result == 0) {
+                Pref.setValue(PrivacyActivity.this, Config.PREF_PRIVACY, obj.toString());
+            } else {
+                privacy = Pref.getValue(PrivacyActivity.this, Config.PREF_PRIVACY, "0,0,0").split(",");
+            }
+            setPrivacy();
+        }
+    };
 
 
 }

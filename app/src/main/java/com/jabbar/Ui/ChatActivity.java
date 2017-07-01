@@ -1,6 +1,7 @@
 package com.jabbar.Ui;
 
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.os.Build;
@@ -61,6 +62,21 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
     private SendMessageAPI sendMessageAPI;
     private ProgressDialog progressDialog;
     private ContactsBean contactsBean;
+
+    public static Activity chatActivity = null;
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        chatActivity = this;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        chatActivity = this;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

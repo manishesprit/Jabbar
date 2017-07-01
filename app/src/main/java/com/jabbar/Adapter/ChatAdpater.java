@@ -47,7 +47,7 @@ public class ChatAdpater extends RecyclerView.Adapter<ChatAdpater.ViewHolder> {
         if (chatBeanArrayList.get(position).userid != Pref.getValue(context, Config.PREF_USERID, 0)) {
             holder.lin_left.setVisibility(View.VISIBLE);
             holder.lin_right.setVisibility(View.GONE);
-            holder.txt_message_left.setText(chatBeanArrayList.get(position).message);
+            holder.txt_message_left.setText(chatBeanArrayList.get(position).msg);
             holder.txt_time_left.setText(chatBeanArrayList.get(position).create_time);
             holder.txt_message_left.setUseSystemDefault(false);
 
@@ -55,7 +55,7 @@ public class ChatAdpater extends RecyclerView.Adapter<ChatAdpater.ViewHolder> {
         } else {
             holder.lin_left.setVisibility(View.GONE);
             holder.lin_right.setVisibility(View.VISIBLE);
-            holder.txt_message_right.setText(chatBeanArrayList.get(position).message);
+            holder.txt_message_right.setText(chatBeanArrayList.get(position).msg);
             holder.txt_time_right.setText(chatBeanArrayList.get(position).create_time);
             holder.txt_message_right.setUseSystemDefault(false);
 

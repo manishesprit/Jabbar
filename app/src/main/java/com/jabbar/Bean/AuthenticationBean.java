@@ -10,5 +10,4 @@ public class AuthenticationBean extends ResponseBean {
     public String avatar;
     public String status;
     public String privacy;
-
 }

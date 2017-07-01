@@ -97,7 +97,8 @@ public class Utils {
 
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        httpClient.connectTimeout(Config.TIMEOUT_CONNECTION, TimeUnit.SECONDS);
+        httpClient.connectTimeout(Config.TIMEOUT_CONNECTION, TimeUnit.MINUTES);
+        httpClient.readTimeout(Config.TIMEOUT_CONNECTION, TimeUnit.MINUTES);
         Retrofit.Builder builder = new Retrofit.Builder().baseUrl(Config.HOST).addConverterFactory(GsonConverterFactory.create());
         Retrofit retrofit = builder.client(httpClient.build()).build();
 
@@ -210,5 +211,13 @@ public class Utils {
                 }
             }
         }
+    }
+
+    public static String ConvertArrayToString(String[] array) {
+        String data = "";
+        for (int i = 0; i < array.length; i++) {
+            data += "," + array[i];
+        }
+        return data.substring(1, data.length());
     }
 }
