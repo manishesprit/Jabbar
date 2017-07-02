@@ -16,6 +16,7 @@
             android:id="@+id/recyclerview_chat"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_above="@+id/rel1"
             android:layout_marginTop="10dp">
 
         </android.support.v7.widget.RecyclerView>
@@ -78,17 +79,6 @@
 
             </RelativeLayout>
 
-            <LinearLayout
-                android:id="@+id/lin"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_below="@+id/rel_send"
-                android:layout_marginTop="10dp"
-                android:background="@color/colorAccent"
-                android:orientation="horizontal"
-                android:visibility="gone">
-
-            </LinearLayout>
         </RelativeLayout>
 
     </RelativeLayout>

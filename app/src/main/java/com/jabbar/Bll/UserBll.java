@@ -8,6 +8,8 @@ import com.jabbar.Bean.FavoriteBean;
 import com.jabbar.Utils.Log;
 import com.jabbar.Utils.Mydb;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
 import java.util.ArrayList;
 
 /**
@@ -51,7 +53,7 @@ public class UserBll {
 
         try {
             sql = "INSERT INTO user_tb (userid,name,mobile_number,status,avatar,location,last_seen,is_favorite)"
-                    + " VALUES (" + contactsBean.userid + ",'" + Mydb.getDBStr(contactsBean.name) + "','" + Mydb.getDBStr(contactsBean.mobile_number) + "','" + Mydb.getDBStr(contactsBean.status) + "','" + Mydb.getDBStr(contactsBean.avatar) + "','" + Mydb.getDBStr(contactsBean.location) + "','" + Mydb.getDBStr(contactsBean.last_seen) + "'," + contactsBean.isFavorite + ")";
+                    + " VALUES (" + contactsBean.userid + ",'" + Mydb.getDBStr(contactsBean.name) + "','" + Mydb.getDBStr(contactsBean.mobile_number) + "','" + Mydb.getDBStr(StringEscapeUtils.unescapeJava(contactsBean.status)) + "','" + Mydb.getDBStr(contactsBean.avatar) + "','" + Mydb.getDBStr(contactsBean.location) + "','" + Mydb.getDBStr(contactsBean.last_seen) + "'," + contactsBean.isFavorite + ")";
 
             dbHelper = new Mydb(this.context);
 

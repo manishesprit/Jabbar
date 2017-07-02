@@ -2,7 +2,10 @@ package com.jabbar.Ui;
 
 
 import android.app.Activity;
+import android.app.NotificationManager;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
@@ -33,9 +36,12 @@ import com.jabbar.Bll.MessageBll;
 import com.jabbar.R;
 import com.jabbar.Utils.Config;
 import com.jabbar.Utils.Log;
+import com.jabbar.Utils.Mydb;
 import com.jabbar.Utils.Pref;
 import com.jabbar.Utils.ResponseListener;
 import com.jabbar.Utils.Utils;
+
+import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.util.ArrayList;
 
@@ -62,20 +68,21 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
     private SendMessageAPI sendMessageAPI;
     private ProgressDialog progressDialog;
     private ContactsBean contactsBean;
-
     public static Activity chatActivity = null;
 
     @Override
     protected void onStart() {
         super.onStart();
-
+        Log.print("=====onStart=====");
         chatActivity = this;
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        chatActivity = this;
+
+        Log.print("=====onStop=====");
+        chatActivity = null;
     }
 
     @Override
@@ -100,6 +107,11 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
 
         contactsBean = (ContactsBean) getIntent().getSerializableExtra("data");
         if (contactsBean != null) {
+
+            NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            mNotificationManager.cancelAll();
+
+            messageBll.RemoveReadMessage(contactsBean.userid);
 
             action_bar_title_1 = (TextView) findViewById(R.id.action_bar_title_1);
             conversation_contact_photo = (ImageView) findViewById(R.id.conversation_contact_photo);
@@ -180,9 +192,10 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
 
             case R.id.rel_send:
                 if (Utils.isOnline(this)) {
-                    Log.print("======Msg=====" + edit_msg.getText().toString());
+                    Log.print("======Original Msg=====" + edit_msg.getText().toString());
+                    Log.print("======Convert Msg=====" + Mydb.getDBStr(StringEscapeUtils.escapeJava(edit_msg.getText().toString().trim())));
                     progressDialog.show();
-                    sendMessageAPI = new SendMessageAPI(this, responseListener, contactsBean.userid, edit_msg.getText().toString().trim());
+                    sendMessageAPI = new SendMessageAPI(this, responseListener, contactsBean.userid, Mydb.getDBStr(StringEscapeUtils.escapeJava(edit_msg.getText().toString().trim())));
                 }
                 break;
         }
@@ -191,14 +204,37 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
     public ResponseListener responseListener = new ResponseListener() {
         @Override
         public void onResponce(String tag, int result, Object obj) {
+
             progressDialog.dismiss();
             if (tag.equalsIgnoreCase(Config.TAG_SEND_MESSAGE) && result == 0) {
                 MessageBean messageBean = (MessageBean) obj;
                 messageBean.userid = Pref.getValue(ChatActivity.this, Config.PREF_USERID, 0);
                 messageBean.friendid = contactsBean.userid;
                 messageBean.msg = edit_msg.getText().toString().trim();
-                messageBll.InsertMessage(messageBean);
+                messageBean.isread = 1;
+                messageBll.InsertMessage(messageBean, false);
+                messageBeanArrayList.add(messageBean);
+                chatAdpater.notifyDataSetChanged();
             }
+            edit_msg.setText("");
         }
     };
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        MessageBean messageBean = (MessageBean) intent.getSerializableExtra("messageBean");
+        if (messageBean.userid == contactsBean.userid) {
+            messageBean.isread = 1;
+            messageBll.InsertMessage(messageBean, false);
+
+            messageBeanArrayList.clear();
+            messageBeanArrayList.addAll(messageBll.geMessageList(contactsBean.userid));
+            chatAdpater.notifyDataSetChanged();
+        } else {
+            messageBean.isread = 0;
+            messageBll.InsertMessage(messageBean, true);
+        }
+    }
 }

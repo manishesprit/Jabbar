@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:emojicon="http://schemas.android.com/apk/res-auto"
     android:fitsSystemWindows="true">
 
     <android.support.design.widget.AppBarLayout
@@ -65,14 +66,23 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/textMediumExtra" />
 
-            <TextView
+
+            <hani.momanii.supernova_emoji_library.Helper.EmojiconTextView
                 android:id="@+id/txtStatus"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/colorAccent"
+                android:gravity="center_vertical"
                 android:padding="@dimen/MarginTen"
                 android:text=""
-                android:textSize="@dimen/textMedium1" />
+                android:textColor="@color/color_title"
+                android:textSize="@dimen/textMediumExtra"
+                emojicon:emojiconSize="@dimen/textLarge" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/color_dark_white"></View>
 
             <TextView
                 android:id="@+id/txtnumber"

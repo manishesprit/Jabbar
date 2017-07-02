@@ -89,7 +89,7 @@ public class Mydb extends SQLiteOpenHelper {
         Log.print("=======level====" + Pref.getValue(context, Config.PREF_DB_LEVEL, 0));
         SQLiteDatabase db = this.getWritableDatabase();
 
-        db.execSQL("CREATE TABLE IF NOT EXISTS message_tb (id INTEGER,userid INTEGER,friendid INTEGER,message TEXT,create_time TEXT)");
+        db.execSQL("CREATE TABLE IF NOT EXISTS message_tb (id INTEGER,userid INTEGER,friendid INTEGER,message TEXT,create_time TEXT,isread INTEGER)");
         db.execSQL("CREATE TABLE IF NOT EXISTS default_status (id INTEGER PRIMARY KEY AUTOINCREMENT,status TEXT)");
 
         db.execSQL("INSERT INTO default_status (status) values ('" + Mydb.getDBStr("Hi! i'm using Jabbar") + "')");

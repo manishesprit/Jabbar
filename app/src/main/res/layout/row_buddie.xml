@@ -30,15 +30,19 @@
             android:textColor="@color/color_title"
             android:textSize="@dimen/textMediumExtra" />
 
-        <TextView
+        <hani.momanii.supernova_emoji_library.Helper.EmojiconTextView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:emojicon="http://schemas.android.com/apk/res-auto"
             android:id="@+id/txtstatus"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:text="Hello"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center_vertical"
             android:textColor="@color/color_title_sub"
+            android:singleLine="true"
             android:textSize="@dimen/textMedium"
-            android:visibility="gone" />
+            android:visibility="gone"
+            emojicon:emojiconSize="@dimen/textMediumExtra" />
+
     </LinearLayout>
 
     <ImageView
@@ -46,9 +50,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
         android:background="?attr/selectableItemBackground"
         android:padding="@dimen/MarginFive"
-        android:layout_centerVertical="true"
         android:src="@drawable/ic_star_unfill"
         android:visibility="visible" />
 

@@ -2,6 +2,7 @@ package com.jabbar.API;
 
 import android.content.Context;
 
+import com.google.gson.Gson;
 import com.jabbar.Bean.ResponseBean;
 import com.jabbar.R;
 import com.jabbar.Utils.Config;
@@ -9,6 +10,9 @@ import com.jabbar.Utils.Log;
 import com.jabbar.Utils.Pref;
 import com.jabbar.Utils.ResponseListener;
 import com.jabbar.Utils.Utils;
+
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -42,15 +46,22 @@ public class UpdateStatusAPI {
         Log.print("======UpdateStatusAPI====" + mParams);
 
         UpdateStatusRoutAPI apiMethod = Utils.getRetrofit().create(UpdateStatusRoutAPI.class);
-        Call<ResponseBean> call = apiMethod.getBean( String.valueOf(Pref.getValue(context, Config.PREF_USERID, 0)),status,Pref.getValue(context, Config.PREF_UDID, ""),Pref.getValue(context, Config.PREF_LOCATION, "0,0"));
+        Call<ResponseBean> call = apiMethod.getBean(String.valueOf(Pref.getValue(context, Config.PREF_USERID, 0)), status, Pref.getValue(context, Config.PREF_UDID, ""), Pref.getValue(context, Config.PREF_LOCATION, "0,0"));
 
         call.enqueue(new Callback<ResponseBean>() {
             @Override
             public void onResponse(Call<ResponseBean> call, Response<ResponseBean> response) {
 
+                Log.print("====onResponse====response.code()=" + response.code() + "=====url=====" + call.request().url());
+                try {
+                    JSONObject jsonObject = new JSONObject(new Gson().toJson(response).toString()).getJSONObject("body");
+                    Log.print("=====jsonObject=====" + jsonObject.toString());
+                } catch (Exception e) {
+                }
+
                 if (response.code() == 200) {
                     if (response.body().code == 0) {
-                        Pref.setValue(context, Config.PREF_STATUS, status);
+                        Pref.setValue(context, Config.PREF_STATUS, StringEscapeUtils.unescapeJava(status));
                         responseListener.onResponce(Config.TAG_UPDATE_STATUS, Config.API_SUCCESS, response.body());
                     } else {
                         responseListener.onResponce(Config.TAG_UPDATE_STATUS, Config.API_FAIL, response.body().message);
@@ -75,7 +86,7 @@ public class UpdateStatusAPI {
     public interface UpdateStatusRoutAPI {
         @FormUrlEncoded
         @POST(Config.API_UPDATE_STATUS)
-        Call<ResponseBean> getBean(@Field("userid") String userid,@Field("status") String status,@Field("udid") String udid,@Field("location") String location);
+        Call<ResponseBean> getBean(@Field("userid") String userid, @Field("status") String status, @Field("udid") String udid, @Field("location") String location);
 
     }
 }

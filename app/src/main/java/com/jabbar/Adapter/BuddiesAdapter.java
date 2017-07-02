@@ -25,6 +25,8 @@ import com.jabbar.Utils.Config;
 
 import java.util.ArrayList;
 
+import hani.momanii.supernova_emoji_library.Helper.EmojiconTextView;
+
 
 public class BuddiesAdapter extends RecyclerView.Adapter<BuddiesAdapter.MyHolder> {
 
@@ -104,7 +106,7 @@ public class BuddiesAdapter extends RecyclerView.Adapter<BuddiesAdapter.MyHolder
         public RelativeLayout rlRow;
         public ImageView imgAvatar;
         public TextView txtName;
-        public TextView txtstatus;
+        public EmojiconTextView txtstatus;
         public ImageView imgfavorite;
 
         public MyHolder(View view) {
@@ -112,7 +114,7 @@ public class BuddiesAdapter extends RecyclerView.Adapter<BuddiesAdapter.MyHolder
             rlRow = (RelativeLayout) view.findViewById(R.id.rlRow);
             imgAvatar = (ImageView) view.findViewById(R.id.imgAvatar);
             txtName = (TextView) view.findViewById(R.id.txtName);
-            txtstatus = (TextView) view.findViewById(R.id.txtstatus);
+            txtstatus = (EmojiconTextView) view.findViewById(R.id.txtstatus);
             imgfavorite = (ImageView) view.findViewById(R.id.imgfavorite);
         }
     }

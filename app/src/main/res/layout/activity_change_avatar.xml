@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:emojicon="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -55,14 +56,22 @@
             android:textColor="@color/colorPrimary"
             android:textSize="@dimen/textMediumExtra" />
 
-        <TextView
+        <hani.momanii.supernova_emoji_library.Helper.EmojiconTextView
             android:id="@+id/txtStatus"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorAccent"
+            android:gravity="center_vertical"
             android:padding="@dimen/MarginTen"
             android:text=""
-            android:textSize="@dimen/textMedium1" />
+            android:textColor="@color/color_title"
+            android:textSize="@dimen/textMediumExtra"
+            emojicon:emojiconSize="@dimen/textLarge" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/color_dark_white"></View>
 
         <TextView
             android:id="@+id/txtnumber"
@@ -71,7 +80,8 @@
             android:background="@color/colorAccent"
             android:padding="@dimen/MarginTen"
             android:text="9904841033"
-            android:textSize="@dimen/textMedium1" />
+            android:textColor="@color/color_title"
+            android:textSize="@dimen/textMediumExtra" />
 
         <TextView
             android:layout_width="match_parent"
@@ -92,7 +102,7 @@
             android:gravity="center_vertical"
             android:padding="@dimen/MarginTen"
             android:text="Your name"
-            android:textSize="@dimen/textMedium1" />
+            android:textSize="@dimen/textMediumExtra" />
 
     </LinearLayout>
 

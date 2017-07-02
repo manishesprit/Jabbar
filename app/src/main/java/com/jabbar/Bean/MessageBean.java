@@ -10,4 +10,5 @@ public class MessageBean extends ResponseBean {
     public int friendid;
     public String msg;
     public String create_time;
+    public int isread;
 }

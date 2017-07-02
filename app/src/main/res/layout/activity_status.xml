@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:emojicon="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -42,17 +43,18 @@
                     android:textSize="@dimen/textMedium1" />
 
 
-                <TextView
+                <hani.momanii.supernova_emoji_library.Helper.EmojiconTextView
                     android:id="@+id/txtStatus"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/MarginTen"
                     android:background="@color/colorAccent"
                     android:drawableRight="@drawable/ic_edit"
-                    android:gravity="top"
+                    android:gravity="center_vertical"
                     android:padding="@dimen/MarginFive"
                     android:textColor="@color/color_title"
-                    android:textSize="@dimen/textMediumExtra" />
+                    android:textSize="@dimen/textMediumExtra"
+                    emojicon:emojiconSize="@dimen/textLarge" />
 
 
             </LinearLayout>

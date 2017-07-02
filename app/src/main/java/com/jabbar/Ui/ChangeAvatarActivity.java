@@ -32,13 +32,17 @@ import com.jabbar.Utils.Utils;
 
 import java.io.File;
 
+import hani.momanii.supernova_emoji_library.Helper.EmojiconTextView;
+
+import static com.jabbar.Ui.StatusActivity.CHANGE_STATUS_CODE;
+
 
 public class ChangeAvatarActivity extends BaseActivity implements View.OnClickListener {
 
     private Toolbar toolbar;
     private ImageView imgAvatar;
     private ImageView imgSelectImage;
-    private TextView txtStatus;
+    private EmojiconTextView txtStatus;
     private TextView txtnumber;
     private Intent intent;
     private Dialog dialog;
@@ -61,11 +65,12 @@ public class ChangeAvatarActivity extends BaseActivity implements View.OnClickLi
         Utils.addActivities(this);
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Loading...");
+        progressDialog.setCancelable(false);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         imgAvatar = (ImageView) findViewById(R.id.imgAvatar);
         imgSelectImage = (ImageView) findViewById(R.id.imgSelectImage);
-        txtStatus = (TextView) findViewById(R.id.txtStatus);
+        txtStatus = (EmojiconTextView) findViewById(R.id.txtStatus);
         txtnumber = (TextView) findViewById(R.id.txtnumber);
 
 
@@ -100,11 +105,12 @@ public class ChangeAvatarActivity extends BaseActivity implements View.OnClickLi
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.txtStatus) {
-            startActivity(new Intent(ChangeAvatarActivity.this, StatusActivity.class));
+            startActivityForResult(new Intent(ChangeAvatarActivity.this, StatusActivity.class), CHANGE_STATUS_CODE);
         } else if (v.getId() == R.id.imgSelectImage) {
             ShowSelectImageDialog();
         }
     }
+
 
     private void ShowSelectImageDialog() {
         dialog = new Dialog(this);
@@ -190,8 +196,9 @@ public class ChangeAvatarActivity extends BaseActivity implements View.OnClickLi
 
 
             Log.print("=======destination=========" + destination);
-
-            if (requestCode == OPEN_GALLERY_IMAGE_CODE) {
+            if (requestCode == CHANGE_STATUS_CODE) {
+                txtStatus.setText(Pref.getValue(this, Config.PREF_STATUS, ""));
+            } else if (requestCode == OPEN_GALLERY_IMAGE_CODE) {
 
                 System.out.println("===real path===" + FileUtils.getPath(this, data.getData()));
                 if (Utils.isGotoCrop(this, data.getData(), 300, 300)) {

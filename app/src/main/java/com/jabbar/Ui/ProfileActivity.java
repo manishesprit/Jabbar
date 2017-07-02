@@ -23,6 +23,8 @@ import com.jabbar.Bean.ContactsBean;
 import com.jabbar.R;
 import com.jabbar.Utils.Config;
 
+import hani.momanii.supernova_emoji_library.Helper.EmojiconTextView;
+
 /**
  * Created by hardikjani on 6/29/17.
  */
@@ -34,7 +36,7 @@ public class ProfileActivity extends AppCompatActivity {
     private ContactsBean contactsBean;
     private Context context;
     private TextView txtnumber;
-    private TextView txtStatus;
+    private EmojiconTextView txtStatus;
     private Bitmap bitmap;
 //    private LinearLayout llDownload;
 //    private TextView txtDownload;
@@ -71,7 +73,7 @@ public class ProfileActivity extends AppCompatActivity {
         image = (ImageView) findViewById(R.id.image);
 
         txtnumber = (TextView) findViewById(R.id.txtnumber);
-        txtStatus = (TextView) findViewById(R.id.txtStatus);
+        txtStatus = (EmojiconTextView) findViewById(R.id.txtStatus);
 
 
         Glide.with(ProfileActivity.this).load(Config.AVATAR_HOST + contactsBean.avatar)
