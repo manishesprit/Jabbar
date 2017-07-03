@@ -34,8 +34,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/color_title"
-                android:textSize="15dp"
-                emojicon:emojiconSize="28sp" />  
+                android:textSize="@dimen/textMediumExtra"
+                emojicon:emojiconSize="@dimen/textLarge" />  
 
 
             <TextView
@@ -45,7 +45,7 @@
                 android:layout_below="@+id/txt_message"
                 android:layout_gravity="right"
                 android:textColor="@color/color_title_sub"
-                android:textSize="12dp" />
+                android:textSize="@dimen/textMedium" />
 
         </LinearLayout>
 
@@ -57,7 +57,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
-        android:layout_marginRight="10dp"
         android:gravity="right"
         android:orientation="horizontal">
 
@@ -78,8 +77,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
-                android:textSize="18dp"
-                emojicon:emojiconSize="28sp" />  
+                android:textColor="@color/color_title"
+                android:textSize="@dimen/textMediumExtra"
+                emojicon:emojiconSize="@dimen/textLarge" />  
 
 
             <TextView
@@ -87,7 +87,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
-                android:textSize="12dp" />
+                android:textSize="@dimen/textMedium" />
 
         </LinearLayout>
 

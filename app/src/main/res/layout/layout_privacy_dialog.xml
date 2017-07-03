@@ -4,13 +4,15 @@
     android:layout_height="wrap_content"
     android:background="@color/colorAccent"
     android:orientation="vertical"
-    android:padding="@dimen/MarginTwety">
+    android:padding="@dimen/MarginThirty">
 
     <TextView
         android:id="@+id/txtTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="@dimen/MarginTen"
+        android:paddingBottom="@dimen/MarginTen"
+        android:paddingLeft="@dimen/MarginTen"
+        android:text="Status"
         android:textColor="@color/colorPrimary"
         android:textSize="@dimen/textLarge" />
 
@@ -24,7 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:padding="@dimen/MarginFive"
+            android:padding="@dimen/MarginTen"
             android:text="Public"
             android:textSize="@dimen/textMediumExtra" />
 
@@ -33,7 +35,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:padding="@dimen/MarginFive"
+            android:padding="@dimen/MarginTen"
             android:text="My contact"
             android:textSize="@dimen/textMediumExtra" />
 
@@ -42,7 +44,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:padding="@dimen/MarginFive"
+            android:padding="@dimen/MarginTen"
             android:text="No buddie"
             android:textSize="@dimen/textMediumExtra" />
     </RadioGroup>

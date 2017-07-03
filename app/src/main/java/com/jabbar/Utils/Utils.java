@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
@@ -123,7 +124,7 @@ public class Utils {
                 isGoto = true;
 
             } else {
-                Toast.makeText(context, "Minimum image dimension must be " + minWidth + " X " + minHeight, Toast.LENGTH_LONG).show();
+                new JabbarDialog(context, "Minimum image dimension must be " + minWidth + " X " + minHeight).show();
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -219,5 +220,14 @@ public class Utils {
             data += "," + array[i];
         }
         return data.substring(1, data.length());
+    }
+
+    public static String convertStringDateToStringDate(SimpleDateFormat oldDateFormate, SimpleDateFormat newDateFormate, String date) {
+        try {
+            return newDateFormate.format(oldDateFormate.parse(date));
+        } catch (Exception e) {
+
+        }
+        return "";
     }
 }

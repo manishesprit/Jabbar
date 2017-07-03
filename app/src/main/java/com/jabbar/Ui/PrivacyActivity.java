@@ -53,6 +53,7 @@ public class PrivacyActivity extends BaseActivity implements View.OnClickListene
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Loading...");
+        progressDialog.setCancelable(false);
 
         llStatus = (LinearLayout) findViewById(R.id.llStatus);
         txtStatus = (TextView) findViewById(R.id.txtStatus);

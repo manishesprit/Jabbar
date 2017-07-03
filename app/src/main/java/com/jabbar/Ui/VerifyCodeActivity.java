@@ -19,6 +19,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.jabbar.API.AuthenticationAPI;
 import com.jabbar.R;
 import com.jabbar.Utils.Config;
+import com.jabbar.Utils.JabbarDialog;
 import com.jabbar.Utils.Log;
 import com.jabbar.Utils.Pref;
 import com.jabbar.Utils.ResponseListener;
@@ -40,6 +41,7 @@ public class VerifyCodeActivity extends AppCompatActivity implements View.OnClic
         Utils.addActivities(this);
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Loading...");
+        progressDialog.setCancelable(false);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -80,7 +82,7 @@ public class VerifyCodeActivity extends AppCompatActivity implements View.OnClic
                                     startActivity(new Intent(VerifyCodeActivity.this, HomeActivity.class));
                                     finish();
                                 } else {
-                                    Toast.makeText(VerifyCodeActivity.this, obj.toString(), Toast.LENGTH_SHORT).show();
+                                    new JabbarDialog(VerifyCodeActivity.this, obj.toString()).show();
                                 }
 
                             }
@@ -112,10 +114,10 @@ public class VerifyCodeActivity extends AppCompatActivity implements View.OnClic
 //                            }
 //                        }).execute();
                     } else {
-                        Toast.makeText(VerifyCodeActivity.this, "No Internet", Toast.LENGTH_SHORT).show();
+                        new JabbarDialog(VerifyCodeActivity.this, getString(R.string.no_internet)).show();
                     }
                 } else {
-                    Toast.makeText(VerifyCodeActivity.this, "Enter code", Toast.LENGTH_SHORT).show();
+                    new JabbarDialog(VerifyCodeActivity.this, "Enter code").show();
                 }
                 break;
         }

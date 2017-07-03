@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/rel1"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="@dimen/MarginFive">
 
         </android.support.v7.widget.RecyclerView>
 
@@ -45,7 +45,8 @@
                     android:background="@null"
                     android:maxLines="3"
                     android:padding="3dp"
-                    emojicon:emojiconSize="28sp" />
+                    android:textSize="@dimen/textMediumExtra"
+                    emojicon:emojiconSize="@dimen/textLarge" />
 
 
                 <ImageView

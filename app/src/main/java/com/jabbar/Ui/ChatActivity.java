@@ -102,6 +102,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Sending...");
+        progressDialog.setCancelable(false);
 
         messageBll = new MessageBll(this);
 
@@ -151,6 +152,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
         emojIcon.ShowEmojIcon();
         emojIcon.setIconsIds(R.drawable.ic_action_keyboard, R.drawable.smiley);
 
+        img_emoji.performClick();
         edit_msg.addTextChangedListener(new TextWatcher() {
 
             @Override

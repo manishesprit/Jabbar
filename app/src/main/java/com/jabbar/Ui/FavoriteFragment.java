@@ -55,6 +55,7 @@ public class FavoriteFragment extends Fragment implements OnMapReadyCallback, Go
 
         progressDialog = new ProgressDialog(getContext());
         progressDialog.setMessage("Loading...");
+        progressDialog.setCancelable(false);
 
 
     }

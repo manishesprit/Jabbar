@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.jabbar.R;
+import com.jabbar.Utils.JabbarDialog;
 import com.jabbar.Utils.Utils;
 
 import java.util.ArrayList;
@@ -129,7 +130,7 @@ public class HomeActivity extends BaseActivity {
         if (requestCode == PERMISSION_CODE && grantResults.length == 2) {
             favoriteFragment.UpdateFavorite(false);
         } else {
-            Toast.makeText(this, "Location Permission is required", Toast.LENGTH_SHORT).show();
+            new JabbarDialog(this, getString(R.string.location_permisssion)).show();
         }
     }
 

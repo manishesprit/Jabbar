@@ -24,6 +24,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.jabbar.R;
 import com.jabbar.Utils.Config;
 import com.jabbar.Utils.GetLocation;
+import com.jabbar.Utils.JabbarDialog;
 import com.jabbar.Utils.Log;
 import com.jabbar.Utils.Pref;
 import com.jabbar.Utils.Utils;
@@ -92,6 +93,7 @@ public class InputDataActivity extends AppCompatActivity implements View.OnClick
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Loading...");
+        progressDialog.setCancelable(false);
 
 
     }
@@ -120,7 +122,7 @@ public class InputDataActivity extends AppCompatActivity implements View.OnClick
         if (requestCode == PERMISSION_CODE && grantResults.length == 1) {
 
         } else {
-            Toast.makeText(this, "Permission is importent", Toast.LENGTH_SHORT).show();
+            new JabbarDialog(this, "Permission is importent").show();
         }
     }
 
@@ -134,9 +136,9 @@ public class InputDataActivity extends AppCompatActivity implements View.OnClick
         switch (view.getId()) {
             case R.id.btnVerify:
                 if (getEdtnumber().getText().toString().trim().equals("")) {
-                    Toast.makeText(InputDataActivity.this, "please enter mobile number", Toast.LENGTH_SHORT).show();
+                    new JabbarDialog(InputDataActivity.this,"please enter mobile number").show();
                 } else if (getEdtnumber().getText().toString().trim().length() != 10) {
-                    Toast.makeText(InputDataActivity.this, "please enter mobile number fix 10 digit", Toast.LENGTH_SHORT).show();
+                    new JabbarDialog(InputDataActivity.this, "please enter mobile number fix 10 digit").show();
                 } else {
                     if (Utils.isOnline(InputDataActivity.this)) {
                         startActivity(new Intent(InputDataActivity.this, VerifyCodeActivity.class).putExtra("session_id", "").putExtra("number", getEdtnumber().getText().toString().trim()));
@@ -155,7 +157,7 @@ public class InputDataActivity extends AppCompatActivity implements View.OnClick
 //                            }
 //                        }).execute();
                     } else {
-                        Toast.makeText(InputDataActivity.this, "no internet.Try again", Toast.LENGTH_SHORT).show();
+                        new JabbarDialog(InputDataActivity.this, getString(R.string.no_internet)).show();
                     }
                 }
                 break;

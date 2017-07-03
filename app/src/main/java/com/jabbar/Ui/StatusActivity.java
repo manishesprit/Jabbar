@@ -19,6 +19,7 @@ import com.jabbar.Bll.MessageBll;
 import com.jabbar.Bll.StatusBll;
 import com.jabbar.R;
 import com.jabbar.Utils.Config;
+import com.jabbar.Utils.JabbarDialog;
 import com.jabbar.Utils.Mydb;
 import com.jabbar.Utils.Pref;
 import com.jabbar.Utils.ResponseListener;
@@ -87,13 +88,13 @@ public class StatusActivity extends BaseActivity {
                                     txtStatus.setText(defaultStatusList.get(position));
                                     setResult(RESULT_OK);
                                 } else {
-                                    Toast.makeText(StatusActivity.this, obj.toString(), Toast.LENGTH_SHORT).show();
+                                    new JabbarDialog(StatusActivity.this, obj.toString()).show();
                                 }
 
                             }
                         }, Mydb.getDBStr(StringEscapeUtils.escapeJava(defaultStatusList.get(position))));
                     } else {
-                        Toast.makeText(StatusActivity.this, "No internet.Try again", Toast.LENGTH_SHORT).show();
+                        new JabbarDialog(StatusActivity.this, getString(R.string.no_internet)).show();
                     }
                 }
             }

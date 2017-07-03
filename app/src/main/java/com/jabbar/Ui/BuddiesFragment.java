@@ -23,6 +23,7 @@ import com.jabbar.MyClickListener;
 import com.jabbar.R;
 import com.jabbar.Utils.Config;
 import com.jabbar.Utils.GetLocation;
+import com.jabbar.Utils.JabbarDialog;
 import com.jabbar.Utils.Log;
 import com.jabbar.Utils.ResponseListener;
 import com.jabbar.Utils.Utils;
@@ -93,12 +94,12 @@ public class BuddiesFragment extends Fragment implements UpdateContact.ContactLi
                     new GetContactAPI(getContext(), this, contactsBeanArrayList);
                 } else {
                     progress_refresh.setVisibility(View.GONE);
-                    Toast.makeText(getContext(), "No internet. Try again", Toast.LENGTH_LONG).show();
+                    new JabbarDialog(getContext(), getString(R.string.no_internet)).show();
                 }
             }
         } else {
             progress_refresh.setVisibility(View.GONE);
-            Toast.makeText(getContext(), "Sync fail. Try again", Toast.LENGTH_LONG).show();
+            new JabbarDialog(getContext(), getString(R.string.sync_fail)).show();
         }
     }
 
@@ -117,7 +118,7 @@ public class BuddiesFragment extends Fragment implements UpdateContact.ContactLi
             buddiesAdapter.notifyDataSetChanged();
             HomeActivity.isFavoriteUpdate = true;
         } else {
-            Toast.makeText(getContext(), obj.toString(), Toast.LENGTH_LONG).show();
+            new JabbarDialog(getContext(), getString(R.string.no_internet)).show();
         }
         Clickpos = -1;
     }
@@ -132,7 +133,7 @@ public class BuddiesFragment extends Fragment implements UpdateContact.ContactLi
                     new ChangeFavoriteAPI(getContext(), BuddiesFragment.this, contactsBeanArrayList.get(pos).userid);
                 }
             } else {
-                Toast.makeText(getContext(), "No internet. Try again", Toast.LENGTH_LONG).show();
+                new JabbarDialog(getContext(), getString(R.string.no_internet)).show();
             }
         }
     };

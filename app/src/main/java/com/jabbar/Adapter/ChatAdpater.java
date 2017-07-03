@@ -1,5 +1,6 @@
 package com.jabbar.Adapter;
 
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jabbar.Bean.MessageBean;
 import com.jabbar.R;
@@ -16,6 +18,8 @@ import com.jabbar.Utils.Pref;
 import java.util.ArrayList;
 
 import hani.momanii.supernova_emoji_library.Helper.EmojiconTextView;
+
+import static android.content.Context.CLIPBOARD_SERVICE;
 
 /**
  * Created by admin on 16/3/17.
@@ -42,7 +46,7 @@ public class ChatAdpater extends RecyclerView.Adapter<ChatAdpater.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
 
         if (chatBeanArrayList.get(position).userid != Pref.getValue(context, Config.PREF_USERID, 0)) {
             holder.lin_left.setVisibility(View.VISIBLE);
@@ -61,6 +65,28 @@ public class ChatAdpater extends RecyclerView.Adapter<ChatAdpater.ViewHolder> {
 
 
         }
+
+
+        holder.lin_right.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                ClipboardManager clipboard = (ClipboardManager) context.getSystemService(CLIPBOARD_SERVICE);
+                clipboard.setText(holder.txt_message_right.getText().toString());
+                Toast.makeText(context, "Copy message", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
+
+        holder.lin_left.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                ClipboardManager clipboard = (ClipboardManager) context.getSystemService(CLIPBOARD_SERVICE);
+                clipboard.setText(holder.txt_message_left.getText().toString());
+                Toast.makeText(context, "Copy message", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
+
     }
 
     @Override

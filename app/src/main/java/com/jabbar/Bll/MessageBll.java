@@ -4,6 +4,8 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.database.Cursor;
+import android.media.RingtoneManager;
+import android.net.Uri;
 
 import com.jabbar.Bean.MessageBean;
 import com.jabbar.Bean.NotificationBean;
@@ -12,6 +14,7 @@ import com.jabbar.Utils.Config;
 import com.jabbar.Utils.Log;
 import com.jabbar.Utils.Mydb;
 import com.jabbar.Utils.Pref;
+import com.jabbar.Utils.Utils;
 
 import java.util.ArrayList;
 
@@ -48,7 +51,7 @@ public class MessageBll {
         }
 
         if (showNotification) {
-            CreateNotification();
+            CreateNotification(false);
         }
     }
 
@@ -71,10 +74,10 @@ public class MessageBll {
             sql = null;
             System.gc();
         }
-        CreateNotification();
+        CreateNotification(true);
     }
 
-    public void CreateNotification() {
+    public void CreateNotification(boolean isSilent) {
         ArrayList<NotificationBean> notificationBeanArrayList = geUnreadMessageList();
 
         if (notificationBeanArrayList != null && notificationBeanArrayList.size() > 0) {
@@ -85,22 +88,27 @@ public class MessageBll {
 
             Notification.Builder notif = new Notification.Builder(context)
                     .setContentTitle(context.getResources().getString(R.string.app_name) + " Message")
-                    .setContentText("Notification")
+                    .setContentText(notificationBeanArrayList.size() + " message")
                     .setSmallIcon(R.drawable.app_icon);
+
+            if (!isSilent) {
+                Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                notif.setSound(notification);
+            }
 
             if (notificationBeanArrayList.size() > 5) {
                 Notification.InboxStyle inboxStyle = new Notification.InboxStyle();
                 for (int i = 0; i < 5; i++) {
                     inboxStyle.addLine(notificationBeanArrayList.get(i).name + ":" + notificationBeanArrayList.get(i).message);
                 }
-                inboxStyle.setSummaryText(notificationBeanArrayList.size() + " messages unread");
+                inboxStyle.setSummaryText(notificationBeanArrayList.size() + " messages");
                 notif.setStyle(inboxStyle);
             } else {
                 Notification.InboxStyle inboxStyle = new Notification.InboxStyle();
                 for (int i = 0; i < notificationBeanArrayList.size(); i++) {
                     inboxStyle.addLine(notificationBeanArrayList.get(i).name + ":" + notificationBeanArrayList.get(i).message);
                 }
-                inboxStyle.setSummaryText(notificationBeanArrayList.size() + " messages unread");
+                inboxStyle.setSummaryText(notificationBeanArrayList.size() + " messages");
                 notif.setStyle(inboxStyle);
             }
 
@@ -131,7 +139,7 @@ public class MessageBll {
                     messageBean.userid = cursor.getInt(1);
                     messageBean.friendid = cursor.getInt(2);
                     messageBean.msg = cursor.getString(3);
-                    messageBean.create_time = cursor.getString(4);
+                    messageBean.create_time = Utils.convertStringDateToStringDate(Config.WebDateFormatter, Config.AppDateFormatter, cursor.getString(4));
                     messageBeanArrayList.add(messageBean);
                 }
 

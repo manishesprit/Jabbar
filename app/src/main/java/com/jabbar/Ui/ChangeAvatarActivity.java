@@ -25,6 +25,7 @@ import com.jabbar.MasterCrop.Crop;
 import com.jabbar.R;
 import com.jabbar.Utils.Config;
 import com.jabbar.Utils.FileUtils;
+import com.jabbar.Utils.JabbarDialog;
 import com.jabbar.Utils.Log;
 import com.jabbar.Utils.Pref;
 import com.jabbar.Utils.ResponseListener;
@@ -204,7 +205,7 @@ public class ChangeAvatarActivity extends BaseActivity implements View.OnClickLi
                 if (Utils.isGotoCrop(this, data.getData(), 300, 300)) {
                     Crop.of(data.getData(), destination).withAspect(1, 2, 2, 300, 300).start(this);
                 } else {
-                    Toast.makeText(this, getString(R.string.mini_image_validation), Toast.LENGTH_LONG).show();
+                    new JabbarDialog(this, getString(R.string.mini_image_validation)).show();
                 }
 
             } else if (requestCode == OPEN_CAMARA_IMAGE_CODE) {
@@ -213,7 +214,7 @@ public class ChangeAvatarActivity extends BaseActivity implements View.OnClickLi
                     if (Utils.isGotoCrop(this, destination_camara, 300, 300)) {
                         Crop.of(destination_camara, destination).withAspect(1, 2, 2, 300, 300).start(this);
                     } else {
-                        Toast.makeText(this, getString(R.string.mini_image_validation), Toast.LENGTH_LONG).show();
+                        new JabbarDialog(this, getString(R.string.mini_image_validation)).show();
                     }
                 } else {
 
@@ -251,7 +252,7 @@ public class ChangeAvatarActivity extends BaseActivity implements View.OnClickLi
                         });
                         changeAvatarAPI.execute();
                     } else {
-                        Toast.makeText(this, "no internet.Try again", Toast.LENGTH_LONG).show();
+                        new JabbarDialog(this, getString(R.string.no_internet)).show();
                     }
 
                 }

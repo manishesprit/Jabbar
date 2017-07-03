@@ -10,13 +10,12 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.jabbar.API.UpdateStatusAPI;
 import com.jabbar.Bll.StatusBll;
 import com.jabbar.R;
 import com.jabbar.Utils.Config;
-import com.jabbar.Utils.Log;
+import com.jabbar.Utils.JabbarDialog;
 import com.jabbar.Utils.Mydb;
 import com.jabbar.Utils.Pref;
 import com.jabbar.Utils.ResponseListener;
@@ -120,13 +119,13 @@ public class AddStatusActivity extends BaseActivity implements View.OnClickListe
                                     setResult(RESULT_OK);
                                     finish();
                                 } else {
-                                    Toast.makeText(AddStatusActivity.this, obj.toString(), Toast.LENGTH_SHORT).show();
+                                    new JabbarDialog(AddStatusActivity.this, obj.toString()).show();
                                 }
 
                             }
                         }, Mydb.getDBStr(Mydb.getDBStr(StringEscapeUtils.escapeJava(edit_msg.getText().toString().trim()))));
                     } else {
-                        Toast.makeText(AddStatusActivity.this, "No internet.Try again", Toast.LENGTH_SHORT).show();
+                        new JabbarDialog(AddStatusActivity.this, getString(R.string.no_internet)).show();
                     }
                 } else {
                     finish();
