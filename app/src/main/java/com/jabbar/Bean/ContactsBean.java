@@ -16,5 +16,5 @@ public class ContactsBean implements Serializable {
     public String avatar;
     public String name;
     public String last_seen;
-
+    public int cntUnReasMsg;
 }

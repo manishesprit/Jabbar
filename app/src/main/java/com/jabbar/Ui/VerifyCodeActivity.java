@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.jabbar.API.AuthenticationAPI;
+import com.jabbar.API.VerifyCodeAPI;
 import com.jabbar.R;
 import com.jabbar.Utils.Config;
 import com.jabbar.Utils.JabbarDialog;
@@ -33,6 +34,8 @@ public class VerifyCodeActivity extends AppCompatActivity implements View.OnClic
     private ProgressDialog progressDialog;
     public static boolean active = false;
     private Toolbar toolbar;
+    private String number;
+    private String session_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,13 +55,19 @@ public class VerifyCodeActivity extends AppCompatActivity implements View.OnClic
             window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
         }
 
+        number = getIntent().getStringExtra("number");
+        session_id = getIntent().getStringExtra("session_id");
+        Log.print("==============number==========" + number + "==========session_id======" + session_id);
+
+
         findViewById(R.id.btnVerify).setOnClickListener(this);
 
+        Pref.setValue(this, Config.PREF_PUSH_ID, FirebaseInstanceId.getInstance().getToken());
+        Log.print("=======PREF_PUSH_ID===========" + FirebaseInstanceId.getInstance().getToken());
         if (Pref.getValue(this, Config.PREF_PUSH_ID, "").equalsIgnoreCase("")) {
-            Pref.setValue(this, Config.PREF_PUSH_ID, FirebaseInstanceId.getInstance().getToken());
-            Log.print("=======PREF_PUSH_ID===========" + FirebaseInstanceId.getInstance().getToken());
-
+            Toast.makeText(this, "Push id not available", Toast.LENGTH_SHORT).show();
         }
+
         Log.print("======onCreate=====");
     }
 
@@ -74,45 +83,31 @@ public class VerifyCodeActivity extends AppCompatActivity implements View.OnClic
                     if (Utils.isOnline(VerifyCodeActivity.this)) {
                         progressDialog.show();
 
-                        new AuthenticationAPI(VerifyCodeActivity.this, new ResponseListener() {
+                        new VerifyCodeAPI(VerifyCodeActivity.this, getEdtcode().getText().toString().trim(), session_id, new Utils.MyListener() {
                             @Override
-                            public void onResponce(String tag, int result, Object obj) {
-                                progressDialog.dismiss();
-                                if (tag.equalsIgnoreCase(TAG_AUTHENTICATION) && result == API_SUCCESS) {
-                                    startActivity(new Intent(VerifyCodeActivity.this, HomeActivity.class));
-                                    finish();
+                            public void OnResponse(Boolean result, final String res) {
+
+                                if (result) {
+                                    new AuthenticationAPI(VerifyCodeActivity.this, new ResponseListener() {
+                                        @Override
+                                        public void onResponce(String tag, int result, Object obj) {
+                                            progressDialog.dismiss();
+                                            if (tag.equalsIgnoreCase(TAG_AUTHENTICATION) && result == API_SUCCESS) {
+                                                startActivity(new Intent(VerifyCodeActivity.this, HomeActivity.class));
+                                                finish();
+                                            } else {
+                                                Toast.makeText(VerifyCodeActivity.this, obj.toString(), Toast.LENGTH_SHORT).show();
+                                            }
+
+                                        }
+                                    }, number);
+
                                 } else {
-                                    new JabbarDialog(VerifyCodeActivity.this, obj.toString()).show();
+                                    progressDialog.dismiss();
+                                    Toast.makeText(VerifyCodeActivity.this, "Error send code.Try again", Toast.LENGTH_SHORT).show();
                                 }
-
                             }
-                        }, getIntent().getStringExtra("number"));
-
-//                        new VerifyCodeAPI(VerifyCodeActivity.this, getEdtcode().getText().toString().trim(), getIntent().getStringExtra("session_id"), new Utils.MyListener() {
-//                            @Override
-//                            public void OnResponse(Boolean result, final String res) {
-//
-//                                if (result) {
-//                                    new AuthenticationAPI(VerifyCodeActivity.this, new ResponseListener() {
-//                                        @Override
-//                                        public void onResponce(String tag, int result, Object obj) {
-//                                            progressDialog.dismiss();
-//                                            if (tag.equalsIgnoreCase(TAG_AUTHENTICATION) && result == API_SUCCESS) {
-//                                                startActivity(new Intent(VerifyCodeActivity.this, HomeActivity.class));
-//                                                finish();
-//                                            } else {
-//                                                Toast.makeText(VerifyCodeActivity.this, obj.toString(), Toast.LENGTH_SHORT).show();
-//                                            }
-//
-//                                        }
-//                                    }, getIntent().getStringExtra("number"));
-//
-//                                } else {
-//                                    progressDialog.dismiss();
-//                                    Toast.makeText(VerifyCodeActivity.this, "Error send code.Try again", Toast.LENGTH_SHORT).show();
-//                                }
-//                            }
-//                        }).execute();
+                        }).execute();
                     } else {
                         new JabbarDialog(VerifyCodeActivity.this, getString(R.string.no_internet)).show();
                     }

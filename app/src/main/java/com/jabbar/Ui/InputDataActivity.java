@@ -21,6 +21,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.jabbar.API.SendMobileAPI;
 import com.jabbar.R;
 import com.jabbar.Utils.Config;
 import com.jabbar.Utils.GetLocation;
@@ -51,11 +52,11 @@ public class InputDataActivity extends AppCompatActivity implements View.OnClick
             window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
         }
 
-        if (Pref.getValue(this, Config.PREF_PUSH_ID, "").equalsIgnoreCase("")) {
-            Pref.setValue(this, Config.PREF_PUSH_ID, FirebaseInstanceId.getInstance().getToken());
-            Log.print("=======PREF_PUSH_ID===========" + FirebaseInstanceId.getInstance().getToken());
+        getEdtnumber().setText("8735032992");
 
-        }
+
+        Pref.setValue(this, Config.PREF_PUSH_ID, FirebaseInstanceId.getInstance().getToken());
+        Log.print("=======PREF_PUSH_ID===========" + FirebaseInstanceId.getInstance().getToken());
 
 
         findViewById(R.id.btnVerify).setOnClickListener(this);
@@ -136,26 +137,25 @@ public class InputDataActivity extends AppCompatActivity implements View.OnClick
         switch (view.getId()) {
             case R.id.btnVerify:
                 if (getEdtnumber().getText().toString().trim().equals("")) {
-                    new JabbarDialog(InputDataActivity.this,"please enter mobile number").show();
+                    new JabbarDialog(InputDataActivity.this, "please enter mobile number").show();
                 } else if (getEdtnumber().getText().toString().trim().length() != 10) {
                     new JabbarDialog(InputDataActivity.this, "please enter mobile number fix 10 digit").show();
                 } else {
                     if (Utils.isOnline(InputDataActivity.this)) {
-                        startActivity(new Intent(InputDataActivity.this, VerifyCodeActivity.class).putExtra("session_id", "").putExtra("number", getEdtnumber().getText().toString().trim()));
-                        finish();
-//                        progressDialog.show();
-//                        new SendMobileAPI(InputDataActivity.this, getEdtnumber().getText().toString().trim(), new Utils.MyListener() {
-//                            @Override
-//                            public void OnResponse(Boolean result, String res) {
-//                                progressDialog.dismiss();
-//                                if (result) {
-//                                    startActivity(new Intent(InputDataActivity.this, VerifyCodeActivity.class).putExtra("session_id", res).putExtra("number", getEdtnumber().getText().toString().trim()));
-//                                    finish();
-//                                } else {
-//                                    Toast.makeText(InputDataActivity.this, "Error send code.Try again", Toast.LENGTH_SHORT).show();
-//                                }
-//                            }
-//                        }).execute();
+                        progressDialog.show();
+                        new SendMobileAPI(InputDataActivity.this, getEdtnumber().getText().toString().trim(), new Utils.MyListener() {
+                            @Override
+                            public void OnResponse(Boolean result, String res) {
+                                Log.print("=====res========" + res);
+                                progressDialog.dismiss();
+                                if (result) {
+                                    startActivity(new Intent(InputDataActivity.this, VerifyCodeActivity.class).putExtra("session_id", res).putExtra("number", getEdtnumber().getText().toString().trim()));
+                                    finish();
+                                } else {
+                                    Toast.makeText(InputDataActivity.this, "Error send code.Try again", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }).execute();
                     } else {
                         new JabbarDialog(InputDataActivity.this, getString(R.string.no_internet)).show();
                     }

@@ -11,6 +11,7 @@ import com.jabbar.Utils.Pref;
 import com.jabbar.Utils.ResponseListener;
 import com.jabbar.Utils.Utils;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -62,7 +63,7 @@ public class AuthenticationAPI {
                         Pref.setValue(context, Config.PREF_NAME, response.body().name);
                         Pref.setValue(context, Config.PREF_MOBILE_NUMBER, mobile_number);
                         Pref.setValue(context, Config.PREF_AVATAR, response.body().avatar);
-                        Pref.setValue(context, Config.PREF_STATUS, response.body().status);
+                        Pref.setValue(context, Config.PREF_STATUS, StringEscapeUtils.unescapeJava(response.body().status));
                         Pref.setValue(context, Config.PREF_PRIVACY, response.body().privacy);
                         responseListener.onResponce(Config.TAG_AUTHENTICATION, Config.API_SUCCESS, response.body());
                     } else {

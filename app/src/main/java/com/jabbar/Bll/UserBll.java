@@ -5,8 +5,10 @@ import android.database.Cursor;
 
 import com.jabbar.Bean.ContactsBean;
 import com.jabbar.Bean.FavoriteBean;
+import com.jabbar.Utils.Config;
 import com.jabbar.Utils.Log;
 import com.jabbar.Utils.Mydb;
+import com.jabbar.Utils.Utils;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 
@@ -155,9 +157,9 @@ public class UserBll {
 
         try {
             if (isFavorite) {
-                sql = "SELECT userid,name,mobile_number,status,avatar,location,last_seen,is_favorite from user_tb where is_favorite=1 ORDER BY NAME ASC";
+                sql = "SELECT userid,name,mobile_number,status,avatar,location,last_seen,is_favorite,(select count (*) from message_tb where( message_tb.userid = user_tb.userid) AND (message_tb.isread=0)) as unread_msg from user_tb where is_favorite=1 ORDER BY NAME ASC";
             } else {
-                sql = "SELECT userid,name,mobile_number,status,avatar,location,last_seen,is_favorite from user_tb ORDER BY NAME ASC";
+                sql = "SELECT userid,name,mobile_number,status,avatar,location,last_seen,is_favorite,(select count (*) from message_tb where( message_tb.userid = user_tb.userid) AND (message_tb.isread=0)) as unread_msg from user_tb ORDER BY NAME ASC";
             }
             contactBeanArrayList = new ArrayList<>();
             mydb = new Mydb(this.context);
@@ -173,10 +175,11 @@ public class UserBll {
                     contactsBean.status = cursor.getString(3);
                     contactsBean.avatar = cursor.getString(4);
                     contactsBean.location = cursor.getString(5);
-                    contactsBean.last_seen = cursor.getString(6);
+                    contactsBean.last_seen = Utils.convertStringDateToStringDate(Config.WebDateFormatter, Config.AppChatDateFormatter, cursor.getString(6));
                     contactsBean.isFavorite = cursor.getInt(7);
+                    contactsBean.cntUnReasMsg = cursor.getInt(8);
                     contactBeanArrayList.add(contactsBean);
-                    Log.print("====mobile_number=====" + contactsBean.mobile_number + "=======name=======" + contactsBean.name);
+                    Log.print("====mobile_number=====" + contactsBean.mobile_number + "=======name=======" + contactsBean.name + "========= contactsBean.last_seen======" + contactsBean.last_seen);
                 }
 
             }

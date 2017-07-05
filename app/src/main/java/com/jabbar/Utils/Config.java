@@ -46,7 +46,8 @@ public class Config {
 
 
     public static final SimpleDateFormat WebDateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    public static final SimpleDateFormat AppDateFormatter = new SimpleDateFormat("HH:mm dd, MMM yy");
+    public static final SimpleDateFormat AppDateFormatter = new SimpleDateFormat("HH:mm  dd,MMM");
+    public static final SimpleDateFormat AppChatDateFormatter = new SimpleDateFormat("dd,MMM yy  HH:mm");
 
     public static int TIMEOUT_CONNECTION = 4;
 

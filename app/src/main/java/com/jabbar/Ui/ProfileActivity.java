@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
@@ -13,6 +12,7 @@ import android.transition.Slide;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -50,19 +50,9 @@ public class ProfileActivity extends AppCompatActivity {
 
         if (getIntent().getExtras() != null) {
             contactsBean = (ContactsBean) getIntent().getSerializableExtra("data");
-//        contactsBean = new ContactsBean();
-//        contactsBean.avatar = "avatar_5.jpeg";
-//        contactsBean.userid = 5;
-//        contactsBean.status = "Hi! i'm using jabbar";
-//        contactsBean.name = "Manish Rathod";
-//        contactsBean.mobile_number = "9904841033";
-
         } else {
             finish();
         }
-
-        ViewCompat.setTransitionName(findViewById(R.id.app_bar_layout), "com.antonioleiva.materializeyourapp.extraImage");
-        supportPostponeEnterTransition();
 
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -78,7 +68,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         Glide.with(ProfileActivity.this).load(Config.AVATAR_HOST + contactsBean.avatar)
                 .asBitmap()
-                .error(R.drawable.default_user).placeholder(R.drawable.default_user).error(R.drawable.default_user).into(new SimpleTarget<Bitmap>() {
+                .error(R.drawable.default_user).into(new SimpleTarget<Bitmap>() {
             @Override
             public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
                 image.setImageBitmap(resource);
@@ -92,30 +82,13 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-//        image.setOnLongClickListener(new View.OnLongClickListener() {
-//            @Override
-//            public boolean onLongClick(View v) {
-//                llDownload.setVisibility(View.VISIBLE);
-//                return false;
-//            }
-//        });
-//
-//        llDownload.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                llDownload.setVisibility(View.GONE);
-//            }
-//        });
-//
-//
-//        txtDownload.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                llDownload.setVisibility(View.GONE);
-//                Utils.DownloadImage(context, bitmap, "Image_" + new SimpleDateFormat("yyyyMMddhhmmss").format(new Date()).toString() + ".jpg", Config.DIR_USERDATA);
-//            }
-//        });
+        image.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
 
+                return false;
+            }
+        });
 
         txtnumber.setText(contactsBean.mobile_number);
         txtStatus.setText(contactsBean.status);

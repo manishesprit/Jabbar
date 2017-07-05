@@ -6,54 +6,87 @@
     android:background="?attr/selectableItemBackground"
     android:padding="@dimen/MarginSaven">
 
-    <ImageView
-        android:id="@+id/imgAvatar"
-        android:layout_width="@dimen/avatar"
-        android:layout_height="@dimen/avatar"
-        android:src="@drawable/default_user" />
-
-    <LinearLayout
+    <RelativeLayout
+        android:id="@+id/rlUser"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_toLeftOf="@+id/imgfavorite"
-        android:layout_toRightOf="@+id/imgAvatar"
-        android:orientation="vertical"
-        android:paddingLeft="@dimen/MarginFive">
+        android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/txtName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:text="Hello"
-            android:textColor="@color/color_title"
-            android:textSize="@dimen/textMediumExtra" />
+        <RelativeLayout
+            android:id="@+id/rlAvatar"
+            android:layout_width="@dimen/avatar_out"
+            android:layout_height="@dimen/avatar_out">
 
-        <hani.momanii.supernova_emoji_library.Helper.EmojiconTextView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:emojicon="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/txtstatus"
+            <ImageView
+                android:id="@+id/imgAvatar"
+                android:layout_width="@dimen/avatar"
+                android:layout_height="@dimen/avatar"
+                android:src="@drawable/default_user" />
+
+            <TextView
+                android:id="@+id/txtNoMsg"
+                android:layout_width="@dimen/noOfMsg"
+                android:layout_height="@dimen/noOfMsg"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/drawable_round"
+                android:gravity="center"
+                android:text="0"
+                android:textColor="@color/colorAccent"
+                android:textSize="@dimen/textSmall"
+                android:visibility="visible" />
+        </RelativeLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/imgfavorite"
+            android:layout_toRightOf="@+id/rlAvatar"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/MarginFive">
+
+            <TextView
+                android:id="@+id/txtName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:text="Hello"
+                android:textColor="@color/color_title"
+                android:textSize="@dimen/textMediumExtra" />
+
+            <hani.momanii.supernova_emoji_library.Helper.EmojiconTextView xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:emojicon="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/txtstatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:textColor="@color/color_title_sub"
+                android:textSize="@dimen/textMedium"
+                android:visibility="gone"
+                emojicon:emojiconSize="@dimen/textMediumExtra" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/imgfavorite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:background="?attr/selectableItemBackground"
-            android:gravity="center_vertical"
-            android:textColor="@color/color_title_sub"
-            android:singleLine="true"
-            android:textSize="@dimen/textMedium"
-            android:visibility="gone"
-            emojicon:emojiconSize="@dimen/textMediumExtra" />
+            android:padding="@dimen/MarginFive"
+            android:src="@drawable/ic_star_unfill"
+            android:visibility="visible" />
 
-    </LinearLayout>
+    </RelativeLayout>
 
-    <ImageView
-        android:id="@+id/imgfavorite"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:background="?attr/selectableItemBackground"
-        android:padding="@dimen/MarginFive"
-        android:src="@drawable/ic_star_unfill"
-        android:visibility="visible" />
-
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/rlUser"
+        android:layout_marginLeft="@dimen/MarginFifteen"
+        android:layout_marginRight="@dimen/MarginFifteen"
+        android:layout_marginTop="@dimen/MarginFive"
+        android:background="@color/color_gray" />
 </RelativeLayout>

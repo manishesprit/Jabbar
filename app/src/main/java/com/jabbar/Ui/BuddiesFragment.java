@@ -12,12 +12,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.jabbar.API.ChangeFavoriteAPI;
 import com.jabbar.API.GetContactAPI;
 import com.jabbar.Adapter.BuddiesAdapter;
+import com.jabbar.Adapter.StoryAdapter;
 import com.jabbar.Bean.ContactsBean;
+import com.jabbar.Bll.StoryBll;
 import com.jabbar.Bll.UserBll;
 import com.jabbar.MyClickListener;
 import com.jabbar.R;
@@ -37,9 +38,15 @@ public class BuddiesFragment extends Fragment implements UpdateContact.ContactLi
 
     private View mView;
     public ArrayList<ContactsBean> contactsBeanArrayList;
+
     private RecyclerView rlFriendList;
     private BuddiesAdapter buddiesAdapter;
     private LinearLayoutManager mLayoutManager;
+
+    private RecyclerView rcvStory;
+    private StoryAdapter storyAdapter;
+    private LinearLayoutManager mLayoutManagerStory;
+
     private ProgressBar progress_refresh;
     private int Clickpos = -1;
     private GetLocation getLocation;
@@ -60,6 +67,13 @@ public class BuddiesFragment extends Fragment implements UpdateContact.ContactLi
         }
     }
 
+    public void ListUpdate() {
+        new UserBll(getContext()).UpdateDirectContact(contactsBeanArrayList);
+        contactsBeanArrayList.clear();
+        contactsBeanArrayList.addAll(new UserBll(getContext()).geBuddiestList(false));
+        buddiesAdapter.notifyDataSetChanged();
+    }
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -73,10 +87,12 @@ public class BuddiesFragment extends Fragment implements UpdateContact.ContactLi
         buddiesAdapter = new BuddiesAdapter(getContext(), contactsBeanArrayList, myClickListener);
         rlFriendList.setAdapter(buddiesAdapter);
 
-        if (updateContact == null) {
-            updateContact = new UpdateContact(getContext(), this, true);
-            updateContact.execute();
-        }
+        rcvStory = (RecyclerView) mView.findViewById(R.id.rcvStory);
+        mLayoutManagerStory = new LinearLayoutManager(getContext());
+        mLayoutManagerStory.setOrientation(LinearLayoutManager.HORIZONTAL);
+        rcvStory.setLayoutManager(mLayoutManagerStory);
+        storyAdapter = new StoryAdapter(getContext(), new StoryBll(getContext()).getStoryListWithGroup());
+        rcvStory.setAdapter(storyAdapter);
 
     }
 

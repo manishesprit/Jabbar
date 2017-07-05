@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000">
+
+    <FrameLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:id="@+id/rlBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true">
+
+            <ImageView
+                android:id="@+id/imgBack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:paddingLeft="@dimen/MarginFive"
+                android:src="@drawable/ic_arrow_back" />
+
+            <ImageView
+                android:id="@+id/conversation_contact_photo"
+                android:layout_width="@dimen/avatar"
+                android:layout_height="@dimen/avatar"
+                android:layout_marginBottom="@dimen/MarginSaven"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="@dimen/MarginSaven"
+                android:layout_toRightOf="@+id/imgBack"
+                android:scaleType="fitCenter"
+                android:src="@drawable/default_user" />
+        </RelativeLayout>
+
+        <com.jabbar.CameraMaster.widgets.CameraSettingsView
+            android:id="@+id/settings_view"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="@dimen/MarginFive">
+
+            <com.jabbar.CameraMaster.widgets.FlashSwitchView
+                android:id="@+id/flash_switch_view"
+                android:layout_width="40dp"
+                android:layout_height="40dp" />
+
+            <TextView
+                android:id="@+id/record_duration_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/red_round"
+                android:drawablePadding="@dimen/MarginFive"
+                android:gravity="center"
+                android:padding="@dimen/MarginFive"
+                android:textColor="@android:color/white"
+                android:textSize="14dp"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/record_size_mb_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="@dimen/MarginFive"
+                android:textColor="@android:color/white"
+                android:textSize="14dp"
+                android:visibility="gone" />
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/record_panel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="@dimen/MarginTen"
+        android:background="@android:color/transparent"
+        android:visibility="visible">
+
+
+        <com.jabbar.CameraMaster.widgets.RecordButton
+            android:id="@+id/record_button"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp" />
+
+
+        <com.jabbar.CameraMaster.widgets.MediaActionSwitchView
+            android:id="@+id/photo_video_camera_switcher"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:checked="false"
+            android:gravity="center" />
+
+
+        <com.jabbar.CameraMaster.widgets.CameraSwitchView
+            android:id="@+id/camera_switcher"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="20dp" />
+
+    </RelativeLayout>
+
+    <!--<android.support.v7.widget.RecyclerView-->
+        <!--android:id="@+id/rv_image_panel"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="170dp"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_alignParentLeft="true"-->
+        <!--android:visibility="gone" />-->
+
+    <GridView
+        android:id="@+id/rv_image_panel"
+        android:layout_width="match_parent"
+        android:layout_height="170dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/imgGallery"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_above="@+id/record_panel"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="@dimen/MarginTen"
+        android:layout_marginRight="20dp"
+        android:src="@drawable/ic_gallery" />
+
+
+</RelativeLayout>

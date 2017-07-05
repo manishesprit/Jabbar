@@ -27,6 +27,7 @@ import com.jabbar.Bll.UserBll;
 import com.jabbar.R;
 import com.jabbar.Utils.Config;
 import com.jabbar.Utils.GetLocation;
+import com.jabbar.Utils.JabbarDialog;
 import com.jabbar.Utils.Pref;
 
 import java.util.ArrayList;
@@ -133,26 +134,30 @@ public class FavoriteFragment extends Fragment implements OnMapReadyCallback, Go
     }
 
     public void AddMarker() {
-        googleMap.clear();
-        contactFavoriteBeanArrayList = new UserBll(getContext()).geBuddiestList(true);
-        if (contactFavoriteBeanArrayList != null && contactFavoriteBeanArrayList.size() > 0) {
-            for (int i = 0; i < contactFavoriteBeanArrayList.size(); i++) {
-                Marker marker = googleMap.addMarker(new MarkerOptions()
-                        .position(new LatLng(Double.parseDouble(contactFavoriteBeanArrayList.get(i).location.split(",")[0]), Double.parseDouble(contactFavoriteBeanArrayList.get(i).location.split(",")[1])))
-                        .title(contactFavoriteBeanArrayList.get(i).name)
-                        .snippet(contactFavoriteBeanArrayList.get(i).status)
-                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+        if (googleMap != null) {
+            googleMap.clear();
+            contactFavoriteBeanArrayList = new UserBll(getContext()).geBuddiestList(true);
+            if (contactFavoriteBeanArrayList != null && contactFavoriteBeanArrayList.size() > 0) {
+                for (int i = 0; i < contactFavoriteBeanArrayList.size(); i++) {
+                    Marker marker = googleMap.addMarker(new MarkerOptions()
+                            .position(new LatLng(Double.parseDouble(contactFavoriteBeanArrayList.get(i).location.split(",")[0]), Double.parseDouble(contactFavoriteBeanArrayList.get(i).location.split(",")[1])))
+                            .title(contactFavoriteBeanArrayList.get(i).name)
+                            .snippet(contactFavoriteBeanArrayList.get(i).status)
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
 
-                marker.setTag(contactFavoriteBeanArrayList.get(i));
+                    marker.setTag(contactFavoriteBeanArrayList.get(i));
 
+                }
             }
+
+            currentLatLong = new LatLng(Double.parseDouble(Pref.getValue(getContext(), Config.PREF_LOCATION, "0,0").split(",")[0]), Double.parseDouble(Pref.getValue(getContext(), Config.PREF_LOCATION, "0,0").split(",")[1]));
+            Marker MyLoc = googleMap.addMarker(new MarkerOptions().position(currentLatLong).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+
+            CameraPosition cameraPosition = new CameraPosition.Builder().target(MyLoc.getPosition()).zoom(10).build();
+            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        } else {
+            new JabbarDialog(getContext(), "Map not support").show();
         }
-
-        currentLatLong = new LatLng(Double.parseDouble(Pref.getValue(getContext(), Config.PREF_LOCATION, "0,0").split(",")[0]), Double.parseDouble(Pref.getValue(getContext(), Config.PREF_LOCATION, "0,0").split(",")[1]));
-        Marker MyLoc = googleMap.addMarker(new MarkerOptions().position(currentLatLong).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-
-        CameraPosition cameraPosition = new CameraPosition.Builder().target(MyLoc.getPosition()).zoom(10).build();
-        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
 
     @Override

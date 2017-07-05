@@ -48,6 +48,7 @@ public class SendMobileAPI extends AsyncTask<String, Void, Boolean> {
                 j_object = new JSONObject(response.body().string());
                 if (j_object != null) {
                     if (j_object.has("Status") && j_object.getString("Status").equalsIgnoreCase("Success")) {
+                        detail = j_object.getString("Details");
                         return true;
                     }
                 }

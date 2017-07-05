@@ -2,7 +2,9 @@ package com.jabbar.Bll;
 
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -10,6 +12,7 @@ import android.net.Uri;
 import com.jabbar.Bean.MessageBean;
 import com.jabbar.Bean.NotificationBean;
 import com.jabbar.R;
+import com.jabbar.Ui.HomeActivity;
 import com.jabbar.Utils.Config;
 import com.jabbar.Utils.Log;
 import com.jabbar.Utils.Mydb;
@@ -80,15 +83,24 @@ public class MessageBll {
     public void CreateNotification(boolean isSilent) {
         ArrayList<NotificationBean> notificationBeanArrayList = geUnreadMessageList();
 
+
         if (notificationBeanArrayList != null && notificationBeanArrayList.size() > 0) {
 
+            ArrayList<Integer> stringIntegerHashMap = new ArrayList<>();
+            for (NotificationBean notificationBean : notificationBeanArrayList) {
+                if (!stringIntegerHashMap.contains(notificationBean.userid)) {
+                    Log.print("====put===" + notificationBean.userid);
+                    stringIntegerHashMap.add(notificationBean.userid);
+                }
+            }
+
             Log.print("===========notificationBeanArrayList===========" + notificationBeanArrayList.size());
+            Log.print("========stringIntegerHashMap===================" + stringIntegerHashMap.size());
 
             NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
             Notification.Builder notif = new Notification.Builder(context)
                     .setContentTitle(context.getResources().getString(R.string.app_name) + " Message")
-                    .setContentText(notificationBeanArrayList.size() + " message")
                     .setSmallIcon(R.drawable.app_icon);
 
             if (!isSilent) {
@@ -96,21 +108,37 @@ public class MessageBll {
                 notif.setSound(notification);
             }
 
+
+            Notification.InboxStyle inboxStyle;
+
             if (notificationBeanArrayList.size() > 5) {
-                Notification.InboxStyle inboxStyle = new Notification.InboxStyle();
-                for (int i = 0; i < 5; i++) {
-                    inboxStyle.addLine(notificationBeanArrayList.get(i).name + ":" + notificationBeanArrayList.get(i).message);
+                inboxStyle = new Notification.InboxStyle();
+                for (int i = 4; i >= 0; i--) {
+                    inboxStyle.addLine(notificationBeanArrayList.get(i).name + " : " + notificationBeanArrayList.get(i).message);
                 }
-                inboxStyle.setSummaryText(notificationBeanArrayList.size() + " messages");
+
+            } else {
+                inboxStyle = new Notification.InboxStyle();
+                for (int i = (notificationBeanArrayList.size() - 1); i >= 0; i--) {
+                    inboxStyle.addLine(notificationBeanArrayList.get(i).name + " : " + notificationBeanArrayList.get(i).message);
+                }
+            }
+
+            if (stringIntegerHashMap.size() == 1) {
+                notif.setContentText(notificationBeanArrayList.size() + " message from " + notificationBeanArrayList.get(0).name);
+                inboxStyle.setSummaryText(notificationBeanArrayList.size() + " message from " + notificationBeanArrayList.get(0).name);
                 notif.setStyle(inboxStyle);
             } else {
-                Notification.InboxStyle inboxStyle = new Notification.InboxStyle();
-                for (int i = 0; i < notificationBeanArrayList.size(); i++) {
-                    inboxStyle.addLine(notificationBeanArrayList.get(i).name + ":" + notificationBeanArrayList.get(i).message);
-                }
-                inboxStyle.setSummaryText(notificationBeanArrayList.size() + " messages");
+                notif.setContentText(notificationBeanArrayList.size() + " message from " + stringIntegerHashMap.size() + " chats");
+                inboxStyle.setSummaryText(notificationBeanArrayList.size() + " message from " + stringIntegerHashMap.size() + " chats");
                 notif.setStyle(inboxStyle);
             }
+
+            Intent intent = new Intent(context, HomeActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            intent.putExtra("type", 2);
+            notif.setContentIntent(PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT));
 
             mNotificationManager.notify(0, notif.build());
         }

@@ -106,26 +106,28 @@ public class AddStatusActivity extends BaseActivity implements View.OnClickListe
 
             case R.id.txtOk:
                 if (!edit_msg.getText().toString().trim().equalsIgnoreCase(Pref.getValue(this, Config.PREF_STATUS, ""))) {
-                    if (Utils.isOnline(this)) {
-                        if (!progressDialog.isShowing())
-                            progressDialog.show();
-                        new UpdateStatusAPI(this, new ResponseListener() {
-                            @Override
-                            public void onResponce(String tag, int result, Object obj) {
-                                if (progressDialog.isShowing())
-                                    progressDialog.dismiss();
-                                if (tag.equalsIgnoreCase(Config.TAG_UPDATE_STATUS) && result == 0) {
-                                    Pref.setValue(AddStatusActivity.this, Config.PREF_STATUS, edit_msg.getText().toString().trim());
-                                    setResult(RESULT_OK);
-                                    finish();
-                                } else {
-                                    new JabbarDialog(AddStatusActivity.this, obj.toString()).show();
-                                }
+                    if (!edit_msg.getText().toString().trim().equalsIgnoreCase("")) {
+                        if (Utils.isOnline(this)) {
+                            if (!progressDialog.isShowing())
+                                progressDialog.show();
+                            new UpdateStatusAPI(this, new ResponseListener() {
+                                @Override
+                                public void onResponce(String tag, int result, Object obj) {
+                                    if (progressDialog.isShowing())
+                                        progressDialog.dismiss();
+                                    if (tag.equalsIgnoreCase(Config.TAG_UPDATE_STATUS) && result == 0) {
+                                        Pref.setValue(AddStatusActivity.this, Config.PREF_STATUS, edit_msg.getText().toString().trim());
+                                        setResult(RESULT_OK);
+                                        finish();
+                                    } else {
+                                        new JabbarDialog(AddStatusActivity.this, obj.toString()).show();
+                                    }
 
-                            }
-                        }, Mydb.getDBStr(Mydb.getDBStr(StringEscapeUtils.escapeJava(edit_msg.getText().toString().trim()))));
-                    } else {
-                        new JabbarDialog(AddStatusActivity.this, getString(R.string.no_internet)).show();
+                                }
+                            }, Mydb.getDBStr(Mydb.getDBStr(StringEscapeUtils.escapeJava(edit_msg.getText().toString().trim()))));
+                        } else {
+                            new JabbarDialog(AddStatusActivity.this, getString(R.string.no_internet)).show();
+                        }
                     }
                 } else {
                     finish();

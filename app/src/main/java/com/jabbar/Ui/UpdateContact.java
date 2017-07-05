@@ -80,6 +80,8 @@ public class UpdateContact extends AsyncTask<String, String, Boolean> {
             contactsCursor = null;
             return true;
         }
+        contactsCursor.close();
+        contactsCursor = null;
         return false;
     }
 

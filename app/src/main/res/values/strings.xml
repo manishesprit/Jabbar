@@ -14,6 +14,19 @@
     <string name="camera">Camera</string>
     <string name="remove">Remove</string>
 
+    <!--CAMERA-->
+    <string name="settings_video_quality_title">Video size %s</string>
+    <string name="settings_photo_quality_title">Photo size</string>
+    <string name="preview_controls_confirm">Save</string>
+    <string name="preview_controls_retake">Repeat</string>
+    <string name="preview_controls_cancel">Cancel</string>
+    <string name="preview_controls_crop">Crop</string>
+    <string name="preview_controls_original_ratio_label">Original</string>
+    <string name="cancel_label">Cancel</string>
+    <string name="ok_label">Ok</string>
+
+
+
     <string name="crop__pick_error">No image sources available</string>
     <string name="crop__wait">Please wait…</string>
     <string name="crop__saving">Saving picture…</string>

@@ -11,9 +11,24 @@
         android:visibility="gone" />
 
     <android.support.v7.widget.RecyclerView
+        android:id="@+id/rcvStory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/progress_refresh"
+        android:padding="@dimen/MarginFive"
+        android:scrollbars="none" />
+
+    <View
+        android:id="@+id/viewMy"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_below="@+id/rcvStory"
+        android:background="@color/color_gray"></View>
+
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/rlFriendList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/progress_refresh"></android.support.v7.widget.RecyclerView>
+        android:layout_below="@+id/viewMy"></android.support.v7.widget.RecyclerView>
 
 </RelativeLayout>

@@ -58,8 +58,10 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
     private RelativeLayout rel_send;
     private ImageView imgSend;
     private LinearLayoutManager linearLayoutManager;
-    EmojIconActions emojIcon;
-    private TextView action_bar_title_1;
+    private EmojIconActions emojIcon;
+    private LinearLayout llBuddiesName;
+    private TextView txtBuddiesName;
+    private TextView txtLastSeen;
     private ImageView conversation_contact_photo;
     private ImageView imgBack;
     private ChatAdpater chatAdpater;
@@ -113,12 +115,15 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
             mNotificationManager.cancelAll();
 
             messageBll.RemoveReadMessage(contactsBean.userid);
-
-            action_bar_title_1 = (TextView) findViewById(R.id.action_bar_title_1);
+            llBuddiesName = (LinearLayout) findViewById(R.id.llBuddiesName);
+            txtBuddiesName = (TextView) findViewById(R.id.txtBuddiesName);
+            txtLastSeen = (TextView) findViewById(R.id.txtLastSeen);
             conversation_contact_photo = (ImageView) findViewById(R.id.conversation_contact_photo);
             imgBack = (ImageView) findViewById(R.id.imgBack);
 
-            action_bar_title_1.setText(contactsBean.name);
+            txtBuddiesName.setText(contactsBean.name);
+            txtLastSeen.setText(contactsBean.last_seen);
+            txtLastSeen.setVisibility(View.VISIBLE);
 
             Glide.with(this).load(Config.AVATAR_HOST + contactsBean.avatar).asBitmap().placeholder(R.drawable.default_user).error(R.drawable.default_user).into(new BitmapImageViewTarget(conversation_contact_photo) {
                 @Override
@@ -133,9 +138,12 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
             messageBeanArrayList = messageBll.geMessageList(contactsBean.userid);
             chatAdpater = new ChatAdpater(this, messageBeanArrayList);
             recyclerview_chat.setAdapter(chatAdpater);
+
+            llBuddiesName.setOnClickListener(this);
         } else {
             finish();
         }
+
 
         imgBack.setOnClickListener(this);
         rel_send.setOnClickListener(this);
@@ -166,7 +174,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
             @Override
             public void onTextChanged(CharSequence s, int start,
                                       int before, int count) {
-                if (edit_msg.getText().toString().length() > 0) {
+                if (edit_msg.getText().toString().trim().length() > 0) {
                     imgSend.setImageResource(R.drawable.ic_send_black_24dp);
                 } else {
                     imgSend.setImageResource(R.drawable.ic_mic_black_24dp);
@@ -193,12 +201,18 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
                 break;
 
             case R.id.rel_send:
-                if (Utils.isOnline(this)) {
-                    Log.print("======Original Msg=====" + edit_msg.getText().toString());
-                    Log.print("======Convert Msg=====" + Mydb.getDBStr(StringEscapeUtils.escapeJava(edit_msg.getText().toString().trim())));
-                    progressDialog.show();
-                    sendMessageAPI = new SendMessageAPI(this, responseListener, contactsBean.userid, Mydb.getDBStr(StringEscapeUtils.escapeJava(edit_msg.getText().toString().trim())));
+                if (!edit_msg.getText().toString().trim().equalsIgnoreCase("")) {
+                    if (Utils.isOnline(this)) {
+                        Log.print("======Original Msg=====" + edit_msg.getText().toString());
+                        Log.print("======Convert Msg=====" + Mydb.getDBStr(StringEscapeUtils.escapeJava(edit_msg.getText().toString().trim())));
+                        progressDialog.show();
+                        sendMessageAPI = new SendMessageAPI(this, responseListener, contactsBean.userid, Mydb.getDBStr(StringEscapeUtils.escapeJava(edit_msg.getText().toString().trim())));
+                    }
                 }
+                break;
+
+            case R.id.llBuddiesName:
+                startActivity(new Intent(this, ProfileActivity.class).putExtra("data", contactsBean));
                 break;
         }
     }

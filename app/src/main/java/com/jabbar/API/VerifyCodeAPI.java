@@ -38,6 +38,7 @@ public class VerifyCodeAPI extends AsyncTask<String, Void, Boolean> {
 
         try {
             OkHttpClient client = new OkHttpClient();
+            Log.print("==============session_id==========" + session_id);
             Request request = new Request.Builder().url(Utils.getVerifyAPI(code, session_id)).build();
             Log.print("======url=====" + request.url());
             Response response = client.newCall(request).execute();

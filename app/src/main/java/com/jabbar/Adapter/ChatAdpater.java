@@ -55,7 +55,6 @@ public class ChatAdpater extends RecyclerView.Adapter<ChatAdpater.ViewHolder> {
             holder.txt_time_left.setText(chatBeanArrayList.get(position).create_time);
             holder.txt_message_left.setUseSystemDefault(false);
 
-
         } else {
             holder.lin_left.setVisibility(View.GONE);
             holder.lin_right.setVisibility(View.VISIBLE);
@@ -98,7 +97,6 @@ public class ChatAdpater extends RecyclerView.Adapter<ChatAdpater.ViewHolder> {
 
         TextView txt_time_left, txt_time_right;
         LinearLayout lin_left, lin_right;
-        TextView imageView;
         EmojiconTextView txt_message_left, txt_message_right;
 
         public ViewHolder(View v) {

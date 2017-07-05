@@ -11,10 +11,13 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.jabbar.R;
+import com.jabbar.Utils.Config;
 import com.jabbar.Utils.JabbarDialog;
+import com.jabbar.Utils.Log;
+import com.jabbar.Utils.Pref;
 import com.jabbar.Utils.Utils;
 
 import java.util.ArrayList;
@@ -32,7 +35,7 @@ public class HomeActivity extends BaseActivity {
 
     private FavoriteFragment favoriteFragment;
     private BuddiesFragment buddiesFragment;
-
+    public static final int CODE_CHAT = 100;
     public static boolean isFavoriteUpdate = true;
 
     @Override
@@ -47,6 +50,11 @@ public class HomeActivity extends BaseActivity {
         setToolbar(toolbar, false);
         setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
+
+        Log.print("====onCreate HOME ====");
+
+        Pref.setValue(this, Config.PREF_PUSH_ID, FirebaseInstanceId.getInstance().getToken());
+        Log.print("=======PREF_PUSH_ID===========" + FirebaseInstanceId.getInstance().getToken());
 
         if (favoriteFragment == null) {
             favoriteFragment = (FavoriteFragment) adapter.getItem(0);
@@ -83,6 +91,10 @@ public class HomeActivity extends BaseActivity {
 
             }
         });
+
+        if (getIntent() != null && getIntent().getIntExtra("type", 0) == 2) {
+            viewPager.setCurrentItem(1);
+        }
 
     }
 
@@ -159,5 +171,30 @@ public class HomeActivity extends BaseActivity {
         }
 
         return true;
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        Log.print("====onNewIntent HOME ====");
+
+        if (intent != null && intent.getIntExtra("type", 0) == 2) {
+            viewPager.setCurrentItem(1);
+            if (buddiesFragment != null) {
+                buddiesFragment.ListUpdate();
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == CODE_CHAT && viewPager.getCurrentItem() == 1) {
+            if (buddiesFragment != null) {
+                buddiesFragment.ListUpdate();
+            }
+        }
     }
 }
