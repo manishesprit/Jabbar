@@ -4,6 +4,7 @@
     <string name="google_android_key">AIzaSyDnEoujknBYaA_IiUPumbFJPivOBUHEs6s</string>
     <string name="title_activity_login">Signin</string>
     <string name="no_internet">No internet. Try again</string>
+    <string name="no_contact">No contact</string>
     <string name="sync_fail">Sync fail. Try again</string>
     <string name="location_permisssion">Location Permission is required</string>
     <string name="server_error">Server problem. try after some time</string>
@@ -24,7 +25,6 @@
     <string name="preview_controls_original_ratio_label">Original</string>
     <string name="cancel_label">Cancel</string>
     <string name="ok_label">Ok</string>
-
 
 
     <string name="crop__pick_error">No image sources available</string>

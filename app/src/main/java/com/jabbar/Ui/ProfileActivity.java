@@ -22,6 +22,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.jabbar.Bean.ContactsBean;
 import com.jabbar.R;
 import com.jabbar.Utils.Config;
+import com.jabbar.Utils.Utils;
 
 import hani.momanii.supernova_emoji_library.Helper.EmojiconTextView;
 
@@ -82,10 +83,11 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
+        Utils.setGlideImage(this, contactsBean.avatar, image, false);
+
         image.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-
                 return false;
             }
         });

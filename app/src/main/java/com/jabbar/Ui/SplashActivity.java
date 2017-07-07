@@ -2,9 +2,11 @@ package com.jabbar.Ui;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.ContentObserver;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
+import android.provider.ContactsContract;
 
 import com.jabbar.R;
 import com.jabbar.Utils.Config;
@@ -22,6 +24,7 @@ public class SplashActivity extends Activity {
         Utils.addActivities(this);
         Utils.getDeviceID(this);
 
+        getContentResolver().registerContentObserver(ContactsContract.Contacts.CONTENT_URI, true, mObserver);
 
         Mydb mydb = new Mydb(this);
         mydb.Update();
@@ -44,4 +47,13 @@ public class SplashActivity extends Activity {
             }
         }, 1500);
     }
+
+    private ContentObserver mObserver = new ContentObserver(new Handler()) {
+
+        @Override
+        public void onChange(boolean selfChange, Uri uri) {
+            super.onChange(selfChange, uri);
+            new UpdateContact1(SplashActivity.this).execute();
+        }
+    };
 }

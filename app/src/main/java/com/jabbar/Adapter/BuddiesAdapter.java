@@ -3,9 +3,6 @@ package com.jabbar.Adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,15 +11,12 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.jabbar.Bean.ContactsBean;
 import com.jabbar.MyClickListener;
 import com.jabbar.R;
 import com.jabbar.Ui.ChatActivity;
 import com.jabbar.Ui.ProfileActivity;
-import com.jabbar.Utils.Config;
+import com.jabbar.Utils.Utils;
 
 import java.util.ArrayList;
 
@@ -95,15 +89,8 @@ public class BuddiesAdapter extends RecyclerView.Adapter<BuddiesAdapter.MyHolder
             }
         });
 
-        Glide.with(context).load(Config.AVATAR_HOST + contactBeanArrayList.get(position).avatar).asBitmap().placeholder(R.drawable.default_user).error(R.drawable.default_user).into(new BitmapImageViewTarget(holder.imgAvatar) {
-            @Override
-            public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                super.onResourceReady(resource, glideAnimation);
-                RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(context.getResources(), resource);
-                circularBitmapDrawable.setCircular(true);
-                holder.imgAvatar.setImageDrawable(circularBitmapDrawable);
-            }
-        });
+        Utils.setGlideImage(context, contactBeanArrayList.get(position).avatar,holder.imgAvatar,true);
+
     }
 
     @Override

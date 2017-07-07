@@ -3,6 +3,7 @@ package com.jabbar.Ui;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -18,6 +19,7 @@ import com.jabbar.API.GetContactAPI;
 import com.jabbar.Adapter.BuddiesAdapter;
 import com.jabbar.Adapter.StoryAdapter;
 import com.jabbar.Bean.ContactsBean;
+import com.jabbar.Bean.ExitsContactBean;
 import com.jabbar.Bll.StoryBll;
 import com.jabbar.Bll.UserBll;
 import com.jabbar.MyClickListener;
@@ -25,7 +27,7 @@ import com.jabbar.R;
 import com.jabbar.Utils.Config;
 import com.jabbar.Utils.GetLocation;
 import com.jabbar.Utils.JabbarDialog;
-import com.jabbar.Utils.Log;
+import com.jabbar.Utils.Pref;
 import com.jabbar.Utils.ResponseListener;
 import com.jabbar.Utils.Utils;
 
@@ -33,7 +35,7 @@ import java.util.ArrayList;
 
 import static com.jabbar.Ui.InputDataActivity.PERMISSION_CODE;
 
-public class BuddiesFragment extends Fragment implements UpdateContact.ContactListener, ResponseListener, GetLocation.MyLocationListener {
+public class BuddiesFragment extends Fragment implements ResponseListener, GetLocation.MyLocationListener {
 
 
     private View mView;
@@ -50,7 +52,10 @@ public class BuddiesFragment extends Fragment implements UpdateContact.ContactLi
     private ProgressBar progress_refresh;
     private int Clickpos = -1;
     private GetLocation getLocation;
-    private UpdateContact updateContact;
+
+    private Handler handler;
+    private Runnable runnable;
+    int Attempt = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -96,28 +101,6 @@ public class BuddiesFragment extends Fragment implements UpdateContact.ContactLi
 
     }
 
-    @Override
-    public void OnSuccess(boolean b, ArrayList<ContactsBean> contactsBeanArrayList, boolean OnlySync) {
-        updateContact = null;
-        if (b && contactsBeanArrayList.size() > 0) {
-            if (OnlySync) {
-                new UserBll(getContext()).UpdateDirectContact(contactsBeanArrayList);
-                contactsBeanArrayList.clear();
-                contactsBeanArrayList.addAll(new UserBll(getContext()).geBuddiestList(false));
-                buddiesAdapter.notifyDataSetChanged();
-            } else {
-                if (Utils.isOnline(getContext())) {
-                    new GetContactAPI(getContext(), this, contactsBeanArrayList);
-                } else {
-                    progress_refresh.setVisibility(View.GONE);
-                    new JabbarDialog(getContext(), getString(R.string.no_internet)).show();
-                }
-            }
-        } else {
-            progress_refresh.setVisibility(View.GONE);
-            new JabbarDialog(getContext(), getString(R.string.sync_fail)).show();
-        }
-    }
 
     @Override
     public void onResponce(String tag, int result, Object obj) {
@@ -156,11 +139,60 @@ public class BuddiesFragment extends Fragment implements UpdateContact.ContactLi
 
     @Override
     public void getLoc(boolean isUpdate) {
-        Log.print("=====UpdateContact====");
-        if (progress_refresh.getVisibility() == View.GONE && updateContact == null) {
+        if (progress_refresh.getVisibility() == View.GONE) {
             progress_refresh.setVisibility(View.VISIBLE);
-            updateContact = new UpdateContact(getContext(), this, false);
-            updateContact.execute();
+            if (UpdateContact1.SyncOn == false) {
+                if (Utils.isOnline(getContext())) {
+                    ArrayList<ExitsContactBean> exitsContactBeanArrayList = Pref.getArrayValue(getContext(), Config.PREF_CONTACT, new ArrayList<ExitsContactBean>());
+                    if (exitsContactBeanArrayList != null && exitsContactBeanArrayList.size() > 0) {
+                        new GetContactAPI(getContext(), BuddiesFragment.this, exitsContactBeanArrayList);
+                    } else {
+                        progress_refresh.setVisibility(View.GONE);
+                        new JabbarDialog(getContext(), getString(R.string.no_contact)).show();
+                    }
+
+                } else {
+                    progress_refresh.setVisibility(View.GONE);
+                    new JabbarDialog(getContext(), getString(R.string.no_internet)).show();
+                }
+            } else {
+                Attempt = 0;
+                handler = new Handler();
+                runnable = new Runnable() {
+                    @Override
+                    public void run() {
+
+                        if (UpdateContact1.SyncOn == false) {
+                            handler.removeCallbacks(runnable);
+                            Attempt = 0;
+                            if (Utils.isOnline(getContext())) {
+                                ArrayList<ExitsContactBean> exitsContactBeanArrayList = Pref.getArrayValue(getContext(), Config.PREF_CONTACT, new ArrayList<ExitsContactBean>());
+                                if (exitsContactBeanArrayList != null && exitsContactBeanArrayList.size() > 0) {
+                                    new GetContactAPI(getContext(), BuddiesFragment.this, exitsContactBeanArrayList);
+                                } else {
+                                    progress_refresh.setVisibility(View.GONE);
+                                    new JabbarDialog(getContext(), getString(R.string.no_contact)).show();
+                                }
+                            } else {
+                                progress_refresh.setVisibility(View.GONE);
+                                new JabbarDialog(getContext(), getString(R.string.no_internet)).show();
+                            }
+
+                        } else {
+                            if (Attempt < 20) {
+                                Attempt++;
+                                handler.postDelayed(runnable, 1000);
+                            } else {
+                                handler.removeCallbacks(runnable);
+                                Attempt = 0;
+                                new JabbarDialog(getContext(), getString(R.string.sync_fail)).show();
+                                progress_refresh.setVisibility(View.GONE);
+                            }
+                        }
+                    }
+                };
+                handler.postDelayed(runnable, 1000);
+            }
         }
     }
 }

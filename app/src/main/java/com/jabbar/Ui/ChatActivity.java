@@ -6,12 +6,9 @@ import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -25,9 +22,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.jabbar.API.SendMessageAPI;
 import com.jabbar.Adapter.ChatAdpater;
 import com.jabbar.Bean.ContactsBean;
@@ -71,6 +65,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
     private ProgressDialog progressDialog;
     private ContactsBean contactsBean;
     public static Activity chatActivity = null;
+    private boolean isFirst = true;
 
     @Override
     protected void onStart() {
@@ -125,19 +120,12 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
             txtLastSeen.setText(contactsBean.last_seen);
             txtLastSeen.setVisibility(View.VISIBLE);
 
-            Glide.with(this).load(Config.AVATAR_HOST + contactsBean.avatar).asBitmap().placeholder(R.drawable.default_user).error(R.drawable.default_user).into(new BitmapImageViewTarget(conversation_contact_photo) {
-                @Override
-                public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                    super.onResourceReady(resource, glideAnimation);
-                    RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), resource);
-                    circularBitmapDrawable.setCircular(true);
-                    conversation_contact_photo.setImageDrawable(circularBitmapDrawable);
-                }
-            });
+            Utils.setGlideImage(this, contactsBean.avatar, conversation_contact_photo, true);
 
             messageBeanArrayList = messageBll.geMessageList(contactsBean.userid);
             chatAdpater = new ChatAdpater(this, messageBeanArrayList);
             recyclerview_chat.setAdapter(chatAdpater);
+            recyclerview_chat.smoothScrollToPosition(messageBeanArrayList.size());
 
             llBuddiesName.setOnClickListener(this);
         } else {
@@ -155,12 +143,14 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
             window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
         }
 
-        emojIcon = new EmojIconActions(this, rootView, edit_msg, img_emoji);
+
+        img_emoji.setOnClickListener(null);
+        emojIcon = new EmojIconActions(ChatActivity.this, rootView, edit_msg, img_emoji);
         emojIcon.setUseSystemEmoji(false);
         emojIcon.ShowEmojIcon();
         emojIcon.setIconsIds(R.drawable.ic_action_keyboard, R.drawable.smiley);
 
-        img_emoji.performClick();
+
         edit_msg.addTextChangedListener(new TextWatcher() {
 
             @Override
@@ -206,7 +196,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
                         Log.print("======Original Msg=====" + edit_msg.getText().toString());
                         Log.print("======Convert Msg=====" + Mydb.getDBStr(StringEscapeUtils.escapeJava(edit_msg.getText().toString().trim())));
                         progressDialog.show();
-                        sendMessageAPI = new SendMessageAPI(this, responseListener, contactsBean.userid, Mydb.getDBStr(StringEscapeUtils.escapeJava(edit_msg.getText().toString().trim())));
+                        sendMessageAPI = new SendMessageAPI(this, responseListener, contactsBean.userid, StringEscapeUtils.escapeJava(edit_msg.getText().toString().trim()));
                     }
                 }
                 break;
@@ -228,9 +218,12 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
                 messageBean.friendid = contactsBean.userid;
                 messageBean.msg = edit_msg.getText().toString().trim();
                 messageBean.isread = 1;
+
                 messageBll.InsertMessage(messageBean, false);
+                messageBean.create_time = Utils.convertStringDateToStringDate(Config.WebDateFormatter, Config.AppDateFormatter, messageBean.create_time);
                 messageBeanArrayList.add(messageBean);
                 chatAdpater.notifyDataSetChanged();
+                recyclerview_chat.smoothScrollToPosition(messageBeanArrayList.size() - 1);
             }
             edit_msg.setText("");
         }

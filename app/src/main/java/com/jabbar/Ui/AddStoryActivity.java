@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Build;
@@ -14,8 +13,6 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresPermission;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Display;
@@ -28,8 +25,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.jabbar.CameraMaster.CameraFragment;
 import com.jabbar.CameraMaster.CameraFragmentApi;
 import com.jabbar.CameraMaster.configuration.Configuration;
@@ -102,15 +97,7 @@ public class AddStoryActivity extends AppCompatActivity {
             }
         });
 
-        Glide.with(this).load(Config.AVATAR_HOST + Pref.getValue(this, Config.PREF_AVATAR, "")).asBitmap().placeholder(R.drawable.default_user).error(R.drawable.default_user).into(new BitmapImageViewTarget(conversation_contact_photo) {
-            @Override
-            public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                super.onResourceReady(resource, glideAnimation);
-                RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), resource);
-                circularBitmapDrawable.setCircular(true);
-                conversation_contact_photo.setImageDrawable(circularBitmapDrawable);
-            }
-        });
+        Utils.setGlideImage(this, Pref.getValue(this, Config.PREF_AVATAR, ""), conversation_contact_photo, true);
 
 
         if (Build.VERSION.SDK_INT > 15) {
@@ -245,7 +232,8 @@ public class AddStoryActivity extends AppCompatActivity {
 
                 @Override
                 public void onPhotoTaken(byte[] bytes, String filePath) {
-                    Intent intent = PreviewStoryActivity.newIntentPhoto(AddStoryActivity.this, filePath);
+
+                    Intent intent = PreviewStoryImage.newIntentPhoto(AddStoryActivity.this, filePath, false);
                     startActivityForResult(intent, REQUEST_PREVIEW_CODE);
                 }
             });
@@ -416,7 +404,6 @@ public class AddStoryActivity extends AppCompatActivity {
     private class ImageAdapter extends BaseAdapter {
 
         private Activity context;
-
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         int width;
@@ -454,8 +441,8 @@ public class AddStoryActivity extends AppCompatActivity {
             picturesView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = PreviewStoryActivity.newIntentPhoto(context, imageArrayList.get(position));
-                    startActivityForResult(intent, AddStoryActivity.REQUEST_PREVIEW_CODE);
+                    Intent intent = PreviewStoryImage.newIntentPhoto(AddStoryActivity.this, imageArrayList.get(position), true);
+                    startActivityForResult(intent, REQUEST_PREVIEW_CODE);
                 }
             });
 

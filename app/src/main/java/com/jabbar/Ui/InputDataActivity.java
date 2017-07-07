@@ -52,7 +52,9 @@ public class InputDataActivity extends AppCompatActivity implements View.OnClick
             window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
         }
 
-        getEdtnumber().setText("8735032992");
+        new UpdateContact1(this).execute();
+
+//        getEdtnumber().setText("8735032992");
 
 
         Pref.setValue(this, Config.PREF_PUSH_ID, FirebaseInstanceId.getInstance().getToken());

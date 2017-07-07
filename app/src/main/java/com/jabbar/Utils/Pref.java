@@ -4,6 +4,13 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.jabbar.Bean.ExitsContactBean;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+
 public class Pref {
     private static SharedPreferences sharedPreferences = null;
 
@@ -70,5 +77,59 @@ public class Pref {
         Pref.sharedPreferences = null;
         return result;
     }
+
+//    @SuppressWarnings("unchecked")
+//    public static ArrayList<ExitsContactBean> getArrayValue(Context context, String key, ArrayList<ExitsContactBean> defaultValue) {
+//        Pref.openPref(context);
+//        ArrayList<ExitsContactBean> set = null;
+//        try {
+//            set = (ArrayList<ExitsContactBean>) ObjectSerializer.deserialize(Pref.sharedPreferences.getString(key, ObjectSerializer.serialize(defaultValue)));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        Pref.sharedPreferences = null;
+//        return set;
+//    }
+//
+//    public static void setArrayValue(Context context, String key, ArrayList<ExitsContactBean> value) {
+//        Pref.openPref(context);
+//        Editor prefsPrivateEditor = Pref.sharedPreferences.edit();
+//        ArrayList<ExitsContactBean> s = new ArrayList<ExitsContactBean>();
+//        s.addAll(value);
+//
+//        try {
+//            prefsPrivateEditor.putString(key, ObjectSerializer.serialize(s));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//
+//        }
+//        prefsPrivateEditor.commit();
+//        Pref.sharedPreferences = null;
+//
+//    }
+
+
+    public static void setArrayValue(Context context, String key, ArrayList<ExitsContactBean> value) {
+        Pref.openPref(context);
+        Editor prefsPrivateEditor = Pref.sharedPreferences.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(value);
+        prefsPrivateEditor.putString(key, json);
+        prefsPrivateEditor.commit();
+        prefsPrivateEditor = null;
+        Pref.sharedPreferences = null;
+    }
+
+    public static ArrayList<ExitsContactBean> getArrayValue(Context context, String key, ArrayList<ExitsContactBean> value) {
+        Pref.openPref(context);
+        String result = Pref.sharedPreferences.getString(key, null);
+        Pref.sharedPreferences = null;
+        Gson gson = new Gson();
+        Type type = new TypeToken<ArrayList<ExitsContactBean>>() {
+        }.getType();
+        ArrayList<ExitsContactBean> arrayList = gson.fromJson(result, type);
+        return arrayList;
+    }
+
 
 }

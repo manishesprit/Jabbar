@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:emojicon="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000">
+
+    <RelativeLayout
+        android:id="@+id/rlTop"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:id="@+id/rlBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true">
+
+            <ImageView
+                android:id="@+id/imgBack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:paddingLeft="@dimen/MarginFive"
+                android:src="@drawable/ic_arrow_back" />
+
+            <ImageView
+                android:id="@+id/conversation_contact_photo"
+                android:layout_width="@dimen/avatar"
+                android:layout_height="@dimen/avatar"
+                android:layout_marginBottom="@dimen/MarginSaven"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="@dimen/MarginSaven"
+                android:layout_toRightOf="@+id/imgBack"
+                android:scaleType="fitCenter"
+                android:src="@drawable/default_user" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rel1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="10dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/rel_send"
+            android:padding="5dp">
+
+            <hani.momanii.supernova_emoji_library.Helper.EmojiconEditText
+                android:id="@+id/edit_msg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/img_emoji"
+                android:background="@null"
+                android:maxLines="3"
+                android:padding="3dp"
+                android:textColor="@color/colorAccent"
+                android:textSize="@dimen/textMediumExtra"
+                emojicon:emojiconSize="@dimen/textLarge" />
+
+
+            <ImageView
+                android:id="@+id/img_emoji"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:padding="5dp"
+                android:src="@drawable/smiley" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/img_emoji"
+                android:background="@color/color_dark_white" />
+
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/rel_send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="10dp">
+
+
+            <ImageView
+                android:id="@+id/img_send"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/small_round"
+                android:padding="10dp"
+                android:src="@drawable/ic_send_black_24dp"
+                android:text="SEND" />
+
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <com.jabbar.ImageViewer.ImageViewTouch
+        android:id="@+id/image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/rel1"
+        android:layout_below="@+id/rlTop" />
+
+</RelativeLayout>

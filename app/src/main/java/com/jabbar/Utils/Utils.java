@@ -13,9 +13,17 @@ import android.os.Build;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.google.android.gms.maps.model.LatLng;
 import com.jabbar.Bean.ContactsBean;
+import com.jabbar.Bean.ExitsContactBean;
+import com.jabbar.R;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -67,7 +75,7 @@ public class Utils {
         }
     }
 
-    public static ArrayList<ContactsBean> getUpdateNameList(ArrayList<ContactsBean> contactsBeanArrayList, ArrayList<ContactsBean> contactsBeanArrayList_old) {
+    public static ArrayList<ContactsBean> getUpdateNameList(ArrayList<ContactsBean> contactsBeanArrayList, ArrayList<ExitsContactBean> contactsBeanArrayList_old) {
 
         for (int i = 0; i < contactsBeanArrayList.size(); i++) {
             for (int j = 0; j < contactsBeanArrayList_old.size(); j++) {
@@ -181,7 +189,7 @@ public class Utils {
     }
 
 
-    public static void ConvertImage(Context context, Bitmap bitmap, String name) {
+    public static void ConvertImage(final Context context, Bitmap bitmap, String name) {
         try {
             File imageFile = new File(context.getApplicationInfo().dataDir, name);
             OutputStream os;
@@ -191,6 +199,41 @@ public class Utils {
             os.close();
         } catch (Exception e) {
         }
+    }
+
+    public static void setGlideImage(final Context context, final String fileName, final ImageView imageView, final boolean isCircle) {
+        File file = new File(context.getApplicationInfo().dataDir, "/" + fileName);
+        if (file != null && file.exists()) {
+            Glide.with(context).load(file.getAbsolutePath()).asBitmap().placeholder(R.drawable.default_user).error(R.drawable.default_user).into(new BitmapImageViewTarget(imageView) {
+                @Override
+                public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                    super.onResourceReady(resource, glideAnimation);
+                    if (isCircle) {
+                        RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(context.getResources(), resource);
+                        circularBitmapDrawable.setCircular(true);
+                        imageView.setImageDrawable(circularBitmapDrawable);
+                    } else {
+                        imageView.setImageBitmap(resource);
+                    }
+                }
+            });
+        } else {
+            Glide.with(context).load(Config.AVATAR_HOST + fileName).asBitmap().placeholder(R.drawable.default_user).error(R.drawable.default_user).into(new BitmapImageViewTarget(imageView) {
+                @Override
+                public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                    super.onResourceReady(resource, glideAnimation);
+                    ConvertImage(context, resource, fileName);
+                    if (isCircle) {
+                        RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(context.getResources(), resource);
+                        circularBitmapDrawable.setCircular(true);
+                        imageView.setImageDrawable(circularBitmapDrawable);
+                    } else {
+                        imageView.setImageBitmap(resource);
+                    }
+                }
+            });
+        }
+
     }
 
     public static void addActivities(Activity _activity) {

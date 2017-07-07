@@ -122,6 +122,11 @@
             android:theme="@style/ThemeFullscreen" />
 
         <activity
+            android:name=".Ui.PreviewStoryImage"
+            android:screenOrientation="portrait"
+            android:theme="@style/ThemeFullscreen" />
+
+        <activity
             android:name=".Ui.AuthenticationAlertActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Dialog" />

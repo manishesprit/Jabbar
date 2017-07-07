@@ -3,23 +3,17 @@ package com.jabbar.Ui;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.jabbar.API.ChangeAvatarAPI;
 import com.jabbar.MasterCrop.Crop;
 import com.jabbar.R;
@@ -82,16 +76,7 @@ public class ChangeAvatarActivity extends BaseActivity implements View.OnClickLi
         txtStatus.setOnClickListener(this);
         imgSelectImage.setOnClickListener(this);
 
-        Glide.with(ChangeAvatarActivity.this).load(Config.AVATAR_HOST + Pref.getValue(ChangeAvatarActivity.this, Config.PREF_AVATAR, "")).asBitmap().placeholder(R.drawable.default_user).error(R.drawable.default_user).into(new BitmapImageViewTarget(imgAvatar) {
-            @Override
-            protected void setResource(Bitmap resource) {
-                super.setResource(resource);
-                RoundedBitmapDrawable roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), resource);
-                roundedBitmapDrawable.setCircular(true);
-                imgAvatar.setImageDrawable(roundedBitmapDrawable);
-
-            }
-        });
+        Utils.setGlideImage(this, Pref.getValue(this, Config.PREF_AVATAR, ""), imgAvatar,true);
 
     }
 
@@ -235,18 +220,9 @@ public class ChangeAvatarActivity extends BaseActivity implements View.OnClickLi
                             public void onResponce(String tag, int result, Object obj) {
                                 progressDialog.dismiss();
                                 if (tag.equalsIgnoreCase(Config.TAG_CHANGE_AVATAR) && result == 0) {
-
-                                    Glide.with(ChangeAvatarActivity.this).load(Config.AVATAR_HOST + Pref.getValue(ChangeAvatarActivity.this, Config.PREF_AVATAR, "")).asBitmap().placeholder(R.drawable.default_user).error(R.drawable.default_user).into(new BitmapImageViewTarget(imgAvatar) {
-                                        @Override
-                                        protected void setResource(Bitmap resource) {
-                                            super.setResource(resource);
-                                            RoundedBitmapDrawable roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), resource);
-                                            roundedBitmapDrawable.setCircular(true);
-                                            imgAvatar.setImageDrawable(roundedBitmapDrawable);
-
-                                        }
-                                    });
-
+                                    Utils.setGlideImage(ChangeAvatarActivity.this, Pref.getValue(ChangeAvatarActivity.this, Config.PREF_AVATAR, ""), imgAvatar,true);
+                                } else {
+                                    new JabbarDialog(ChangeAvatarActivity.this, "Upload fail").show();
                                 }
                             }
                         });

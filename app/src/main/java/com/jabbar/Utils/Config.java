@@ -44,6 +44,9 @@ public class Config {
     public static final String API_CHANGE_PRIVACY = "change_privacy.php";
     public static String TAG_CHANGE_PRIVACY = "TAG_CHANGE_PRIVACY";
 
+    public static final String API_ADD_STORY = "add_story.php";
+    public static final String TAG_ADD_STORY = "TAG_ADD_STORY";
+
 
     public static final SimpleDateFormat WebDateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     public static final SimpleDateFormat AppDateFormatter = new SimpleDateFormat("HH:mm  dd,MMM");
@@ -70,6 +73,7 @@ public class Config {
     public static String PREF_UDID = "PREF_UDID";
     public static String PREF_PUSH_ID = "PREF_PUSH_ID";
     public static String PREF_LOCATION = "PREF_LOCATION";
+    public static String PREF_CONTACT = "PREF_CONTACT";
 
     public static LatLng currentLatLong;
 
