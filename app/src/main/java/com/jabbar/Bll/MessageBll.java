@@ -13,11 +13,15 @@ import com.jabbar.Bean.MessageBean;
 import com.jabbar.Bean.NotificationBean;
 import com.jabbar.R;
 import com.jabbar.Ui.HomeActivity;
+import com.jabbar.Utils.BadgeUtils;
 import com.jabbar.Utils.Config;
 import com.jabbar.Utils.Log;
 import com.jabbar.Utils.Mydb;
 import com.jabbar.Utils.Pref;
 import com.jabbar.Utils.Utils;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -57,6 +61,53 @@ public class MessageBll {
             CreateNotification(false);
         }
     }
+
+    public void InsertNewMessage(MessageBean messageBean, boolean showNotification) {
+        Mydb dbHelper = null;
+        String sql = null;
+
+        try {
+            sql = "INSERT INTO message_tb (id,userid,friendid,message,create_time,isread,tempId) values (" + messageBean.id + "," + messageBean.userid + "," + messageBean.friendid + ",'" + Mydb.getDBStr(messageBean.msg) + "','" + messageBean.create_time + "'," + messageBean.isread + ",'" + messageBean.tempId + "')";
+            dbHelper = new Mydb(this.context);
+            dbHelper.execute(sql);
+
+        } catch (Exception e) {
+            Log.print(this.getClass() + " :: insert()" + " " + e);
+        } finally {
+            if (dbHelper != null)
+                dbHelper.close();
+            // release
+            dbHelper = null;
+            sql = null;
+            System.gc();
+        }
+
+        if (showNotification) {
+            CreateNotification(false);
+        }
+    }
+
+    public void UpdateMessage(MessageBean messageBean, int friendid) {
+        Mydb dbHelper = null;
+        String sql = null;
+
+        try {
+            sql = "UPDATE message_tb set id=" + messageBean.id + ",create_time='" + messageBean.create_time + "', isread=1 where tempId='" + messageBean.tempId + "' AND  friendid = " + friendid;
+            dbHelper = new Mydb(this.context);
+            dbHelper.execute(sql);
+
+        } catch (Exception e) {
+            Log.print(this.getClass() + " :: UPDATE()" + " " + e);
+        } finally {
+            if (dbHelper != null)
+                dbHelper.close();
+            // release
+            dbHelper = null;
+            sql = null;
+            System.gc();
+        }
+    }
+
 
     public void RemoveReadMessage(int friendid) {
         Mydb dbHelper = null;
@@ -141,6 +192,8 @@ public class MessageBll {
             notif.setContentIntent(PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT));
 
             mNotificationManager.notify(0, notif.build());
+
+            BadgeUtils.setBadge(context, notificationBeanArrayList.size());
         }
     }
 
@@ -168,6 +221,53 @@ public class MessageBll {
                     messageBean.friendid = cursor.getInt(2);
                     messageBean.msg = cursor.getString(3);
                     messageBean.create_time = Utils.convertStringDateToStringDate(Config.WebDateFormatter, Config.AppDateFormatter, cursor.getString(4));
+                    messageBeanArrayList.add(messageBean);
+                }
+
+            }
+        } catch (Exception e) {
+            Log.print(this.getClass() + " :: getBusiness_hour()" + " " + e);
+            Log.sendError(e);
+        } finally {
+            if (cursor != null && !cursor.isClosed())
+                cursor.close();
+            if (mydb != null)
+                mydb.close();
+            // release
+            mydb = null;
+            sql = null;
+            cursor = null;
+            System.gc();
+        }
+        return messageBeanArrayList;
+    }
+
+    public ArrayList<MessageBean> geNewMessageList(int friendid, int lastid) {
+        Mydb mydb = null;
+        String sql = null;
+        Cursor cursor = null;
+        ArrayList<MessageBean> messageBeanArrayList = null;
+        MessageBean messageBean;
+
+        try {
+
+            sql = "SELECT id,userid,friendid,message,create_time,tempId,isread from message_tb where ((userid=" + Pref.getValue(context, Config.PREF_USERID, 0) + " AND friendid=" + friendid + " ) OR (userid=" + friendid + " AND friendid=" + Pref.getValue(context, Config.PREF_USERID, 0) + ")) AND id > " + lastid + " order by id asc ";
+
+            messageBeanArrayList = new ArrayList<>();
+            mydb = new Mydb(this.context);
+            cursor = mydb.query(sql);
+
+            if (cursor != null && cursor.getCount() > 0) {
+                Log.print("====cursor=====" + cursor.getCount());
+                while (cursor.moveToNext()) {
+                    messageBean = new MessageBean();
+                    messageBean.id = cursor.getInt(0);
+                    messageBean.userid = cursor.getInt(1);
+                    messageBean.friendid = cursor.getInt(2);
+                    messageBean.msg = cursor.getString(3);
+                    messageBean.create_time = Utils.convertStringDateToStringDate(Config.WebDateFormatter, Config.AppDateFormatter, cursor.getString(4));
+                    messageBean.tempId = cursor.getString(5);
+                    messageBean.isread = cursor.getInt(6);
                     messageBeanArrayList.add(messageBean);
                 }
 
@@ -230,6 +330,86 @@ public class MessageBll {
             System.gc();
         }
         return notificationBeanArrayList;
+    }
+
+    public String geUnsendMessageList() {
+        Mydb mydb = null;
+        String sql = null;
+        Cursor cursor = null;
+        int friendid = -1;
+        try {
+
+            sql = "select message,tempId,create_time,friendid from message_tb where userid='" + Pref.getValue(context, Config.PREF_USERID, 0) + "' AND isread=0 order by friendid asc";
+
+            mydb = new Mydb(this.context);
+            cursor = mydb.query(sql);
+
+            JSONArray jsonObject = new JSONArray();
+            JSONObject jsonList = new JSONObject();
+            JSONArray jsonMsgList = new JSONArray();
+
+            if (cursor != null && cursor.getCount() > 0) {
+                Log.print("====cursor=====" + cursor.getCount());
+                while (cursor.moveToNext()) {
+                    if (friendid == -1) {
+                        jsonList.put("friendid", cursor.getInt(3));
+                        friendid = cursor.getInt(3);
+                        jsonMsgList = new JSONArray();
+
+                        JSONObject jsonMsg = new JSONObject();
+                        jsonMsg.put("id", cursor.getString(1));
+                        jsonMsg.put("msg", cursor.getString(0));
+                        jsonMsgList.put(jsonMsg);
+
+                    } else if (friendid != cursor.getInt(3)) {
+
+                        jsonList.put("messages", jsonMsgList);
+                        jsonObject.put(jsonList);
+
+                        jsonList = new JSONObject();
+                        friendid = cursor.getInt(3);
+                        jsonList.put("friendid", cursor.getInt(3));
+                        jsonMsgList = new JSONArray();
+
+                        JSONObject jsonMsg = new JSONObject();
+                        jsonMsg.put("id", cursor.getString(1));
+                        jsonMsg.put("msg", cursor.getString(0));
+                        jsonMsgList.put(jsonMsg);
+
+                    } else {
+                        friendid = cursor.getInt(3);
+                        JSONObject jsonMsg = new JSONObject();
+                        jsonMsg.put("id", cursor.getString(1));
+                        jsonMsg.put("msg", cursor.getString(0));
+                        jsonMsgList.put(jsonMsg);
+                    }
+                }
+
+                jsonList.put("messages", jsonMsgList);
+                jsonObject.put(jsonList);
+                JSONObject mainData = new JSONObject();
+                mainData.put("users", jsonObject);
+                Log.print("======mainData========");
+                return mainData.toString();
+
+
+            }
+        } catch (Exception e) {
+            Log.print("====Exception======" + e.toString());
+//            Log.print(this.getClass() + "()" + " " + e);
+//            Log.sendError(e);
+        } finally {
+            if (cursor != null && !cursor.isClosed())
+                cursor.close();
+            if (mydb != null)
+                mydb.close();
+            // release
+            mydb = null;
+            sql = null;
+            cursor = null;
+            System.gc();
+        }
+        return null;
     }
 
 }

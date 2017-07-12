@@ -62,6 +62,11 @@ public class ChatAdpater extends RecyclerView.Adapter<ChatAdpater.ViewHolder> {
             holder.txt_time_right.setText(chatBeanArrayList.get(position).create_time);
             holder.txt_message_right.setUseSystemDefault(false);
 
+            if (chatBeanArrayList.get(position).isread == 0) {
+                holder.txt_time_right.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_error_outline, 0);
+            } else {
+                holder.txt_time_right.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+            }
 
         }
 

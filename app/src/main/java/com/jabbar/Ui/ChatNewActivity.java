@@ -3,12 +3,12 @@ package com.jabbar.Ui;
 
 import android.app.Activity;
 import android.app.NotificationManager;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,28 +23,27 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.jabbar.API.SendMessageAPI;
+import com.jabbar.API.SendMessageNewAPI;
 import com.jabbar.Adapter.ChatAdpater;
 import com.jabbar.Bean.ContactsBean;
 import com.jabbar.Bean.MessageBean;
 import com.jabbar.Bll.MessageBll;
 import com.jabbar.R;
+import com.jabbar.Utils.BadgeUtils;
 import com.jabbar.Utils.Config;
 import com.jabbar.Utils.Log;
-import com.jabbar.Utils.Mydb;
 import com.jabbar.Utils.Pref;
 import com.jabbar.Utils.ResponseListener;
 import com.jabbar.Utils.Utils;
 
-import org.apache.commons.lang3.StringEscapeUtils;
-
 import java.util.ArrayList;
+import java.util.Date;
 
 import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
 import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
 
 
-public class ChatActivity extends BaseActivity implements View.OnClickListener {
+public class ChatNewActivity extends BaseActivity implements View.OnClickListener {
 
     private LinearLayout rootView;
     private RecyclerView recyclerview_chat;
@@ -62,11 +61,14 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
     private ChatAdpater chatAdpater;
     private ArrayList<MessageBean> messageBeanArrayList;
     private MessageBll messageBll;
-    private SendMessageAPI sendMessageAPI;
-    private ProgressDialog progressDialog;
+    private SendMessageNewAPI sendMessageNewAPI;
     private ContactsBean contactsBean;
     public static Activity chatActivity = null;
     private boolean isFirst = true;
+    public int lastid = 0;
+    private TextView txtNoOfUnreadMsg;
+    private int totalUnreadMsg = 0;
+    public int totalVisibleMsg;
 
     @Override
     protected void onStart() {
@@ -96,14 +98,10 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
         img_emoji = (ImageView) findViewById(R.id.img_emoji);
         rel_send = (RelativeLayout) findViewById(R.id.rel_send);
         imgSend = (ImageView) findViewById(R.id.img_send);
-
+        txtNoOfUnreadMsg = (TextView) findViewById(R.id.txtNoOfUnreadMsg);
         recyclerview_chat = (RecyclerView) findViewById(R.id.recyclerview_chat);
         linearLayoutManager = new LinearLayoutManager(this);
         recyclerview_chat.setLayoutManager(linearLayoutManager);
-
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Sending...");
-        progressDialog.setCancelable(false);
 
         messageBll = new MessageBll(this);
 
@@ -112,6 +110,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
 
             NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             mNotificationManager.cancelAll();
+            BadgeUtils.clearBadge(this);
 
             messageBll.RemoveReadMessage(contactsBean.userid);
             llBuddiesName = (LinearLayout) findViewById(R.id.llBuddiesName);
@@ -126,7 +125,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
 
             Utils.setGlideImage(this, contactsBean.avatar, conversation_contact_photo, true);
 
-            messageBeanArrayList = messageBll.geMessageList(contactsBean.userid);
+            messageBeanArrayList = messageBll.geNewMessageList(contactsBean.userid, lastid);
             chatAdpater = new ChatAdpater(this, messageBeanArrayList);
             recyclerview_chat.setAdapter(chatAdpater);
             recyclerview_chat.smoothScrollToPosition(messageBeanArrayList.size());
@@ -147,12 +146,18 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
             window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
         }
 
-
-        img_emoji.setOnClickListener(null);
-        emojIcon = new EmojIconActions(ChatActivity.this, rootView, edit_msg, img_emoji);
+        emojIcon = new EmojIconActions(ChatNewActivity.this, rootView, edit_msg, img_emoji);
         emojIcon.setUseSystemEmoji(false);
         emojIcon.ShowEmojIcon();
         emojIcon.setIconsIds(R.drawable.ic_action_keyboard, R.drawable.smiley);
+
+        img_emoji.performClick();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                img_emoji.performClick();
+            }
+        }, 300);
 
 
         edit_msg.addTextChangedListener(new TextWatcher() {
@@ -176,6 +181,34 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
             }
         });
 
+        recyclerview_chat.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                int visibleItemCount = linearLayoutManager.getChildCount();
+                int totalItemCount = linearLayoutManager.getItemCount();
+                int firstVisibleItemPosition = linearLayoutManager.findFirstVisibleItemPosition();
+
+                totalVisibleMsg = (visibleItemCount + firstVisibleItemPosition);
+                Log.print("=========" + totalVisibleMsg + "=======totalItemCount======" + totalItemCount + "=======firstVisibleItemPosition=======" + firstVisibleItemPosition);
+
+                if (totalVisibleMsg >= totalItemCount && firstVisibleItemPosition >= 0) {
+                    Log.print("========INNNNNNNNNNNN=====");
+                    txtNoOfUnreadMsg.setVisibility(View.GONE);
+                    totalUnreadMsg = 0;
+                }
+            }
+        });
+
+        txtNoOfUnreadMsg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                recyclerview_chat.smoothScrollToPosition(messageBeanArrayList.size());
+                txtNoOfUnreadMsg.setVisibility(View.GONE);
+                totalUnreadMsg = 0;
+            }
+        });
 
     }
 
@@ -196,11 +229,28 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
 
             case R.id.rel_send:
                 if (!edit_msg.getText().toString().trim().equalsIgnoreCase("")) {
+
+                    MessageBean messageBean = new MessageBean();
+                    messageBean.userid = Pref.getValue(ChatNewActivity.this, Config.PREF_USERID, 0);
+                    messageBean.friendid = contactsBean.userid;
+                    messageBean.msg = edit_msg.getText().toString().trim();
+                    messageBean.isread = 0;
+                    messageBean.id = 0;
+                    messageBean.create_time = Config.WebDateFormatter.format(new Date());
+                    messageBean.tempId = "" + (System.currentTimeMillis() / 1000);
+                    messageBll.InsertNewMessage(messageBean, false);
+
+                    messageBean.create_time = Utils.convertStringDateToStringDate(Config.WebDateFormatter, Config.AppChatDateFormatter, messageBean.create_time);
+                    messageBeanArrayList.add(messageBean);
+                    chatAdpater.notifyDataSetChanged();
+                    recyclerview_chat.smoothScrollToPosition(messageBeanArrayList.size());
+
+                    edit_msg.setText("");
+
                     if (Utils.isOnline(this)) {
-                        Log.print("======Original Msg=====" + edit_msg.getText().toString());
-                        Log.print("======Convert Msg=====" + Mydb.getDBStr(StringEscapeUtils.escapeJava(edit_msg.getText().toString().trim())));
-                        progressDialog.show();
-                        sendMessageAPI = new SendMessageAPI(this, responseListener, contactsBean.userid, StringEscapeUtils.escapeJava(edit_msg.getText().toString().trim()));
+                        String data = messageBll.geUnsendMessageList();
+                        if (data != null && !SendMessageNewAPI.isCallAPI)
+                            sendMessageNewAPI = new SendMessageNewAPI(this, responseListener, data);
                     }
                 }
                 break;
@@ -215,21 +265,11 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
         @Override
         public void onResponce(String tag, int result, Object obj) {
 
-            progressDialog.dismiss();
             if (tag.equalsIgnoreCase(Config.TAG_SEND_MESSAGE) && result == 0) {
-                MessageBean messageBean = (MessageBean) obj;
-                messageBean.userid = Pref.getValue(ChatActivity.this, Config.PREF_USERID, 0);
-                messageBean.friendid = contactsBean.userid;
-                messageBean.msg = edit_msg.getText().toString().trim();
-                messageBean.isread = 1;
-
-                messageBll.InsertMessage(messageBean, false);
-                messageBean.create_time = Utils.convertStringDateToStringDate(Config.WebDateFormatter, Config.AppDateFormatter, messageBean.create_time);
-                messageBeanArrayList.add(messageBean);
+                messageBeanArrayList.clear();
+                messageBeanArrayList.addAll(messageBll.geNewMessageList(contactsBean.userid, 0));
                 chatAdpater.notifyDataSetChanged();
-                recyclerview_chat.smoothScrollToPosition(messageBeanArrayList.size() - 1);
             }
-            edit_msg.setText("");
         }
     };
 
@@ -242,16 +282,28 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener {
             messageBean.isread = 1;
             messageBll.InsertMessage(messageBean, false);
 
-            messageBeanArrayList.clear();
-            messageBeanArrayList.addAll(messageBll.geMessageList(contactsBean.userid));
+            messageBean.create_time = Utils.convertStringDateToStringDate(Config.WebDateFormatter, Config.AppChatDateFormatter, messageBean.create_time);
+            messageBeanArrayList.add(messageBean);
             chatAdpater.notifyDataSetChanged();
-//            recyclerview_chat.smoothScrollToPosition(messageBeanArrayList.size());
             MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.msg_tone);
             mediaPlayer.start();
+            ShowUnreadMsgCount();
+            recyclerview_chat.smoothScrollToPosition(totalVisibleMsg);
 
         } else {
             messageBean.isread = 0;
             messageBll.InsertMessage(messageBean, true);
+        }
+    }
+
+    public void ShowUnreadMsgCount() {
+        if (txtNoOfUnreadMsg.getVisibility() == View.GONE) {
+            totalUnreadMsg = 1;
+            txtNoOfUnreadMsg.setText("" + totalUnreadMsg);
+            txtNoOfUnreadMsg.setVisibility(View.VISIBLE);
+        } else {
+            totalUnreadMsg += 1;
+            txtNoOfUnreadMsg.setText("" + totalUnreadMsg);
         }
     }
 }

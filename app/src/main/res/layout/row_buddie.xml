@@ -85,8 +85,8 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_below="@+id/rlUser"
-        android:layout_marginLeft="@dimen/MarginFifteen"
-        android:layout_marginRight="@dimen/MarginFifteen"
+        android:layout_marginLeft="@dimen/MarginFive"
+        android:layout_marginRight="@dimen/MarginFive"
         android:layout_marginTop="@dimen/MarginFive"
         android:background="@color/color_gray" />
 </RelativeLayout>

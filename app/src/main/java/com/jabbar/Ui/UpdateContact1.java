@@ -15,9 +15,6 @@ import com.jabbar.Utils.Pref;
 
 import java.util.ArrayList;
 
-/**
- * Created by hardikjani on 6/17/17.
- */
 
 public class UpdateContact1 extends AsyncTask<String, String, Boolean> {
 

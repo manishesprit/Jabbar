@@ -94,7 +94,7 @@ public class AddStoryAPI extends AsyncTask<Void, Void, Integer> {
 
             if (code == 0) {
 
-                if (file != null && file.exists()) {
+                if (file != null && file.exists() && file.getAbsolutePath().contains(context.getCacheDir().toString() + "/story")) {
                     file.delete();
                 }
             }

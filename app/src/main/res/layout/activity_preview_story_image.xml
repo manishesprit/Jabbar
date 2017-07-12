@@ -48,7 +48,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@+id/rel_send"
-            android:padding="5dp">
+            android:background="@drawable/edit_border"
+            android:padding="3dp">
 
             <hani.momanii.supernova_emoji_library.Helper.EmojiconEditText
                 android:id="@+id/edit_msg"
@@ -57,12 +58,12 @@
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@+id/img_emoji"
                 android:background="@null"
-                android:maxLines="3"
+                android:maxLines="1"
                 android:padding="3dp"
+                android:singleLine="true"
                 android:textColor="@color/colorAccent"
                 android:textSize="@dimen/textMediumExtra"
                 emojicon:emojiconSize="@dimen/textLarge" />
-
 
             <ImageView
                 android:id="@+id/img_emoji"
@@ -71,13 +72,6 @@
                 android:layout_centerVertical="true"
                 android:padding="5dp"
                 android:src="@drawable/smiley" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_below="@+id/img_emoji"
-                android:background="@color/color_dark_white" />
-
 
         </RelativeLayout>
 

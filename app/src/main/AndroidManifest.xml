@@ -101,13 +101,21 @@
         <activity
             android:name=".Ui.ChatActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".Ui.ChatNewActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".Ui.ProfileActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" />
 
-        </activity>
+        <activity
+            android:name=".Ui.ViewStoryActivity"
+            android:screenOrientation="portrait" />
+
 
         <activity
             android:name=".Ui.AddStoryActivity"
@@ -135,6 +143,13 @@
         <receiver android:name=".Utils.IncomingSmsReceiver">
             <intent-filter>
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".Utils.NetworkReceiver">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
             </intent-filter>
         </receiver>
 

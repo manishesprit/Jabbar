@@ -19,6 +19,7 @@ public class Config {
     public static String HOST = "https://manishpaytm001.000webhostapp.com/jabbar/";
 
     public static String AVATAR_HOST = HOST + "avatar/";
+    public static String STORY_HOST = HOST + "story/";
 
     public static final String API_CHANGE_FAVORITE = "change_favorite.php";
     public static String TAG_CHANGE_FAVORITE = "TAG_CHANGE_FAVORITE";
@@ -39,6 +40,7 @@ public class Config {
     public static final String TAG_CHANGE_AVATAR = "TAG_CHANGE_AVATAR";
 
     public static final String API_SEND_MESSAGE = "send_message.php";
+    public static final String API_SEND_NEW_MESSAGE = "send_message_new.php";
     public static String TAG_SEND_MESSAGE = "TAG_SEND_MESSAGE";
 
     public static final String API_CHANGE_PRIVACY = "change_privacy.php";
@@ -46,6 +48,9 @@ public class Config {
 
     public static final String API_ADD_STORY = "add_story.php";
     public static final String TAG_ADD_STORY = "TAG_ADD_STORY";
+
+    public static final String API_GET_STORY_LIST = "get_story.php";
+    public static String TAG_GET_STORY_LIST = "TAG_GET_STORY_LIST";
 
 
     public static final SimpleDateFormat WebDateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

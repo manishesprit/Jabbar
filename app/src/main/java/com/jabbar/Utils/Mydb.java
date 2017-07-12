@@ -109,10 +109,8 @@ public class Mydb extends SQLiteOpenHelper {
     public void doUpdate2() {
         Log.print("=======level====" + Pref.getValue(context, Config.PREF_DB_LEVEL, 0));
         SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("CREATE TABLE IF NOT EXISTS story (id INTEGER PRIMARY KEY AUTOINCREMENT, userid INTEGER, image TEXT, caption TEXT, time TEXT, is_seen INTEGER)");
-
-        this.execute("INSERT INTO story VALUES (1,8,'http://quotes.iskcondesiretree.com/wp-content/uploads/2013/07/Quotes-by-Srila-Prabhupada-on-Panoramic-Beauty-of-Nature.jpg','Krishna Quote','20170704120001',0)");
-
+        db.execSQL("CREATE TABLE IF NOT EXISTS story (id INTEGER PRIMARY KEY, userid INTEGER, image TEXT, caption TEXT, time TEXT, is_seen INTEGER)");
+        db.execSQL("ALTER TABLE message_tb ADD COLUMN tempId TEXT");
         int level = Pref.getValue(context, Config.PREF_DB_LEVEL, 0) + 1;
         Pref.setValue(context, Config.PREF_DB_LEVEL, level);
         doUpdate3();
@@ -120,6 +118,7 @@ public class Mydb extends SQLiteOpenHelper {
 
     public void doUpdate3() {
         Log.print("=======level====" + Pref.getValue(context, Config.PREF_DB_LEVEL, 0));
+
     }
 
     public static String getDBStr(String str) {

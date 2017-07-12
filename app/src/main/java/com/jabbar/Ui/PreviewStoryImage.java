@@ -24,12 +24,15 @@ import com.jabbar.ImageViewer.ImageViewTouch;
 import com.jabbar.ImageViewer.ImageViewTouchBase;
 import com.jabbar.R;
 import com.jabbar.Utils.Config;
+import com.jabbar.Utils.JabbarDialog;
 import com.jabbar.Utils.Log;
 import com.jabbar.Utils.Pref;
 import com.jabbar.Utils.ResponseListener;
 import com.jabbar.Utils.Utils;
 
 import org.apache.commons.lang3.StringEscapeUtils;
+
+import java.io.File;
 
 import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
 import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
@@ -106,12 +109,16 @@ public class PreviewStoryImage extends AppCompatActivity {
                         public void onResponce(String tag, int result, Object obj) {
                             progressDialog.dismiss();
                             if (tag.equalsIgnoreCase(Config.TAG_ADD_STORY) && result == 0) {
+                                setResult(RESULT_OK);
+                                finish();
 
+                            } else {
+                                new JabbarDialog(PreviewStoryImage.this, obj.toString()).show();
                             }
                         }
-                    });
+                    }).execute();
                 } else {
-
+                    new JabbarDialog(PreviewStoryImage.this, getString(R.string.no_internet)).show();
                 }
             }
         });
@@ -133,6 +140,7 @@ public class PreviewStoryImage extends AppCompatActivity {
         mImage = (ImageViewTouch) findViewById(R.id.image);
         mImage.setDisplayType(ImageViewTouchBase.DisplayType.FIT_IF_BIGGER);
         fileName = getIntent().getStringExtra(FILE_PATH_ARG);
+        Log.print("=====length====" + new File(fileName).length() / 1024);
         isStorage = getIntent().getBooleanExtra(FILE_PATH_ARG, false);
         LoadImage(Uri.parse(getIntent().getStringExtra(FILE_PATH_ARG)));
         mImage.setSingleTapListener(

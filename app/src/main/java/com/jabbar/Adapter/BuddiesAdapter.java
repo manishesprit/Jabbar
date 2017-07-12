@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.jabbar.Bean.ContactsBean;
 import com.jabbar.MyClickListener;
 import com.jabbar.R;
-import com.jabbar.Ui.ChatActivity;
+import com.jabbar.Ui.ChatNewActivity;
 import com.jabbar.Ui.ProfileActivity;
 import com.jabbar.Utils.Utils;
 
@@ -78,7 +78,7 @@ public class BuddiesAdapter extends RecyclerView.Adapter<BuddiesAdapter.MyHolder
         holder.rlRow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((Activity) context).startActivityForResult(new Intent(context, ChatActivity.class).putExtra("data", contactBeanArrayList.get(position)), CODE_CHAT);
+                ((Activity) context).startActivityForResult(new Intent(context, ChatNewActivity.class).putExtra("data", contactBeanArrayList.get(position)), CODE_CHAT);
             }
         });
 

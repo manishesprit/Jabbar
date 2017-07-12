@@ -8,11 +8,11 @@ import java.io.Serializable;
 
 public class StoryBean implements Serializable {
     public int id;
-    public int userId;
-    public String statusPic;
-    public String time;
-    public int isShow;
+    public int userid;
+    public String story_image;
     public String caption;
+    public String create_time;
+    public int isShow;
     public String userName;
     public String userAvatar;
 }

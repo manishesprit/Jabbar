@@ -7,16 +7,14 @@ import com.google.android.gms.gcm.GcmListenerService;
 import com.jabbar.Bean.MessageBean;
 import com.jabbar.Bll.MessageBll;
 import com.jabbar.Ui.AuthenticationAlertActivity;
-import com.jabbar.Ui.ChatActivity;
-import com.jabbar.Ui.VerifyCodeActivity;
+import com.jabbar.Ui.ChatNewActivity;
 import com.jabbar.Utils.Config;
 import com.jabbar.Utils.Log;
 import com.jabbar.Utils.Pref;
 import com.jabbar.Utils.Utils;
 
-import org.apache.commons.codec.StringEncoder;
 import org.apache.commons.lang3.StringEscapeUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
@@ -46,26 +44,30 @@ public class MyFirebaseMessagingService extends GcmListenerService {
             } else if (jsonObject.has("type") && jsonObject.getInt("type") == 2) {
                 if (jsonObject.has("userid") && jsonObject.getInt("userid") == Pref.getValue(getApplicationContext(), Config.PREF_USERID, 0)) {
 
-
                     JSONObject message = jsonObject.getJSONObject("message");
-                    MessageBean messageBean = new MessageBean();
-                    messageBean.id = message.getInt("id");
-                    messageBean.userid = message.getInt("userid");
-                    messageBean.friendid = Pref.getValue(getApplicationContext(), Config.PREF_USERID, 0);
-                    messageBean.msg = StringEscapeUtils.unescapeJava(message.getString("message"));
-                    messageBean.create_time = message.getString("create_time");
+                    JSONArray messageslist = message.getJSONArray("messageslist");
+                    if (messageslist != null && messageslist.length() > 0) {
+                        for (int i = 0; i < messageslist.length(); i++) {
+                            JSONObject msgObj = messageslist.getJSONObject(i);
+                            MessageBean messageBean = new MessageBean();
+                            messageBean.id = msgObj.getInt("id");
+                            messageBean.userid = message.getInt("userid");
+                            messageBean.friendid = Pref.getValue(getApplicationContext(), Config.PREF_USERID, 0);
+                            messageBean.msg = StringEscapeUtils.unescapeJava(msgObj.getString("message"));
+                            messageBean.create_time = msgObj.getString("create_time");
 
-                    if (ChatActivity.chatActivity != null) {
-                        Intent newintent = new Intent(getApplicationContext(), ChatActivity.class);
-                        newintent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        newintent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                        newintent.putExtra("messageBean", messageBean);
-                        startActivity(newintent);
-                    } else {
-                        messageBean.isread = 0;
-                        new MessageBll(getApplicationContext()).InsertMessage(messageBean, true);
+                            if (ChatNewActivity.chatActivity != null) {
+                                Intent newintent = new Intent(getApplicationContext(), ChatNewActivity.class);
+                                newintent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                newintent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                                newintent.putExtra("messageBean", messageBean);
+                                startActivity(newintent);
+                            } else {
+                                messageBean.isread = 0;
+                                new MessageBll(getApplicationContext()).InsertMessage(messageBean, true);
+                            }
+                        }
                     }
-
                 }
             }
         } catch (Exception e) {

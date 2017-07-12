@@ -16,10 +16,12 @@ import android.widget.ProgressBar;
 
 import com.jabbar.API.ChangeFavoriteAPI;
 import com.jabbar.API.GetContactAPI;
+import com.jabbar.API.GetStoryAPI;
 import com.jabbar.Adapter.BuddiesAdapter;
 import com.jabbar.Adapter.StoryAdapter;
 import com.jabbar.Bean.ContactsBean;
 import com.jabbar.Bean.ExitsContactBean;
+import com.jabbar.Bean.StoryBean;
 import com.jabbar.Bll.StoryBll;
 import com.jabbar.Bll.UserBll;
 import com.jabbar.MyClickListener;
@@ -56,6 +58,8 @@ public class BuddiesFragment extends Fragment implements ResponseListener, GetLo
     private Handler handler;
     private Runnable runnable;
     int Attempt = 0;
+
+    public ArrayList<StoryBean> storyBeanArrayList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -96,11 +100,25 @@ public class BuddiesFragment extends Fragment implements ResponseListener, GetLo
         mLayoutManagerStory = new LinearLayoutManager(getContext());
         mLayoutManagerStory.setOrientation(LinearLayoutManager.HORIZONTAL);
         rcvStory.setLayoutManager(mLayoutManagerStory);
-        storyAdapter = new StoryAdapter(getContext(), new StoryBll(getContext()).getStoryListWithGroup());
+        storyBeanArrayList = new ArrayList<>();
+        storyAdapter = new StoryAdapter(getContext(), storyBeanArrayList);
         rcvStory.setAdapter(storyAdapter);
+
+        if (Utils.isOnline(getContext())) {
+            new GetStoryAPI(getContext(), BuddiesFragment.this);
+        }
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        storyBeanArrayList.clear();
+        storyBeanArrayList.addAll(new StoryBll(getContext()).getStoryListWithGroup());
+        storyAdapter.notifyDataSetChanged();
+
+    }
 
     @Override
     public void onResponce(String tag, int result, Object obj) {
@@ -111,13 +129,22 @@ public class BuddiesFragment extends Fragment implements ResponseListener, GetLo
             contactsBeanArrayList.addAll(new UserBll(getContext()).geBuddiestList(false));
             buddiesAdapter.notifyDataSetChanged();
             HomeActivity.isFavoriteUpdate = true;
+
+            storyBeanArrayList.clear();
+            storyBeanArrayList.addAll(new StoryBll(getContext()).getStoryListWithGroup());
+            storyAdapter.notifyDataSetChanged();
+
         } else if (tag.equalsIgnoreCase(Config.TAG_CHANGE_FAVORITE) && result == 0) {
             new UserBll(getContext()).updateFavoriteContact(contactsBeanArrayList.get(Clickpos).userid, (int) obj);
             contactsBeanArrayList.get(Clickpos).isFavorite = (int) obj;
             buddiesAdapter.notifyDataSetChanged();
             HomeActivity.isFavoriteUpdate = true;
+        } else if (tag.equalsIgnoreCase(Config.TAG_GET_STORY_LIST) && result == 0) {
+            storyBeanArrayList.clear();
+            storyBeanArrayList.addAll(new StoryBll(getContext()).getStoryListWithGroup());
+            storyAdapter.notifyDataSetChanged();
         } else {
-            new JabbarDialog(getContext(), getString(R.string.no_internet)).show();
+            new JabbarDialog(getContext(), obj.toString()).show();
         }
         Clickpos = -1;
     }

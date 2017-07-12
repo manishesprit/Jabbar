@@ -14,8 +14,8 @@
 
     <ImageView
         android:id="@+id/conversation_contact_photo"
-        android:layout_width="?attr/actionBarSize"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_width="@dimen/avatar"
+        android:layout_height="@dimen/avatar"
         android:layout_marginBottom="@dimen/MarginSaven"
         android:layout_marginLeft="-5dp"
         android:layout_marginTop="@dimen/MarginSaven"

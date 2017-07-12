@@ -11,4 +11,5 @@ public class MessageBean extends ResponseBean {
     public String msg;
     public String create_time;
     public int isread;
+    public String tempId;
 }

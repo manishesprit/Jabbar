@@ -8,10 +8,11 @@
 
     <include layout="@layout/layout_custome_toolbar"></include>
 
+
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#003326">
+        android:layout_height="match_parent">
+
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerview_chat"
@@ -34,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:layout_toLeftOf="@+id/rel_send"
                 android:background="@drawable/edit_border"
-                android:padding="5dp">
+                android:padding="3dp">
 
                 <hani.momanii.supernova_emoji_library.Helper.EmojiconEditText
                     android:id="@+id/edit_msg"
@@ -54,7 +55,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:padding="5dp"
+                    android:padding="3dp"
                     android:src="@drawable/smiley" />
 
 
@@ -73,14 +74,28 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/small_round"
-                    android:padding="10dp"
-                    android:src="@drawable/ic_mic_black_24dp"
-                    android:text="SEND" />
+                    android:padding="5dp"
+                    android:src="@drawable/ic_mic_black_24dp" />
 
 
             </RelativeLayout>
 
         </RelativeLayout>
+
+
+        <TextView
+            android:id="@+id/txtNoOfUnreadMsg"
+            android:layout_width="@dimen/MarginTwety"
+            android:layout_height="@dimen/MarginTwety"
+            android:layout_above="@+id/rel1"
+            android:layout_alignParentRight="true"
+            android:layout_margin="@dimen/MarginTwety"
+            android:background="@drawable/small_round"
+            android:gravity="center"
+            android:text="45"
+            android:textColor="@color/colorAccent"
+            android:textSize="@dimen/textSmall"
+            android:visibility="visible" />
 
     </RelativeLayout>
 

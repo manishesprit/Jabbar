@@ -46,6 +46,8 @@ import com.jabbar.Utils.Utils;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class AddStoryActivity extends AppCompatActivity {
@@ -64,16 +66,17 @@ public class AddStoryActivity extends AppCompatActivity {
     private ImageView imgGallery;
     private RelativeLayout record_panel;
     private GridView rv_image_panel;
-    private ArrayList<String> imageArrayList;
+    private ArrayList<ImageBean> imageArrayList;
     private RelativeLayout rlBack;
     private ImageView conversation_contact_photo;
+    public static Activity activity;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_add_story);
-
+        activity = this;
 
         camera_switcher = (CameraSwitchView) findViewById(R.id.camera_switcher);
         record_button = (RecordButton) findViewById(R.id.record_button);
@@ -379,26 +382,56 @@ public class AddStoryActivity extends AppCompatActivity {
 
     private void getAllShownImagesPath() {
 
+        imageArrayList = new ArrayList<>();
+        getImageList(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, imageArrayList);
+        getImageList(MediaStore.Images.Media.INTERNAL_CONTENT_URI, imageArrayList);
 
-        Uri uri;
-        Cursor cursor;
-        int column_index_data;
-        imageArrayList = new ArrayList<String>();
-        String absolutePathOfImage = null;
-        uri = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-        String[] projection = {MediaStore.MediaColumns.DATA, MediaStore.Images.Media.BUCKET_DISPLAY_NAME, MediaStore.Images.ImageColumns.DATE_TAKEN};
-        String orderBy = MediaStore.Images.ImageColumns.DATE_TAKEN + " DESC";
-        cursor = getContentResolver().query(uri, projection, null, null, orderBy);
-        column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
-        while (cursor.moveToNext()) {
-            absolutePathOfImage = cursor.getString(column_index_data);
 
-            imageArrayList.add(absolutePathOfImage);
-        }
+        Log.print("=====Collections=====");
+        Collections.sort(imageArrayList, new Comparator<ImageBean>() {
+            @Override
+            public int compare(ImageBean o1, ImageBean o2) {
+                return o1.DATE_TAKEN.compareTo(o2.DATE_TAKEN);
+            }
+        });
         System.out.println("=========imageBeanArrayList=====" + imageArrayList.size());
         ImageAdapter imageAdapter = new ImageAdapter(this);
         rv_image_panel.setAdapter(imageAdapter);
 
+    }
+
+    public class ImageBean {
+        public String path;
+        public String DATE_TAKEN;
+    }
+
+    public void getImageList(Uri uri, ArrayList<ImageBean> imageBeanArrayList) {
+        Cursor cursor;
+        int column_index_data;
+        int column_index_date_time;
+        String[] projection = {MediaStore.MediaColumns.DATA, MediaStore.Images.Media.BUCKET_DISPLAY_NAME, MediaStore.Images.ImageColumns.DATE_TAKEN};
+        String orderBy = MediaStore.Images.ImageColumns.DATE_TAKEN + " DESC";
+        cursor = getContentResolver().query(uri, projection, null, null, orderBy);
+        column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
+        column_index_date_time = cursor.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.DATE_TAKEN);
+        while (cursor.moveToNext()) {
+            ImageBean imageBean = new ImageBean();
+            imageBean.path = cursor.getString(column_index_data);
+            imageBean.DATE_TAKEN = cursor.getString(column_index_date_time);
+            imageBeanArrayList.add(imageBean);
+        }
+        cursor.close();
+    }
+
+    @Override
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_PREVIEW_CODE && resultCode == RESULT_OK) {
+            setResult(RESULT_OK);
+            finish();
+        }
     }
 
     private class ImageAdapter extends BaseAdapter {
@@ -441,12 +474,12 @@ public class AddStoryActivity extends AppCompatActivity {
             picturesView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = PreviewStoryImage.newIntentPhoto(AddStoryActivity.this, imageArrayList.get(position), true);
+                    Intent intent = PreviewStoryImage.newIntentPhoto(AddStoryActivity.this, imageArrayList.get(position).path, true);
                     startActivityForResult(intent, REQUEST_PREVIEW_CODE);
                 }
             });
 
-            Glide.with(context).load(imageArrayList.get(position))
+            Glide.with(context).load(imageArrayList.get(position).path)
                     .placeholder(R.drawable.ic_gallery).centerCrop()
                     .into(picturesView);
 
