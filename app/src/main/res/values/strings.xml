@@ -50,12 +50,14 @@
         completions."
     </string>
 
+    <string name="setting">Setting</string>
     <string name="account">Account</string>
-
+    <string name="chat_setting">Chat setting</string>
+    <string name="set_wallpaper">Set Wallpaper</string>
 
     <string name="profile">Profile</string>
 
-
+    <string name="privacy">Privacy</string>
     <string name="status">Status</string>
 
 </resources>

@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 
 import com.jabbar.Adapter.StoryFragment;
 import com.jabbar.Adapter.StoryFragmentAdapter;
@@ -14,6 +13,7 @@ import com.jabbar.OnNextSlideChange;
 import com.jabbar.R;
 import com.jabbar.RotateDown;
 import com.jabbar.Utils.Log;
+import com.jabbar.Utils.Utils;
 
 import java.util.ArrayList;
 
@@ -21,7 +21,7 @@ import java.util.ArrayList;
  * Created by user on 26/6/17.
  */
 
-public class ViewStoryActivity extends AppCompatActivity implements OnNextSlideChange {
+public class ViewStoryActivity extends BaseActivity implements OnNextSlideChange {
     private Context context;
     private ViewPager vwpImage;
     private StoryFragmentAdapter storyFragmentAdapter;
@@ -33,6 +33,7 @@ public class ViewStoryActivity extends AppCompatActivity implements OnNextSlideC
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_story);
+        Utils.addActivities(this);
         context = ViewStoryActivity.this;
         storyBeanArrayList = (ArrayList<StoryBean>) getIntent().getSerializableExtra("userBeanArrayList");
         vwpImage = (ViewPager) findViewById(R.id.vwpImage);

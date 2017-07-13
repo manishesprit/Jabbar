@@ -7,7 +7,6 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -31,7 +30,7 @@ import java.io.File;
 /*
  * Created by memfis on 7/6/16.
  */
-public class PreviewStoryActivity extends AppCompatActivity implements View.OnClickListener {
+public class PreviewStoryActivity extends BaseActivity implements View.OnClickListener {
 
     private static final String TAG = "PreviewActivity";
 
@@ -82,10 +81,10 @@ public class PreviewStoryActivity extends AppCompatActivity implements View.OnCl
 
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_preview_story);
-
+        com.jabbar.Utils.Utils.addActivities(this);
         String originalRatioLabel = getString(R.string.preview_controls_original_ratio_label);
         ratioLabels = new String[]{originalRatioLabel, "1:1", "4:3", "16:9"};
         ratios = new float[]{0f, 1f, 4f / 3f, 16f / 9f};

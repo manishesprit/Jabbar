@@ -10,7 +10,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.ImageView;
@@ -41,7 +40,7 @@ import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
  * Created by hardikjani on 7/6/17.
  */
 
-public class PreviewStoryImage extends AppCompatActivity {
+public class PreviewStoryImage extends BaseActivity {
 
     private ProgressDialog progressDialog;
     private final static String MEDIA_ACTION_ARG = "media_action_arg";
@@ -75,6 +74,7 @@ public class PreviewStoryImage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_preview_story_image);
+        Utils.addActivities(this);
         Bundle args = getIntent().getExtras();
 
 

@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -267,6 +268,28 @@ public class Utils {
     public static String convertStringDateToStringDate(SimpleDateFormat oldDateFormate, SimpleDateFormat newDateFormate, String date) {
         try {
             return newDateFormate.format(oldDateFormate.parse(date));
+        } catch (Exception e) {
+
+        }
+        return "";
+    }
+
+    public static String getLastSeen(SimpleDateFormat oldDateFormate, String date) {
+        try {
+            Date last_seen = oldDateFormate.parse(date);
+            Date current_seen = new Date();
+
+            long diff = current_seen.getTime() - last_seen.getTime();
+            Log.print("======diff=====" + diff);
+            Log.print("last_seen.getDay() == current_seen.getDay()======" + last_seen.getDate() + "-------" + current_seen.getDate());
+            if (diff <= (1000 * 120)) {
+                return "online";
+            } else if (last_seen.getDate() == current_seen.getDate()) {
+                return "last seen Today " + new SimpleDateFormat("HH:mm").format(last_seen);
+            } else {
+                return "last seen " + new SimpleDateFormat("dd MMM,yyyy").format(last_seen);
+            }
+
         } catch (Exception e) {
 
         }

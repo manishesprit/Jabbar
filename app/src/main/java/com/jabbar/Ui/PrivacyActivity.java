@@ -33,12 +33,15 @@ public class PrivacyActivity extends BaseActivity implements View.OnClickListene
     private TextView txtProfile;
     private LinearLayout llLastSeen;
     private TextView txtLastSeen;
+    private LinearLayout llLocation;
+    private TextView txtLocation;
 
     private String[] privacy;
 
     public int status_privacy = 0;
     public int profile_privacy = 0;
     public int last_seen_privacy = 0;
+    public int location_privacy = 0;
 
     private ProgressDialog progressDialog;
     private Dialog dialog;
@@ -61,9 +64,11 @@ public class PrivacyActivity extends BaseActivity implements View.OnClickListene
         txtProfile = (TextView) findViewById(R.id.txtProfile);
         llLastSeen = (LinearLayout) findViewById(R.id.llLastSeen);
         txtLastSeen = (TextView) findViewById(R.id.txtLastSeen);
+        llLocation = (LinearLayout) findViewById(R.id.llLocation);
+        txtLocation = (TextView) findViewById(R.id.txtLocation);
 
 
-        privacy = Pref.getValue(this, Config.PREF_PRIVACY, "0,0,0").split(",");
+        privacy = Pref.getValue(this, Config.PREF_PRIVACY, "0,0,0,0").split(",");
 
         setPrivacy();
     }
@@ -104,6 +109,18 @@ public class PrivacyActivity extends BaseActivity implements View.OnClickListene
             txtLastSeen.setText("no buddie");
             last_seen_privacy = 2;
         }
+
+        // last seen privacy
+        if (privacy[3].equalsIgnoreCase("0")) {
+            txtLocation.setText("public");
+            location_privacy = 0;
+        } else if (privacy[3].equalsIgnoreCase("1")) {
+            txtLocation.setText("my contact");
+            location_privacy = 1;
+        } else if (privacy[3].equalsIgnoreCase("2")) {
+            txtLocation.setText("no buddie");
+            location_privacy = 2;
+        }
     }
 
     @Override
@@ -127,6 +144,10 @@ public class PrivacyActivity extends BaseActivity implements View.OnClickListene
 
             case R.id.llLastSeen:
                 ShowDialog(2, "Last seen", last_seen_privacy);
+                break;
+
+            case R.id.llLocation:
+                ShowDialog(3, "Location", location_privacy);
                 break;
         }
     }
@@ -180,7 +201,7 @@ public class PrivacyActivity extends BaseActivity implements View.OnClickListene
             if (tag.equalsIgnoreCase(Config.TAG_CHANGE_PRIVACY) && result == 0) {
                 Pref.setValue(PrivacyActivity.this, Config.PREF_PRIVACY, obj.toString());
             } else {
-                privacy = Pref.getValue(PrivacyActivity.this, Config.PREF_PRIVACY, "0,0,0").split(",");
+                privacy = Pref.getValue(PrivacyActivity.this, Config.PREF_PRIVACY, "0,0,0,0").split(",");
             }
             setPrivacy();
         }

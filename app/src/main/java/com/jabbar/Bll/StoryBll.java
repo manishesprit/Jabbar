@@ -199,7 +199,7 @@ public class StoryBll {
             long hours = minutes / 60;
 
             minutes = minutes - (hours * 60);
-            seconds = seconds - (hours * 60 * 60);
+            seconds = seconds - (minutes * 60);
             if (hours >= 1) {
                 datediff = hours + "h ";
                 datediff = datediff + minutes + "m";

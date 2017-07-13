@@ -39,6 +39,8 @@ public class SendMessageNewAPI {
         this.responseListener = responseListener;
         isCallAPI = true;
         SendNewMessageRoutAPI apiMethod = Utils.getRetrofit().create(SendNewMessageRoutAPI.class);
+        Log.print("====data======" + data);
+        Log.print("====String.valueOf(Pref.getValue(context, Config.PREF_USERID, 0))======" + String.valueOf(Pref.getValue(context, Config.PREF_USERID, 0)));
         Call<SendMessageBean> call = apiMethod.getBean(String.valueOf(Pref.getValue(context, Config.PREF_USERID, 0)), data);
 
         call.enqueue(new Callback<SendMessageBean>() {

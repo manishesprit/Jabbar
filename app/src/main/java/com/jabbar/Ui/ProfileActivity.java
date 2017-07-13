@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.transition.Slide;
@@ -30,7 +29,7 @@ import hani.momanii.supernova_emoji_library.Helper.EmojiconTextView;
  * Created by hardikjani on 6/29/17.
  */
 
-public class ProfileActivity extends AppCompatActivity {
+public class ProfileActivity extends BaseActivity {
 
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private ImageView image;
@@ -45,8 +44,8 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initActivityTransitions();
         setContentView(R.layout.activity_profile);
+        Utils.addActivities(this);
         context = this;
 
         if (getIntent().getExtras() != null) {

@@ -61,7 +61,7 @@
                 android:maxLines="1"
                 android:padding="3dp"
                 android:singleLine="true"
-                android:textColor="@color/colorAccent"
+                android:textColor="@color/color_title"
                 android:textSize="@dimen/textMediumExtra"
                 emojicon:emojiconSize="@dimen/textLarge" />
 

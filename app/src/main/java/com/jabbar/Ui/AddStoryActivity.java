@@ -14,7 +14,6 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresPermission;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,7 +49,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class AddStoryActivity extends AppCompatActivity {
+public class AddStoryActivity extends BaseActivity {
 
 
     public static final int REQUEST_CAMERA_PERMISSIONS = 931;
@@ -76,6 +75,7 @@ public class AddStoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_add_story);
+        Utils.addActivities(this);
         activity = this;
 
         camera_switcher = (CameraSwitchView) findViewById(R.id.camera_switcher);

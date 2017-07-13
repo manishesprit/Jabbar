@@ -41,12 +41,12 @@ public class GetContactAPI {
         mParams.put("userid", String.valueOf(Pref.getValue(context, Config.PREF_USERID, 0)));
         mParams.put("udid", Pref.getValue(context, Config.PREF_UDID, ""));
         mParams.put("location", Pref.getValue(context, Config.PREF_LOCATION, "0,0"));
-        mParams.put("contacts", ConvertArrayToString(exitsContactBeanArrayList));
+        mParams.put("contacts", ConvertArrayToString(exitsContactBeanArrayList, Pref.getValue(context, Config.PREF_MOBILE_NUMBER, "")));
 
         Log.print("======GetContactAPI====" + mParams);
 
         GetContactRoutAPI apiMethod = Utils.getRetrofit().create(GetContactRoutAPI.class);
-        Call<ContactListBean> call = apiMethod.getBean(String.valueOf(Pref.getValue(context, Config.PREF_USERID, 0)), Pref.getValue(context, Config.PREF_UDID, ""), Pref.getValue(context, Config.PREF_LOCATION, "0,0"), ConvertArrayToString(exitsContactBeanArrayList));
+        Call<ContactListBean> call = apiMethod.getBean(String.valueOf(Pref.getValue(context, Config.PREF_USERID, 0)), Pref.getValue(context, Config.PREF_UDID, ""), Pref.getValue(context, Config.PREF_LOCATION, "0,0"), ConvertArrayToString(exitsContactBeanArrayList, Pref.getValue(context, Config.PREF_MOBILE_NUMBER, "")));
 
         call.enqueue(new Callback<ContactListBean>() {
             @Override
@@ -94,11 +94,13 @@ public class GetContactAPI {
 
     }
 
-    public String ConvertArrayToString(ArrayList<ExitsContactBean> exitsContactBeanArrayList) {
+    public String ConvertArrayToString(ArrayList<ExitsContactBean> exitsContactBeanArrayList, String mobile_number) {
         String str = "";
 
         for (ExitsContactBean exitsContactBean : exitsContactBeanArrayList) {
-            str += "," + exitsContactBean.mobile_number;
+            if (!mobile_number.equalsIgnoreCase(exitsContactBean.mobile_number)) {
+                str += "," + exitsContactBean.mobile_number;
+            }
         }
         return str.substring(1, str.length());
     }

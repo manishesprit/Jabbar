@@ -35,7 +35,7 @@ public class AuthenticationAPI {
     public Context context;
     public ResponseListener responseListener;
 
-    public AuthenticationAPI(final Context context, final ResponseListener responseListener, final String mobile_number,final ArrayList<ExitsContactBean> exitsContactBeanArrayList) {
+    public AuthenticationAPI(final Context context, final ResponseListener responseListener, final String mobile_number, final ArrayList<ExitsContactBean> exitsContactBeanArrayList) {
         this.context = context;
         this.responseListener = responseListener;
         HashMap<String, String> mParams = new HashMap<String, String>();
@@ -43,11 +43,12 @@ public class AuthenticationAPI {
         mParams.put("udid", Pref.getValue(context, Config.PREF_UDID, ""));
         mParams.put("location", Pref.getValue(context, Config.PREF_LOCATION, "0,0"));
         mParams.put("pushid", Pref.getValue(context, Config.PREF_PUSH_ID, ""));
+        mParams.put("contacts", ConvertArrayToString(exitsContactBeanArrayList, mobile_number));
 
         Log.print("======AuthenticationAPI====" + mParams);
 
         AuthenticationRoutAPI apiMethod = Utils.getRetrofit().create(AuthenticationRoutAPI.class);
-        Call<AuthenticationBean> call = apiMethod.getBean(mobile_number, Pref.getValue(context, Config.PREF_UDID, ""), Pref.getValue(context, Config.PREF_LOCATION, "0,0"), Pref.getValue(context, Config.PREF_PUSH_ID, ""));
+        Call<AuthenticationBean> call = apiMethod.getBean(mobile_number, Pref.getValue(context, Config.PREF_UDID, ""), Pref.getValue(context, Config.PREF_LOCATION, "0,0"), Pref.getValue(context, Config.PREF_PUSH_ID, ""), ConvertArrayToString(exitsContactBeanArrayList, mobile_number));
 
         call.enqueue(new Callback<AuthenticationBean>() {
             @Override
@@ -95,7 +96,18 @@ public class AuthenticationAPI {
     public interface AuthenticationRoutAPI {
         @FormUrlEncoded
         @POST(Config.API_AUTHENTICATION)
-        Call<AuthenticationBean> getBean(@Field("mobile_number") String mobile_number, @Field("udid") String udid, @Field("location") String location, @Field("pushid") String pushid);
+        Call<AuthenticationBean> getBean(@Field("mobile_number") String mobile_number, @Field("udid") String udid, @Field("location") String location, @Field("pushid") String pushid, @Field("contacts") String contacts);
 
+    }
+
+    public String ConvertArrayToString(ArrayList<ExitsContactBean> exitsContactBeanArrayList, String mobile_number) {
+        String str = "";
+
+        for (ExitsContactBean exitsContactBean : exitsContactBeanArrayList) {
+            if (!mobile_number.equalsIgnoreCase(exitsContactBean.mobile_number)) {
+                str += "," + exitsContactBean.mobile_number;
+            }
+        }
+        return str.substring(1, str.length());
     }
 }

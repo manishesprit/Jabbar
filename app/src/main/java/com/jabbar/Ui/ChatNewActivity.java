@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,8 +17,10 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -28,6 +31,7 @@ import com.jabbar.Adapter.ChatAdpater;
 import com.jabbar.Bean.ContactsBean;
 import com.jabbar.Bean.MessageBean;
 import com.jabbar.Bll.MessageBll;
+import com.jabbar.Bll.UserBll;
 import com.jabbar.R;
 import com.jabbar.Utils.BadgeUtils;
 import com.jabbar.Utils.Config;
@@ -69,6 +73,9 @@ public class ChatNewActivity extends BaseActivity implements View.OnClickListene
     private TextView txtNoOfUnreadMsg;
     private int totalUnreadMsg = 0;
     public int totalVisibleMsg;
+    public UserBll userBll;
+    public Handler handler;
+    public Runnable runnable;
 
     @Override
     protected void onStart() {
@@ -90,8 +97,11 @@ public class ChatNewActivity extends BaseActivity implements View.OnClickListene
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_chat);
-//        Drawable d = Drawable.createFromPath(pathName);
-        getWindow().setBackgroundDrawableResource(R.drawable.wallpaper1);
+        try {
+            Drawable d = Drawable.createFromStream(getAssets().open(Pref.getValue(this, Config.PREF_WALLPAPER, "wallpaper1.jpg")), null);
+            getWindow().setBackgroundDrawable(d);
+        } catch (Exception e) {
+        }
         Utils.addActivities(this);
         rootView = (LinearLayout) findViewById(R.id.root_view);
         edit_msg = (EmojiconEditText) findViewById(R.id.edit_msg);
@@ -104,7 +114,7 @@ public class ChatNewActivity extends BaseActivity implements View.OnClickListene
         recyclerview_chat.setLayoutManager(linearLayoutManager);
 
         messageBll = new MessageBll(this);
-
+        userBll = new UserBll(this);
         contactsBean = (ContactsBean) getIntent().getSerializableExtra("data");
         if (contactsBean != null) {
 
@@ -120,8 +130,8 @@ public class ChatNewActivity extends BaseActivity implements View.OnClickListene
             imgBack = (ImageView) findViewById(R.id.imgBack);
 
             txtBuddiesName.setText(contactsBean.name);
-            txtLastSeen.setText(contactsBean.last_seen);
-            txtLastSeen.setVisibility(View.VISIBLE);
+//            txtLastSeen.setText(contactsBean.last_seen);
+
 
             Utils.setGlideImage(this, contactsBean.avatar, conversation_contact_photo, true);
 
@@ -131,6 +141,21 @@ public class ChatNewActivity extends BaseActivity implements View.OnClickListene
             recyclerview_chat.smoothScrollToPosition(messageBeanArrayList.size());
 
             llBuddiesName.setOnClickListener(this);
+
+
+            handler = new Handler();
+            runnable = new Runnable() {
+                @Override
+                public void run() {
+                    contactsBean = userBll.getUserDetail(contactsBean.userid);
+                    txtLastSeen.setText(contactsBean.last_seen);
+                    txtLastSeen.setVisibility(View.VISIBLE);
+                    handler.postDelayed(runnable, 15000);
+                }
+            };
+
+            handler.postDelayed(runnable, 2000);
+
         } else {
             finish();
         }
@@ -152,12 +177,6 @@ public class ChatNewActivity extends BaseActivity implements View.OnClickListene
         emojIcon.setIconsIds(R.drawable.ic_action_keyboard, R.drawable.smiley);
 
         img_emoji.performClick();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                img_emoji.performClick();
-            }
-        }, 300);
 
 
         edit_msg.addTextChangedListener(new TextWatcher() {
@@ -210,6 +229,33 @@ public class ChatNewActivity extends BaseActivity implements View.OnClickListene
             }
         });
 
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if (handler != null) {
+            handler.removeCallbacks(runnable);
+        }
+
+        Utils.trimCache(this);
+        Runtime.getRuntime().gc();
+        unbindDrawables(rootView);
+        System.gc();
+    }
+
+    private void unbindDrawables(View view) {
+        if (view.getBackground() != null) {
+            view.getBackground().setCallback(null);
+        }
+        if (view instanceof ViewGroup && !(view instanceof AdapterView)) {
+            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+                unbindDrawables(((ViewGroup) view).getChildAt(i));
+            }
+            ((ViewGroup) view).removeAllViews();
+        }
     }
 
     @Override

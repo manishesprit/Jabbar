@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
-import com.jabbar.API.ChangeFavoriteAPI;
 import com.jabbar.API.GetContactAPI;
 import com.jabbar.API.GetStoryAPI;
 import com.jabbar.Adapter.BuddiesAdapter;
@@ -52,7 +51,6 @@ public class BuddiesFragment extends Fragment implements ResponseListener, GetLo
     private LinearLayoutManager mLayoutManagerStory;
 
     private ProgressBar progress_refresh;
-    private int Clickpos = -1;
     private GetLocation getLocation;
 
     private Handler handler;
@@ -77,10 +75,12 @@ public class BuddiesFragment extends Fragment implements ResponseListener, GetLo
     }
 
     public void ListUpdate() {
-        new UserBll(getContext()).UpdateDirectContact(contactsBeanArrayList);
-        contactsBeanArrayList.clear();
-        contactsBeanArrayList.addAll(new UserBll(getContext()).geBuddiestList(false));
-        buddiesAdapter.notifyDataSetChanged();
+        if (contactsBeanArrayList != null) {
+            new UserBll(getContext()).UpdateDirectContact(contactsBeanArrayList);
+            contactsBeanArrayList.clear();
+            contactsBeanArrayList.addAll(new UserBll(getContext()).geBuddiestList(false));
+            buddiesAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -134,11 +134,6 @@ public class BuddiesFragment extends Fragment implements ResponseListener, GetLo
             storyBeanArrayList.addAll(new StoryBll(getContext()).getStoryListWithGroup());
             storyAdapter.notifyDataSetChanged();
 
-        } else if (tag.equalsIgnoreCase(Config.TAG_CHANGE_FAVORITE) && result == 0) {
-            new UserBll(getContext()).updateFavoriteContact(contactsBeanArrayList.get(Clickpos).userid, (int) obj);
-            contactsBeanArrayList.get(Clickpos).isFavorite = (int) obj;
-            buddiesAdapter.notifyDataSetChanged();
-            HomeActivity.isFavoriteUpdate = true;
         } else if (tag.equalsIgnoreCase(Config.TAG_GET_STORY_LIST) && result == 0) {
             storyBeanArrayList.clear();
             storyBeanArrayList.addAll(new StoryBll(getContext()).getStoryListWithGroup());
@@ -146,21 +141,16 @@ public class BuddiesFragment extends Fragment implements ResponseListener, GetLo
         } else {
             new JabbarDialog(getContext(), obj.toString()).show();
         }
-        Clickpos = -1;
     }
 
     public MyClickListener myClickListener = new MyClickListener() {
         @Override
         public void onClick(int pos) {
-            if (Utils.isOnline(getContext())) {
-                if (progress_refresh.getVisibility() == View.GONE) {
-                    progress_refresh.setVisibility(View.VISIBLE);
-                    Clickpos = pos;
-                    new ChangeFavoriteAPI(getContext(), BuddiesFragment.this, contactsBeanArrayList.get(pos).userid);
-                }
-            } else {
-                new JabbarDialog(getContext(), getString(R.string.no_internet)).show();
-            }
+
+            new UserBll(getContext()).updateFavoriteContact(contactsBeanArrayList.get(pos).userid, contactsBeanArrayList.get(pos).isFavorite == 0 ? 1 : 0);
+            contactsBeanArrayList.get(pos).isFavorite = contactsBeanArrayList.get(pos).isFavorite == 0 ? 1 : 0;
+            buddiesAdapter.notifyDataSetChanged();
+            HomeActivity.isFavoriteUpdate = true;
         }
     };
 

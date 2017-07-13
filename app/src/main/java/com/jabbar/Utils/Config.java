@@ -21,12 +21,6 @@ public class Config {
     public static String AVATAR_HOST = HOST + "avatar/";
     public static String STORY_HOST = HOST + "story/";
 
-    public static final String API_CHANGE_FAVORITE = "change_favorite.php";
-    public static String TAG_CHANGE_FAVORITE = "TAG_CHANGE_FAVORITE";
-
-    public static final String API_GET_FAVORITE = "get_favorite_list.php";
-    public static String TAG_GET_FAVORITE = "TAG_CHANGE_FAVORITE";
-
     public static final String API_UPDATE_STATUS = "update_status.php";
     public static String TAG_UPDATE_STATUS = "TAG_UPDATE_STATUS";
 
@@ -75,6 +69,7 @@ public class Config {
     public static String PREF_NAME = "PREF_NAME";
     public static String PREF_MOBILE_NUMBER = "PREF_MOBILE_NUMBER";
     public static String PREF_AVATAR = "PREF_AVATAR";
+    public static String PREF_WALLPAPER = "PREF_WALLPAPER";
     public static String PREF_STATUS = "PREF_STATUS";
     public static String PREF_PRIVACY = "PREF_PRIVACY";
     public static String PREF_DB_LEVEL = "PREF_DB_LEVEL";

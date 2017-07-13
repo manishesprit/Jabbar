@@ -65,7 +65,6 @@ public class FavoriteFragment extends Fragment implements OnMapReadyCallback, Go
         if (onlyDbUpdate) {
             AddMarker();
         } else {
-            Toast.makeText(getContext(), "OnUpdate MyMapFragment", Toast.LENGTH_SHORT).show();
             setMarker();
         }
     }

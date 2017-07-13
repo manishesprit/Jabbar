@@ -2,7 +2,7 @@ package com.jabbar.API;
 
 import android.content.Context;
 
-import com.jabbar.Bean.ChangeFavoriteBean;
+import com.jabbar.Bean.ResponseBean;
 import com.jabbar.R;
 import com.jabbar.Utils.Config;
 import com.jabbar.Utils.Log;
@@ -20,9 +20,6 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;
 
 
-/**
- * Created by admin on 10/1/17.
- */
 
 public class ChangePrivacyAPI {
     public Context context;
@@ -36,11 +33,11 @@ public class ChangePrivacyAPI {
         Log.print("======ChangeFavoriteAPI====" + mParams);
 
         ChangeFavoriteRoutAPI apiMethod = Utils.getRetrofit().create(ChangeFavoriteRoutAPI.class);
-        Call<ChangeFavoriteBean> call = apiMethod.getBean(String.valueOf(Pref.getValue(context, Config.PREF_USERID, 0)), Pref.getValue(context, Config.PREF_LOCATION, "0,0"), privacy);
+        Call<ResponseBean> call = apiMethod.getBean(String.valueOf(Pref.getValue(context, Config.PREF_USERID, 0)), Pref.getValue(context, Config.PREF_LOCATION, "0,0"), privacy);
 
-        call.enqueue(new Callback<ChangeFavoriteBean>() {
+        call.enqueue(new Callback<ResponseBean>() {
             @Override
-            public void onResponse(Call<ChangeFavoriteBean> call, Response<ChangeFavoriteBean> response) {
+            public void onResponse(Call<ResponseBean> call, Response<ResponseBean> response) {
 
                 if (response.code() == 200) {
                     if (response.body().code == 0) {
@@ -51,24 +48,21 @@ public class ChangePrivacyAPI {
                 } else {
                     responseListener.onResponce(Config.TAG_CHANGE_PRIVACY, Config.API_FAIL, context.getString(R.string.server_error));
                 }
-
             }
 
             @Override
-            public void onFailure(Call<ChangeFavoriteBean> call, Throwable t) {
+            public void onFailure(Call<ResponseBean> call, Throwable t) {
                 Log.print(t.getMessage());
                 responseListener.onResponce(Config.TAG_CHANGE_PRIVACY, Config.API_FAIL, context.getString(R.string.server_error));
 
             }
         });
-
-
     }
 
     public interface ChangeFavoriteRoutAPI {
         @FormUrlEncoded
         @POST(Config.API_CHANGE_PRIVACY)
-        Call<ChangeFavoriteBean> getBean(@Field("userid") String userid, @Field("location") String location, @Field("privacy") String privacy);
+        Call<ResponseBean> getBean(@Field("userid") String userid, @Field("location") String location, @Field("privacy") String privacy);
 
     }
 }

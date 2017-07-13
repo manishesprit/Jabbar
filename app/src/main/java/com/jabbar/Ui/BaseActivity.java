@@ -38,6 +38,7 @@ public class BaseActivity extends AppCompatActivity implements GetLocation.MyLoc
 
     }
 
+
     @Override
     protected void onResume() {
         super.onResume();

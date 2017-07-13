@@ -2,18 +2,16 @@ package com.jabbar.API;
 
 import android.content.Context;
 
-import com.jabbar.Bean.ChangeFavoriteBean;
+import com.google.gson.Gson;
 import com.jabbar.Bean.ContactListBean;
 import com.jabbar.Bean.ContactsBean;
 import com.jabbar.Bll.UserBll;
-import com.jabbar.R;
 import com.jabbar.Utils.Config;
 import com.jabbar.Utils.Log;
 import com.jabbar.Utils.Pref;
-import com.jabbar.Utils.ResponseListener;
 import com.jabbar.Utils.Utils;
 
-import java.util.HashMap;
+import org.json.JSONObject;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -22,10 +20,6 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;
 
-
-/**
- * Created by admin on 10/1/17.
- */
 
 public class GetOnlineAPI {
     public Context context;
@@ -42,6 +36,14 @@ public class GetOnlineAPI {
         call.enqueue(new Callback<ContactListBean>() {
             @Override
             public void onResponse(Call<ContactListBean> call, Response<ContactListBean> response) {
+
+                Log.print("====onResponse====response.code()=" + response.code() + "=====url=====" + call.request().url());
+                try {
+                    JSONObject jsonObject = new JSONObject(new Gson().toJson(response).toString()).getJSONObject("body");
+                    Log.print("=====jsonObject=====" + jsonObject.toString());
+                } catch (Exception e) {
+                }
+
                 isOnlineCall = false;
                 if (response.code() == 200) {
                     if (response.body().code == 0) {
@@ -53,7 +55,6 @@ public class GetOnlineAPI {
                         }
                     }
                 }
-
             }
 
             @Override
@@ -62,7 +63,6 @@ public class GetOnlineAPI {
                 Log.print(t.getMessage());
             }
         });
-
 
     }
 

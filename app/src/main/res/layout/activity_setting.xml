@@ -21,13 +21,13 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/txtPrivacy"
+            android:id="@+id/txtAccount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackground"
             android:gravity="center_vertical"
             android:padding="@dimen/MarginFifteen"
-            android:text="Privacy"
+            android:text="Account"
             android:textColor="@color/color_title"
             android:textSize="@dimen/textMediumExtra" />
 
@@ -37,13 +37,13 @@
             android:background="@color/color_gray"></View>
 
         <TextView
-            android:id="@+id/txtChange_number"
+            android:id="@+id/txtChat"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackground"
             android:gravity="center_vertical"
             android:padding="@dimen/MarginFifteen"
-            android:text="Change number"
+            android:text="Chat"
             android:textColor="@color/color_title"
             android:textSize="@dimen/textMediumExtra" />
 
@@ -53,13 +53,13 @@
             android:background="@color/color_gray"></View>
 
         <TextView
-            android:id="@+id/txtRemove_account"
+            android:id="@+id/txtProfile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackground"
             android:gravity="center_vertical"
             android:padding="@dimen/MarginFifteen"
-            android:text="Remove account"
+            android:text="Change profile"
             android:textColor="@color/color_title"
             android:textSize="@dimen/textMediumExtra" />
 
@@ -68,6 +68,38 @@
             android:layout_height="0.5dp"
             android:background="@color/color_gray"></View>
 
+        <TextView
+            android:id="@+id/txtStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center_vertical"
+            android:padding="@dimen/MarginFifteen"
+            android:text="Change status"
+            android:textColor="@color/color_title"
+            android:textSize="@dimen/textMediumExtra" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/color_gray"></View>
+
+
+        <TextView
+            android:id="@+id/txtAbout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center_vertical"
+            android:padding="@dimen/MarginFifteen"
+            android:text="About Us"
+            android:textColor="@color/color_title"
+            android:textSize="@dimen/textMediumExtra" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/color_gray"></View>
     </LinearLayout>
 
 </LinearLayout>

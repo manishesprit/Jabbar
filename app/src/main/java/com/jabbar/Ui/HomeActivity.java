@@ -14,8 +14,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.jabbar.API.GetOnlineAPI;
-import com.jabbar.API.SendMessageNewAPI;
 import com.jabbar.R;
 import com.jabbar.Utils.Config;
 import com.jabbar.Utils.JabbarDialog;
@@ -106,14 +104,25 @@ public class HomeActivity extends BaseActivity {
         runnable = new Runnable() {
             @Override
             public void run() {
-                CallHandler(60000);
-                if (Utils.isOnline(HomeActivity.this)) {
-                    if (GetOnlineAPI.isOnlineCall == false && SendMessageNewAPI.isCallAPI == false) {
-                        new GetOnlineAPI(HomeActivity.this);
-                    }
+                handler.postDelayed(runnable, 10000);
+                if (buddiesFragment != null) {
+                    buddiesFragment.ListUpdate();
                 }
             }
         };
+
+        handler.postDelayed(runnable, 2000);
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if (handler != null) {
+            handler.removeCallbacks(runnable);
+            handler = null;
+        }
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -123,11 +132,6 @@ public class HomeActivity extends BaseActivity {
         viewPager.setAdapter(adapter);
     }
 
-    public void CallHandler(int time) {
-        if (handler != null && runnable != null) {
-            handler.postDelayed(runnable, time);
-        }
-    }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
 
@@ -160,22 +164,6 @@ public class HomeActivity extends BaseActivity {
 
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        CallHandler(2000);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if (handler != null) {
-            handler.removeCallbacks(runnable);
-            runnable = null;
-            handler = null;
-        }
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -197,8 +185,8 @@ public class HomeActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
-            case R.id.menu_profile:
-                startActivity(new Intent(this, AccountActivity.class));
+            case R.id.menu_setting:
+                startActivity(new Intent(this, SettingActivity.class));
                 break;
 
             case R.id.menu_refresh:
@@ -209,10 +197,15 @@ public class HomeActivity extends BaseActivity {
                 }
                 break;
 
+            case R.id.menu_new_broadcast:
+
+                break;
+
         }
 
         return true;
     }
+
 
     @Override
     protected void onNewIntent(Intent intent) {
