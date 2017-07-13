@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.jabbar.API.AuthenticationAPI;
 import com.jabbar.API.VerifyCodeAPI;
+import com.jabbar.Bean.ExitsContactBean;
 import com.jabbar.R;
 import com.jabbar.Utils.Config;
 import com.jabbar.Utils.JabbarDialog;
@@ -25,6 +26,8 @@ import com.jabbar.Utils.Log;
 import com.jabbar.Utils.Pref;
 import com.jabbar.Utils.ResponseListener;
 import com.jabbar.Utils.Utils;
+
+import java.util.ArrayList;
 
 import static com.jabbar.Utils.Config.API_SUCCESS;
 import static com.jabbar.Utils.Config.TAG_AUTHENTICATION;
@@ -88,6 +91,7 @@ public class VerifyCodeActivity extends AppCompatActivity implements View.OnClic
                             public void OnResponse(Boolean result, final String res) {
 
                                 if (result) {
+                                    ArrayList<ExitsContactBean> exitsContactBeanArrayList = Pref.getArrayValue(VerifyCodeActivity.this, Config.PREF_CONTACT, new ArrayList<ExitsContactBean>());
                                     new AuthenticationAPI(VerifyCodeActivity.this, new ResponseListener() {
                                         @Override
                                         public void onResponce(String tag, int result, Object obj) {
@@ -98,9 +102,8 @@ public class VerifyCodeActivity extends AppCompatActivity implements View.OnClic
                                             } else {
                                                 Toast.makeText(VerifyCodeActivity.this, obj.toString(), Toast.LENGTH_SHORT).show();
                                             }
-
                                         }
-                                    }, number);
+                                    }, number, exitsContactBeanArrayList);
 
                                 } else {
                                     progressDialog.dismiss();

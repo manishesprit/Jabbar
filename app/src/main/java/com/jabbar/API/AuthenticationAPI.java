@@ -4,6 +4,8 @@ import android.content.Context;
 
 import com.google.gson.Gson;
 import com.jabbar.Bean.AuthenticationBean;
+import com.jabbar.Bean.ExitsContactBean;
+import com.jabbar.Bll.UserBll;
 import com.jabbar.R;
 import com.jabbar.Utils.Config;
 import com.jabbar.Utils.Log;
@@ -14,6 +16,7 @@ import com.jabbar.Utils.Utils;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import retrofit2.Call;
@@ -32,7 +35,7 @@ public class AuthenticationAPI {
     public Context context;
     public ResponseListener responseListener;
 
-    public AuthenticationAPI(final Context context, final ResponseListener responseListener, final String mobile_number) {
+    public AuthenticationAPI(final Context context, final ResponseListener responseListener, final String mobile_number,final ArrayList<ExitsContactBean> exitsContactBeanArrayList) {
         this.context = context;
         this.responseListener = responseListener;
         HashMap<String, String> mParams = new HashMap<String, String>();
@@ -65,6 +68,9 @@ public class AuthenticationAPI {
                         Pref.setValue(context, Config.PREF_AVATAR, response.body().avatar);
                         Pref.setValue(context, Config.PREF_STATUS, StringEscapeUtils.unescapeJava(response.body().status));
                         Pref.setValue(context, Config.PREF_PRIVACY, response.body().privacy);
+                        if (response.body().buddies_list != null) {
+                            new UserBll(context).InsertContact(Utils.getUpdateNameList(response.body().buddies_list, exitsContactBeanArrayList));
+                        }
                         responseListener.onResponce(Config.TAG_AUTHENTICATION, Config.API_SUCCESS, response.body());
                     } else {
                         responseListener.onResponce(Config.TAG_AUTHENTICATION, Config.API_FAIL, response.body().message);

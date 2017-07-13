@@ -2,6 +2,7 @@ package com.jabbar.Ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.jabbar.API.GetOnlineAPI;
+import com.jabbar.API.SendMessageNewAPI;
 import com.jabbar.R;
 import com.jabbar.Utils.Config;
 import com.jabbar.Utils.JabbarDialog;
@@ -37,6 +40,9 @@ public class HomeActivity extends BaseActivity {
     private BuddiesFragment buddiesFragment;
     public static final int CODE_CHAT = 100;
     public static boolean isFavoriteUpdate = true;
+
+    public Handler handler;
+    public Runnable runnable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +102,18 @@ public class HomeActivity extends BaseActivity {
             viewPager.setCurrentItem(1);
         }
 
+        handler = new Handler();
+        runnable = new Runnable() {
+            @Override
+            public void run() {
+                CallHandler(60000);
+                if (Utils.isOnline(HomeActivity.this)) {
+                    if (GetOnlineAPI.isOnlineCall == false && SendMessageNewAPI.isCallAPI == false) {
+                        new GetOnlineAPI(HomeActivity.this);
+                    }
+                }
+            }
+        };
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -103,6 +121,12 @@ public class HomeActivity extends BaseActivity {
         adapter.addFragment(new FavoriteFragment(), "FAVORITE");
         adapter.addFragment(new BuddiesFragment(), "BUDDIES");
         viewPager.setAdapter(adapter);
+    }
+
+    public void CallHandler(int time) {
+        if (handler != null && runnable != null) {
+            handler.postDelayed(runnable, time);
+        }
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
@@ -134,6 +158,23 @@ public class HomeActivity extends BaseActivity {
             return mFragmentTitleList.get(position);
         }
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        CallHandler(2000);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (handler != null) {
+            handler.removeCallbacks(runnable);
+            runnable = null;
+            handler = null;
+        }
     }
 
     @Override

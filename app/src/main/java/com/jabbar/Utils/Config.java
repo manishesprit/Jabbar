@@ -52,6 +52,9 @@ public class Config {
     public static final String API_GET_STORY_LIST = "get_story.php";
     public static String TAG_GET_STORY_LIST = "TAG_GET_STORY_LIST";
 
+    public static final String API_GET_ONLINE = "get_online.php";
+    public static String TAG_GET_ONLINE = "TAG_GET_ONLINE";
+
 
     public static final SimpleDateFormat WebDateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     public static final SimpleDateFormat AppDateFormatter = new SimpleDateFormat("HH:mm  dd,MMM");

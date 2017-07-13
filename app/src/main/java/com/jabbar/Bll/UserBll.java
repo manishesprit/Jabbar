@@ -74,6 +74,30 @@ public class UserBll {
         }
     }
 
+    public void updateContactOnline(ContactsBean contactsBean) {
+        Mydb dbHelper = null;
+        String sql = null;
+        try {
+
+            dbHelper = new Mydb(this.context);
+            sql = "UPDATE user_tb SET status='" + contactsBean.status + "',avatar='" + contactsBean.avatar + "',last_seen='" + contactsBean.last_seen + "',location='" + contactsBean.location + "' where userid=" + contactsBean.userid;
+            dbHelper.execute(sql);
+
+
+        } catch (Exception e) {
+            Log.print(this.getClass() + " :: update()" + "===" + e);
+        } finally {
+            if (dbHelper != null)
+                dbHelper.close();
+            // release
+            dbHelper = null;
+            sql = null;
+            contactsBean = null;
+            System.gc();
+        }
+    }
+
+
     public void updateContact(ContactsBean contactsBean) {
         Mydb dbHelper = null;
         String sql = null;
