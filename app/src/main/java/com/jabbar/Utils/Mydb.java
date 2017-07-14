@@ -91,6 +91,8 @@ public class Mydb extends SQLiteOpenHelper {
 
     public void doUpdate1() {
         Log.print("=======level====" + Pref.getValue(context, Config.PREF_DB_LEVEL, 0));
+        SQLiteDatabase db = this.getWritableDatabase();
+//        db.execSQL("delete from message_tb");
     }
 
     public static String getDBStr(String str) {

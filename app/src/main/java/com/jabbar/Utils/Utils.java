@@ -297,6 +297,23 @@ public class Utils {
         return "";
     }
 
+    public static String gettime(SimpleDateFormat oldDateFormate, String date) {
+        try {
+            Date last_seen = oldDateFormate.parse(date);
+            Date current_seen = new Date();
+
+            if (last_seen.getDate() == current_seen.getDate()) {
+                return new SimpleDateFormat("HH:mm").format(last_seen);
+            } else {
+                return new SimpleDateFormat("dd-MM-yyyy").format(last_seen);
+            }
+
+        } catch (Exception e) {
+
+        }
+        return "";
+    }
+
     public static void trimCache(Context context) {
         try {
             File dir = context.getCacheDir();

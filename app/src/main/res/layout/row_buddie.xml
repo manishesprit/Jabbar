@@ -33,7 +33,7 @@
                 android:text="0"
                 android:textColor="@color/colorAccent"
                 android:textSize="@dimen/textSmall"
-                android:visibility="visible" />
+                android:visibility="gone" />
         </RelativeLayout>
 
         <LinearLayout
@@ -77,7 +77,7 @@
             android:background="?attr/selectableItemBackground"
             android:padding="@dimen/MarginFive"
             android:src="@drawable/ic_star_unfill"
-            android:visibility="visible" />
+            android:visibility="gone" />
 
     </RelativeLayout>
 

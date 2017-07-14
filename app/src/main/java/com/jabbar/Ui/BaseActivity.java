@@ -18,7 +18,7 @@ import com.jabbar.Utils.GetLocation;
 import com.jabbar.Utils.Log;
 import com.jabbar.Utils.Pref;
 
-public class BaseActivity extends AppCompatActivity implements GetLocation.MyLocationListener {
+public class BaseActivity extends AppCompatActivity {
 
     private GetLocation getLocation;
 
@@ -27,7 +27,7 @@ public class BaseActivity extends AppCompatActivity implements GetLocation.MyLoc
         super.onCreate(savedInstanceState);
 
 
-        getLocation = new GetLocation(this, this);
+        getLocation = new GetLocation(this, null);
         LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         boolean statusOfGPS = manager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         if (!statusOfGPS) {
@@ -65,10 +65,5 @@ public class BaseActivity extends AppCompatActivity implements GetLocation.MyLoc
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
         }
-    }
-
-    @Override
-    public void getLoc(boolean isUpdate) {
-
     }
 }

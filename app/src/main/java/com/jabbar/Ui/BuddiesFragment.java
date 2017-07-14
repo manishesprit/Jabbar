@@ -16,7 +16,7 @@ import android.widget.ProgressBar;
 
 import com.jabbar.API.GetContactAPI;
 import com.jabbar.API.GetStoryAPI;
-import com.jabbar.Adapter.BuddiesAdapter;
+import com.jabbar.Adapter.ChatsAdapter;
 import com.jabbar.Adapter.StoryAdapter;
 import com.jabbar.Bean.ContactsBean;
 import com.jabbar.Bean.ExitsContactBean;
@@ -44,7 +44,7 @@ public class BuddiesFragment extends Fragment implements ResponseListener, GetLo
     public ArrayList<ContactsBean> contactsBeanArrayList;
 
     private RecyclerView rlFriendList;
-    private BuddiesAdapter buddiesAdapter;
+    private ChatsAdapter chatsAdapter;
     private LinearLayoutManager mLayoutManager;
 
     private RecyclerView rcvStory;
@@ -78,8 +78,8 @@ public class BuddiesFragment extends Fragment implements ResponseListener, GetLo
     public void ListUpdate() {
         if (contactsBeanArrayList != null) {
             contactsBeanArrayList.clear();
-            contactsBeanArrayList.addAll(new UserBll(getContext()).geBuddiestList(false));
-            buddiesAdapter.notifyDataSetChanged();
+            contactsBeanArrayList.addAll(new UserBll(getContext()).getChatList());
+            chatsAdapter.notifyDataSetChanged();
         }
     }
 
@@ -92,9 +92,9 @@ public class BuddiesFragment extends Fragment implements ResponseListener, GetLo
         rlFriendList.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getContext());
         rlFriendList.setLayoutManager(mLayoutManager);
-        contactsBeanArrayList = new UserBll(getContext()).geBuddiestList(false);
-        buddiesAdapter = new BuddiesAdapter(getContext(), contactsBeanArrayList, myClickListener);
-        rlFriendList.setAdapter(buddiesAdapter);
+        contactsBeanArrayList = new UserBll(getContext()).getChatList();
+        chatsAdapter = new ChatsAdapter(getContext(), contactsBeanArrayList, myClickListener);
+        rlFriendList.setAdapter(chatsAdapter);
 
         rcvStory = (RecyclerView) mView.findViewById(R.id.rcvStory);
         mLayoutManagerStory = new LinearLayoutManager(getContext());
@@ -126,8 +126,8 @@ public class BuddiesFragment extends Fragment implements ResponseListener, GetLo
 
         if (tag.equalsIgnoreCase(Config.TAG_GET_CONTACT_LIST) && result == 0) {
             contactsBeanArrayList.clear();
-            contactsBeanArrayList.addAll(new UserBll(getContext()).geBuddiestList(false));
-            buddiesAdapter.notifyDataSetChanged();
+            contactsBeanArrayList.addAll(new UserBll(getContext()).getChatList());
+            chatsAdapter.notifyDataSetChanged();
             HomeActivity.isFavoriteUpdate = true;
 
             storyBeanArrayList.clear();
@@ -146,10 +146,9 @@ public class BuddiesFragment extends Fragment implements ResponseListener, GetLo
     public MyClickListener myClickListener = new MyClickListener() {
         @Override
         public void onClick(int pos) {
-
             new UserBll(getContext()).updateFavoriteContact(contactsBeanArrayList.get(pos).userid, contactsBeanArrayList.get(pos).isFavorite == 0 ? 1 : 0);
             contactsBeanArrayList.get(pos).isFavorite = contactsBeanArrayList.get(pos).isFavorite == 0 ? 1 : 0;
-            buddiesAdapter.notifyDataSetChanged();
+            chatsAdapter.notifyDataSetChanged();
             HomeActivity.isFavoriteUpdate = true;
         }
     };

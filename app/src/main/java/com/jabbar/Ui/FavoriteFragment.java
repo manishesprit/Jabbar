@@ -135,7 +135,7 @@ public class FavoriteFragment extends Fragment implements OnMapReadyCallback, Go
     public void AddMarker() {
         if (googleMap != null) {
             googleMap.clear();
-            contactFavoriteBeanArrayList = new UserBll(getContext()).geBuddiestList(true);
+            contactFavoriteBeanArrayList = new UserBll(getContext()).geFavoriteList();
             if (contactFavoriteBeanArrayList != null && contactFavoriteBeanArrayList.size() > 0) {
                 for (int i = 0; i < contactFavoriteBeanArrayList.size(); i++) {
                     Marker marker = googleMap.addMarker(new MarkerOptions()

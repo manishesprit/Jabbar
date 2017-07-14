@@ -27,7 +27,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jabbar.API.SendMessageNewAPI;
-import com.jabbar.Adapter.ChatAdpater;
+import com.jabbar.Adapter.ConversionAdpater;
 import com.jabbar.Bean.ContactsBean;
 import com.jabbar.Bean.MessageBean;
 import com.jabbar.Bll.MessageBll;
@@ -62,7 +62,7 @@ public class ChatNewActivity extends BaseActivity implements View.OnClickListene
     private TextView txtLastSeen;
     private ImageView conversation_contact_photo;
     private ImageView imgBack;
-    private ChatAdpater chatAdpater;
+    private ConversionAdpater conversionAdpater;
     private ArrayList<MessageBean> messageBeanArrayList;
     private MessageBll messageBll;
     private SendMessageNewAPI sendMessageNewAPI;
@@ -136,8 +136,8 @@ public class ChatNewActivity extends BaseActivity implements View.OnClickListene
             Utils.setGlideImage(this, contactsBean.avatar, conversation_contact_photo, true);
 
             messageBeanArrayList = messageBll.geNewMessageList(contactsBean.userid, lastid);
-            chatAdpater = new ChatAdpater(this, messageBeanArrayList);
-            recyclerview_chat.setAdapter(chatAdpater);
+            conversionAdpater = new ConversionAdpater(this, messageBeanArrayList);
+            recyclerview_chat.setAdapter(conversionAdpater);
             recyclerview_chat.smoothScrollToPosition(messageBeanArrayList.size());
 
             llBuddiesName.setOnClickListener(this);
@@ -288,7 +288,7 @@ public class ChatNewActivity extends BaseActivity implements View.OnClickListene
 
                     messageBean.create_time = Utils.convertStringDateToStringDate(Config.WebDateFormatter, Config.AppChatDateFormatter, messageBean.create_time);
                     messageBeanArrayList.add(messageBean);
-                    chatAdpater.notifyDataSetChanged();
+                    conversionAdpater.notifyDataSetChanged();
                     recyclerview_chat.smoothScrollToPosition(messageBeanArrayList.size());
 
                     edit_msg.setText("");
@@ -314,7 +314,7 @@ public class ChatNewActivity extends BaseActivity implements View.OnClickListene
             if (tag.equalsIgnoreCase(Config.TAG_SEND_MESSAGE) && result == 0) {
                 messageBeanArrayList.clear();
                 messageBeanArrayList.addAll(messageBll.geNewMessageList(contactsBean.userid, 0));
-                chatAdpater.notifyDataSetChanged();
+                conversionAdpater.notifyDataSetChanged();
             }
         }
     };
@@ -330,7 +330,7 @@ public class ChatNewActivity extends BaseActivity implements View.OnClickListene
 
             messageBean.create_time = Utils.convertStringDateToStringDate(Config.WebDateFormatter, Config.AppChatDateFormatter, messageBean.create_time);
             messageBeanArrayList.add(messageBean);
-            chatAdpater.notifyDataSetChanged();
+            conversionAdpater.notifyDataSetChanged();
             MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.msg_tone);
             mediaPlayer.start();
             ShowUnreadMsgCount();

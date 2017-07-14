@@ -35,10 +35,12 @@ public class GetLocation implements LocationListener {
             if (location != null) {
                 Log.print("====location getLastKnownLocation======" + location.getLatitude() + "===" + location.getLongitude());
                 Pref.setValue(context, Config.PREF_LOCATION, location.getLatitude() + "," + location.getLongitude());
-                myLocationListener.getLoc(true);
+                if (myLocationListener != null)
+                    myLocationListener.getLoc(true);
             } else {
                 Log.print("====location getLastKnownLocation NULL======");
-                myLocationListener.getLoc(false);
+                if (myLocationListener != null)
+                    myLocationListener.getLoc(false);
             }
 
         } else {
@@ -50,10 +52,12 @@ public class GetLocation implements LocationListener {
                     if (location != null) {
                         Log.print("====isNetworkEnabled======" + location.getLatitude() + "===" + location.getLongitude());
                         Pref.setValue(context, Config.PREF_LOCATION, location.getLatitude() + "," + location.getLongitude());
-                        myLocationListener.getLoc(true);
+                        if (myLocationListener != null)
+                            myLocationListener.getLoc(true);
                     } else {
                         Log.print("====isNetworkEnabled NULL======");
-                        myLocationListener.getLoc(false);
+                        if (myLocationListener != null)
+                            myLocationListener.getLoc(false);
                     }
                 }
             }
@@ -68,10 +72,12 @@ public class GetLocation implements LocationListener {
                         if (location != null) {
                             Log.print("====isGPSEnabled======" + location.getLatitude() + "===" + location.getLongitude());
                             Pref.setValue(context, Config.PREF_LOCATION, location.getLatitude() + "," + location.getLongitude());
-                            myLocationListener.getLoc(true);
+                            if (myLocationListener != null)
+                                myLocationListener.getLoc(true);
                         } else {
                             Log.print("====isGPSEnabled NULL======");
-                            myLocationListener.getLoc(false);
+                            if (myLocationListener != null)
+                                myLocationListener.getLoc(false);
                         }
                     }
                 }

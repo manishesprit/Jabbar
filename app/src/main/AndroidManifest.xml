@@ -127,6 +127,10 @@
             android:name=".Ui.ViewStoryActivity"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".Ui.BuddiesActivity"
+            android:screenOrientation="portrait" />
+
 
         <activity
             android:name=".Ui.AddStoryActivity"

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rlRow"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:padding="@dimen/MarginSaven">
+
+    <RelativeLayout
+        android:id="@+id/rlUser"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <ImageView
+            android:id="@+id/imgAvatar"
+            android:layout_width="@dimen/avatar"
+            android:layout_height="@dimen/avatar"
+            android:src="@drawable/default_user" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/imgAvatar"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/MarginFive">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/txtName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/txtTime"
+                    android:singleLine="true"
+                    android:text="Hello"
+                    android:textColor="@color/color_title"
+                    android:textSize="@dimen/textMediumExtra" />
+
+                <TextView
+                    android:id="@+id/txtTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:textColor="@color/color_title_sub"
+                    android:textSize="@dimen/textSmall"
+                    android:visibility="visible" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:orientation="horizontal">
+
+                <hani.momanii.supernova_emoji_library.Helper.EmojiconTextView xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:emojicon="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/txtstatus"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/txtNoMsg"
+                    android:gravity="center_vertical"
+                    android:singleLine="true"
+                    android:textColor="@color/color_title_sub"
+                    android:textSize="@dimen/textMedium"
+                    android:visibility="visible"
+                    emojicon:emojiconSize="@dimen/textMediumExtra" />
+
+                <TextView
+                    android:id="@+id/txtNoMsg"
+                    android:layout_width="@dimen/noOfMsg"
+                    android:layout_height="@dimen/noOfMsg"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/drawable_round"
+                    android:gravity="center"
+                    android:text="0"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="@dimen/textSmall"
+                    android:visibility="gone" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/rlUser"
+        android:layout_marginLeft="@dimen/MarginFive"
+        android:layout_marginRight="@dimen/MarginFive"
+        android:layout_marginTop="@dimen/MarginFive"
+        android:background="@color/color_gray" />
+</RelativeLayout>

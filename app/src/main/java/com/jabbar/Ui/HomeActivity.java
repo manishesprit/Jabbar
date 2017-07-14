@@ -42,6 +42,8 @@ public class HomeActivity extends BaseActivity {
     public Handler handler;
     public Runnable runnable;
 
+    private Menu menu;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,6 +76,7 @@ public class HomeActivity extends BaseActivity {
             public void onPageSelected(int position) {
 
                 if (position == 0 && adapter != null) {
+                    menu.findItem(R.id.menu_refresh).setVisible(true);
                     if (favoriteFragment == null) {
                         favoriteFragment = (FavoriteFragment) adapter.getItem(0);
                     }
@@ -83,6 +86,7 @@ public class HomeActivity extends BaseActivity {
                     }
                 }
                 if (position == 1 && adapter != null) {
+                    menu.findItem(R.id.menu_refresh).setVisible(false);
                     if (buddiesFragment == null) {
                         buddiesFragment = (BuddiesFragment) adapter.getItem(1);
                     }
@@ -105,24 +109,38 @@ public class HomeActivity extends BaseActivity {
             @Override
             public void run() {
                 handler.postDelayed(runnable, 10000);
-                if (buddiesFragment != null) {
-                    buddiesFragment.ListUpdate();
+                if (viewPager.getCurrentItem() == 1) {
+                    if (buddiesFragment != null) {
+                        buddiesFragment.ListUpdate();
+                    }
                 }
             }
         };
 
-        handler.postDelayed(runnable, 2000);
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        handler.postDelayed(runnable, 2000);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        if (handler != null) {
+            handler.removeCallbacks(runnable);
+        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
 
-        if (handler != null) {
-            handler.removeCallbacks(runnable);
-            handler = null;
-        }
+
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -177,6 +195,7 @@ public class HomeActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        this.menu = menu;
         getMenuInflater().inflate(R.menu.menu, menu);
         return true;
     }
@@ -185,6 +204,9 @@ public class HomeActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
+            case R.id.menu_buddies:
+                startActivity(new Intent(this, BuddiesActivity.class));
+                break;
             case R.id.menu_setting:
                 startActivity(new Intent(this, SettingActivity.class));
                 break;
@@ -192,8 +214,6 @@ public class HomeActivity extends BaseActivity {
             case R.id.menu_refresh:
                 if (viewPager.getCurrentItem() == 0) {
                     favoriteFragment.UpdateFavorite(false);
-                } else {
-                    buddiesFragment.OnUpdate();
                 }
                 break;
 
@@ -215,17 +235,6 @@ public class HomeActivity extends BaseActivity {
 
         if (intent != null && intent.getIntExtra("type", 0) == 2) {
             viewPager.setCurrentItem(1);
-            if (buddiesFragment != null) {
-                buddiesFragment.ListUpdate();
-            }
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == CODE_CHAT && viewPager.getCurrentItem() == 1) {
             if (buddiesFragment != null) {
                 buddiesFragment.ListUpdate();
             }

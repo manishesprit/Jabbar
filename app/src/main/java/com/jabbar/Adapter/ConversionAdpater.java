@@ -26,12 +26,12 @@ import static android.content.Context.CLIPBOARD_SERVICE;
  */
 
 
-public class ChatAdpater extends RecyclerView.Adapter<ChatAdpater.ViewHolder> {
+public class ConversionAdpater extends RecyclerView.Adapter<ConversionAdpater.ViewHolder> {
     private ArrayList<MessageBean> chatBeanArrayList;
     private Context context;
 
 
-    public ChatAdpater(Context context, ArrayList<MessageBean> chatBeanArrayList) {
+    public ConversionAdpater(Context context, ArrayList<MessageBean> chatBeanArrayList) {
 
         this.context = context;
         this.chatBeanArrayList = chatBeanArrayList;

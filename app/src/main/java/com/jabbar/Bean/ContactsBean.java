@@ -16,5 +16,10 @@ public class ContactsBean implements Serializable {
     public String avatar;
     public String name;
     public String last_seen;
+    public boolean users;
     public int cntUnReasMsg;
+    // For message
+    public String msg;
+    public String create_time;
+    public int isread;
 }

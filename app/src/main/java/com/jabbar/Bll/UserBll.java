@@ -4,10 +4,10 @@ import android.content.Context;
 import android.database.Cursor;
 
 import com.jabbar.Bean.ContactsBean;
-import com.jabbar.Bean.StoryBean;
 import com.jabbar.Utils.Config;
 import com.jabbar.Utils.Log;
 import com.jabbar.Utils.Mydb;
+import com.jabbar.Utils.Pref;
 import com.jabbar.Utils.Utils;
 
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -185,7 +185,7 @@ public class UserBll {
     }
 
 
-    public ArrayList<ContactsBean> geBuddiestList(boolean isFavorite) {
+    public ArrayList<ContactsBean> getChatList() {
         Mydb mydb = null;
         String sql = null;
         Cursor cursor = null;
@@ -193,11 +193,141 @@ public class UserBll {
         ContactsBean contactsBean;
 
         try {
-            if (isFavorite) {
-                sql = "SELECT userid,name,mobile_number,status,avatar,location,last_seen,is_favorite,(select count (*) from message_tb where( message_tb.userid = user_tb.userid) AND (message_tb.isread=0)) as unread_msg from user_tb where is_favorite=1 ORDER BY NAME ASC";
-            } else {
-                sql = "SELECT userid,name,mobile_number,status,avatar,location,last_seen,is_favorite,(select count (*) from message_tb where( message_tb.userid = user_tb.userid) AND (message_tb.isread=0)) as unread_msg from user_tb ORDER BY NAME ASC";
+            //id,message,create_time,userid,avatar,name,mobile_number,status,isread
+
+            sql = "select \n" +
+                    "ifnull(res.id,0),res.message,res.create_time,res.userid,\n" +
+                    "res.avatar,res.name,res.mobile_number,res.status,res.isread,\n" +
+                    "ifnull(sen.id,0),sen.message,sen.create_time,sen.friendid,\n" +
+                    "sen.avatar,sen.name ,sen.mobile_number,sen.status,sen.isread ,\n" +
+                    "case when res.create_time is null then sen.create_time when sen.create_time is null then res.create_time when res.create_time > sen.create_time then res.create_time else sen.create_time end as create_time\n" +
+                    "from \n" +
+                    "(select id,message,create_time,message_tb.friendid,user_tb.avatar,user_tb.name,user_tb.mobile_number,user_tb.status,isread from message_tb join user_tb on (message_tb.friendid=user_tb.userid) where message_tb.userid=" + Pref.getValue(context, Config.PREF_USERID, 0) + " group by friendid) sen\n" +
+                    "LEFT join \n" +
+                    "(select id,message,create_time,message_tb.userid,user_tb.avatar,user_tb.name,user_tb.mobile_number,user_tb.status,isread \n" +
+                    "from message_tb join user_tb on (message_tb.userid=user_tb.userid) where friendid=" + Pref.getValue(context, Config.PREF_USERID, 0) + " group by message_tb.userid) res \n" +
+                    " on (res.userid=sen.friendid)\n" +
+                    "UNION\n" +
+                    "select \n" +
+                    "ifnull(res.id,0),res.message,res.create_time,res.userid,\n" +
+                    "res.avatar,res.name,res.mobile_number,res.status,res.isread,\n" +
+                    "ifnull(sen.id,0),sen.message,sen.create_time,sen.friendid,\n" +
+                    "sen.avatar,sen.name ,sen.mobile_number,sen.status,sen.isread ,\n" +
+                    "case when res.create_time is null then sen.create_time when sen.create_time is null then res.create_time when res.create_time > sen.create_time then res.create_time else sen.create_time end as create_time\n" +
+                    "from \n" +
+                    "(select id,message,create_time,message_tb.userid,user_tb.avatar,user_tb.name,user_tb.mobile_number,user_tb.status,isread \n" +
+                    "from message_tb join user_tb on (message_tb.userid=user_tb.userid) where friendid=" + Pref.getValue(context, Config.PREF_USERID, 0) + " group by message_tb.userid) res\n" +
+                    "LEFT join \n" +
+                    "(select id,message,create_time,message_tb.friendid,user_tb.avatar,user_tb.name,user_tb.mobile_number,user_tb.status,isread from message_tb join user_tb on (message_tb.friendid=user_tb.userid) where message_tb.userid=" + Pref.getValue(context, Config.PREF_USERID, 0) + " group by friendid) sen\n" +
+                    "on (res.userid=sen.friendid) order by create_time desc\n";
+
+            contactBeanArrayList = new ArrayList<>();
+            mydb = new Mydb(this.context);
+            cursor = mydb.query(sql);
+
+            if (cursor != null && cursor.getCount() > 0) {
+                Log.print("====cursor=====" + cursor.getCount());
+                while (cursor.moveToNext()) {
+                    contactsBean = new ContactsBean();
+                    if (cursor.getInt(0) == 0) {
+                        contactsBean.msg = cursor.getString(10);
+                        contactsBean.create_time = Utils.gettime(Config.WebDateFormatter, cursor.getString(11));
+                        contactsBean.userid = cursor.getInt(12);
+                        contactsBean.avatar = cursor.getString(13);
+                        contactsBean.name = cursor.getString(14).toString().equalsIgnoreCase("") ? cursor.getString(15) : cursor.getString(14);
+                        contactsBean.mobile_number = cursor.getString(15);
+                        contactsBean.status = cursor.getString(16);
+                        contactsBean.isread = cursor.getInt(17);
+                        contactsBean.users = true;
+                        contactsBean.cntUnReasMsg = 0;
+
+                    } else if (cursor.getInt(9) == 0) {
+                        contactsBean.msg = cursor.getString(1);
+                        contactsBean.create_time = Utils.gettime(Config.WebDateFormatter, cursor.getString(2));
+                        contactsBean.userid = cursor.getInt(3);
+                        contactsBean.avatar = cursor.getString(4);
+                        contactsBean.name = cursor.getString(5).toString().equalsIgnoreCase("") ? cursor.getString(6) : cursor.getString(5);
+                        contactsBean.mobile_number = cursor.getString(6);
+                        contactsBean.status = cursor.getString(7);
+                        contactsBean.isread = cursor.getInt(8);
+                        contactsBean.users = false;
+                        contactsBean.cntUnReasMsg = 1;
+
+                        sql = "select count(id) from message_tb where (userid=" + cursor.getInt(3) + " AND friendid=" + Pref.getValue(context, Config.PREF_USERID, 0) + ") AND isread=0 ";
+                        Cursor cursor1 = mydb.query(sql);
+                        if (cursor1 != null && cursor1.getCount() > 0) {
+                            cursor1.moveToFirst();
+                            contactsBean.cntUnReasMsg = cursor1.getInt(0);
+                            cursor1.close();
+                        }
+                    } else {
+                        if (cursor.getInt(0) < cursor.getInt(9)) {
+                            contactsBean.msg = cursor.getString(10);
+                            contactsBean.create_time = Utils.gettime(Config.WebDateFormatter, cursor.getString(11));
+                            contactsBean.userid = cursor.getInt(12);
+                            contactsBean.avatar = cursor.getString(13);
+                            contactsBean.name = cursor.getString(14).toString().equalsIgnoreCase("") ? cursor.getString(15) : cursor.getString(14);
+                            contactsBean.mobile_number = cursor.getString(15);
+                            contactsBean.status = cursor.getString(16);
+                            contactsBean.isread = cursor.getInt(17);
+                            contactsBean.users = true;
+                            contactsBean.cntUnReasMsg = 0;
+
+                        } else {
+                            contactsBean.msg = cursor.getString(1);
+                            contactsBean.create_time = Utils.gettime(Config.WebDateFormatter, cursor.getString(2));
+                            contactsBean.userid = cursor.getInt(3);
+                            contactsBean.avatar = cursor.getString(4);
+                            contactsBean.name = cursor.getString(5).toString().equalsIgnoreCase("") ? cursor.getString(6) : cursor.getString(5);
+                            contactsBean.mobile_number = cursor.getString(6);
+                            contactsBean.status = cursor.getString(7);
+                            contactsBean.isread = cursor.getInt(8);
+                            contactsBean.users = false;
+                            contactsBean.cntUnReasMsg = 1;
+
+                            sql = "select count(id) from message_tb where (userid=" + cursor.getInt(3) + " AND friendid=" + Pref.getValue(context, Config.PREF_USERID, 0) + ") AND isread=0 ";
+                            Cursor cursor1 = mydb.query(sql);
+                            if (cursor1 != null && cursor1.getCount() > 0) {
+                                cursor1.moveToFirst();
+                                contactsBean.cntUnReasMsg = cursor1.getInt(0);
+                                cursor1.close();
+                            }
+
+                        }
+                    }
+                    contactBeanArrayList.add(contactsBean);
+                    Log.print("====mobile_number=====" + contactsBean.mobile_number + "=======name=======" + contactsBean.name + "========= contactsBean.last_seen======" + contactsBean.last_seen);
+                }
+
             }
+        } catch (Exception e) {
+            Log.print(this.getClass() + " :: getBusiness_hour()" + " " + e);
+            Log.sendError(e);
+        } finally {
+            if (cursor != null && !cursor.isClosed())
+                cursor.close();
+            if (mydb != null)
+                mydb.close();
+            // release
+            mydb = null;
+            sql = null;
+            cursor = null;
+            System.gc();
+        }
+        return contactBeanArrayList;
+    }
+
+    public ArrayList<ContactsBean> geFavoriteList() {
+        Mydb mydb = null;
+        String sql = null;
+        Cursor cursor = null;
+        ArrayList<ContactsBean> contactBeanArrayList = null;
+        ContactsBean contactsBean;
+
+        try {
+
+            sql = "SELECT userid,name,status,location from user_tb where is_favorite=1 ORDER BY name ASC";
+
             contactBeanArrayList = new ArrayList<>();
             mydb = new Mydb(this.context);
             cursor = mydb.query(sql);
@@ -207,26 +337,66 @@ public class UserBll {
                 while (cursor.moveToNext()) {
                     contactsBean = new ContactsBean();
                     contactsBean.userid = cursor.getInt(0);
-                    contactsBean.name = cursor.getString(1).toString().equalsIgnoreCase("") ? cursor.getString(2) : cursor.getString(1);
+                    contactsBean.name = cursor.getString(1).toString();
+                    contactsBean.status = cursor.getString(2);
+                    contactsBean.location = cursor.getString(3);
+                    contactBeanArrayList.add(contactsBean);
+                }
+
+            }
+        } catch (Exception e) {
+            Log.print(this.getClass() + " :: contactBeanArrayList()" + " " + e);
+            Log.sendError(e);
+        } finally {
+            if (cursor != null && !cursor.isClosed())
+                cursor.close();
+            if (mydb != null)
+                mydb.close();
+            // release
+            mydb = null;
+            sql = null;
+            cursor = null;
+            System.gc();
+        }
+        return contactBeanArrayList;
+    }
+
+    public ArrayList<ContactsBean> geBuddiestList() {
+        Mydb mydb = null;
+        String sql = null;
+        Cursor cursor = null;
+        ArrayList<ContactsBean> contactBeanArrayList = null;
+        ContactsBean contactsBean;
+
+        try {
+
+            sql = "SELECT userid,name,mobile_number,status,avatar,location,last_seen,is_favorite from user_tb where is_contact=1 ORDER BY name ASC";
+
+            contactBeanArrayList = new ArrayList<>();
+            mydb = new Mydb(this.context);
+            cursor = mydb.query(sql);
+
+            if (cursor != null && cursor.getCount() > 0) {
+                Log.print("====cursor=====" + cursor.getCount());
+                while (cursor.moveToNext()) {
+                    contactsBean = new ContactsBean();
+                    contactsBean.userid = cursor.getInt(0);
+                    contactsBean.name = cursor.getString(1).toString();
                     contactsBean.mobile_number = cursor.getString(2);
                     contactsBean.status = cursor.getString(3);
                     contactsBean.avatar = cursor.getString(4);
                     contactsBean.location = cursor.getString(5);
                     contactsBean.last_seen = Utils.convertStringDateToStringDate(Config.WebDateFormatter, Config.AppChatDateFormatter, cursor.getString(6));
                     contactsBean.isFavorite = cursor.getInt(7);
-                    contactsBean.cntUnReasMsg = cursor.getInt(8);
-                    if (isFavorite) {
-                        if (!contactsBean.location.equalsIgnoreCase(""))
-                            contactBeanArrayList.add(contactsBean);
-                    } else {
-                        contactBeanArrayList.add(contactsBean);
-                    }
+
+                    contactBeanArrayList.add(contactsBean);
+
                     Log.print("====mobile_number=====" + contactsBean.mobile_number + "=======name=======" + contactsBean.name + "========= contactsBean.last_seen======" + contactsBean.last_seen);
                 }
 
             }
         } catch (Exception e) {
-            Log.print(this.getClass() + " :: getBusiness_hour()" + " " + e);
+            Log.print(this.getClass() + " :: contactBeanArrayList()" + " " + e);
             Log.sendError(e);
         } finally {
             if (cursor != null && !cursor.isClosed())

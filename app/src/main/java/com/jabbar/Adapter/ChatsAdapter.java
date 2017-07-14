@@ -25,13 +25,13 @@ import hani.momanii.supernova_emoji_library.Helper.EmojiconTextView;
 import static com.jabbar.Ui.HomeActivity.CODE_CHAT;
 
 
-public class BuddiesAdapter extends RecyclerView.Adapter<BuddiesAdapter.MyHolder> {
+public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.MyHolder> {
 
     private ArrayList<ContactsBean> contactBeanArrayList;
     private Context context;
     public MyClickListener myClickListener;
 
-    public BuddiesAdapter(Context context, ArrayList<ContactsBean> contactBeanArrayList, MyClickListener myClickListener) {
+    public ChatsAdapter(Context context, ArrayList<ContactsBean> contactBeanArrayList, MyClickListener myClickListener) {
         this.context = context;
         this.contactBeanArrayList = contactBeanArrayList;
         this.myClickListener = myClickListener;
@@ -39,7 +39,7 @@ public class BuddiesAdapter extends RecyclerView.Adapter<BuddiesAdapter.MyHolder
 
     @Override
     public MyHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.row_buddie, null);
+        View view = LayoutInflater.from(context).inflate(R.layout.row_chat, null);
         return new MyHolder(view);
     }
 
@@ -47,26 +47,27 @@ public class BuddiesAdapter extends RecyclerView.Adapter<BuddiesAdapter.MyHolder
     public void onBindViewHolder(final MyHolder holder, final int position) {
 
         holder.txtName.setText(contactBeanArrayList.get(position).name);
+        holder.txtstatus.setText(contactBeanArrayList.get(position).msg);
+        holder.txtTime.setText(contactBeanArrayList.get(position).create_time);
+        holder.txtstatus.setVisibility(View.VISIBLE);
 
-        if (!contactBeanArrayList.get(position).status.equalsIgnoreCase("")) {
-            holder.txtstatus.setText(contactBeanArrayList.get(position).status);
-            holder.txtstatus.setVisibility(View.VISIBLE);
+        if (contactBeanArrayList.get(position).isread == 0 && contactBeanArrayList.get(position).users == false) {
+            holder.txtTime.setTextColor(context.getResources().getColor(R.color.colorPrimary));
+            holder.txtNoMsg.setText("" + contactBeanArrayList.get(position).cntUnReasMsg);
+            holder.txtNoMsg.setVisibility(View.VISIBLE);
         } else {
-            holder.txtstatus.setVisibility(View.GONE);
+            holder.txtTime.setTextColor(context.getResources().getColor(R.color.color_title_sub));
+            holder.txtNoMsg.setVisibility(View.GONE);
         }
 
-        if (contactBeanArrayList.get(position).isFavorite == 1) {
-            holder.imgfavorite.setImageResource(R.drawable.ic_star_fill);
-        } else {
-            holder.imgfavorite.setImageResource(R.drawable.ic_star_unfill);
-        }
 
-        holder.imgfavorite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                myClickListener.onClick(position);
-            }
-        });
+//        if (contactBeanArrayList.get(position).cntUnReasMsg > 0) {
+//            holder.txtNoMsg.setText("" + contactBeanArrayList.get(position).cntUnReasMsg);
+//            holder.txtNoMsg.setVisibility(View.VISIBLE);
+//        } else {
+//            holder.txtNoMsg.setVisibility(View.GONE);
+//        }
+
 
         holder.rlRow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,8 +99,8 @@ public class BuddiesAdapter extends RecyclerView.Adapter<BuddiesAdapter.MyHolder
         public ImageView imgAvatar;
         public TextView txtNoMsg;
         public TextView txtName;
+        public TextView txtTime;
         public EmojiconTextView txtstatus;
-        public ImageView imgfavorite;
 
         public MyHolder(View view) {
             super(view);
@@ -107,9 +108,8 @@ public class BuddiesAdapter extends RecyclerView.Adapter<BuddiesAdapter.MyHolder
             imgAvatar = (ImageView) view.findViewById(R.id.imgAvatar);
             txtNoMsg = (TextView) view.findViewById(R.id.txtNoMsg);
             txtName = (TextView) view.findViewById(R.id.txtName);
+            txtTime = (TextView) view.findViewById(R.id.txtTime);
             txtstatus = (EmojiconTextView) view.findViewById(R.id.txtstatus);
-            imgfavorite = (ImageView) view.findViewById(R.id.imgfavorite);
-            imgfavorite.setVisibility(View.VISIBLE);
         }
     }
 }

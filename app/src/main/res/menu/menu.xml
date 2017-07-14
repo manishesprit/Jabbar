@@ -9,8 +9,14 @@
         app:showAsAction="always" />
 
     <item
+        android:id="@+id/menu_buddies"
+        android:icon="@drawable/ic_chat_white"
+        android:title="Buddies"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/menu_setting"
-        android:title="Setting"
+        android:title="Settings"
         app:showAsAction="never" />
 
     <item
