@@ -1,5 +1,8 @@
 package com.jabbar.Ui;
 
+import android.content.res.AssetManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -15,6 +18,9 @@ import com.jabbar.Utils.Config;
 import com.jabbar.Utils.Pref;
 import com.jabbar.Utils.Utils;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 public class SetWallpaperActivity extends BaseActivity implements View.OnClickListener {
 
     private ImageView imgwallpaper1;
@@ -24,7 +30,7 @@ public class SetWallpaperActivity extends BaseActivity implements View.OnClickLi
     private Toolbar toolbar;
     private LinearLayout root_view;
 
-    private Drawable drawable;
+    private Bitmap bm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,17 +50,19 @@ public class SetWallpaperActivity extends BaseActivity implements View.OnClickLi
         imgwallpaper4 = (ImageView) findViewById(R.id.imgwallpaper4);
 
         try {
-            drawable = Drawable.createFromStream(getAssets().open("wallpaper1.jpg"), null);
-            imgwallpaper1.setImageDrawable(drawable);
 
-            drawable = Drawable.createFromStream(getAssets().open("wallpaper2.jpg"), null);
-            imgwallpaper2.setImageDrawable(drawable);
+            bm = getBitmapFromAsset("wallpaper1.jpg");
+            imgwallpaper1.setImageBitmap(bm);
 
-            drawable = Drawable.createFromStream(getAssets().open("wallpaper3.jpg"), null);
-            imgwallpaper3.setImageDrawable(drawable);
+            bm = getBitmapFromAsset("wallpaper2.jpg");
+            imgwallpaper2.setImageBitmap(bm);
 
-            drawable = Drawable.createFromStream(getAssets().open("wallpaper4.jpg"), null);
-            imgwallpaper4.setImageDrawable(drawable);
+            bm = getBitmapFromAsset("wallpaper3.jpg");
+            imgwallpaper3.setImageBitmap(bm);
+
+            bm = getBitmapFromAsset("wallpaper4.jpg");
+            imgwallpaper4.setImageBitmap(bm);
+
         } catch (Exception e) {
         }
 
@@ -64,6 +72,15 @@ public class SetWallpaperActivity extends BaseActivity implements View.OnClickLi
         imgwallpaper4.setOnClickListener(this);
 
 
+    }
+
+    private Bitmap getBitmapFromAsset(String strName) throws IOException {
+        AssetManager assetManager = getAssets();
+
+        InputStream istr = assetManager.open(strName);
+        Bitmap bitmap = BitmapFactory.decodeStream(istr);
+
+        return bitmap;
     }
 
     @Override
@@ -102,6 +119,10 @@ public class SetWallpaperActivity extends BaseActivity implements View.OnClickLi
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
+        if (bm != null) {
+            bm.recycle();
+        }
 
         Utils.trimCache(this);
         Runtime.getRuntime().gc();
