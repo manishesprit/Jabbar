@@ -1,6 +1,7 @@
 package com.jabbar.GCM;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 
 import com.google.android.gms.gcm.GcmListenerService;
@@ -10,6 +11,7 @@ import com.jabbar.Ui.AuthenticationAlertActivity;
 import com.jabbar.Ui.ChatNewActivity;
 import com.jabbar.Utils.Config;
 import com.jabbar.Utils.Log;
+import com.jabbar.Utils.Mydb;
 import com.jabbar.Utils.Pref;
 import com.jabbar.Utils.Utils;
 
@@ -47,9 +49,19 @@ public class MyFirebaseMessagingService extends GcmListenerService {
                     JSONObject message = jsonObject.getJSONObject("message");
                     JSONArray messageslist = message.getJSONArray("messageslist");
                     if (messageslist != null && messageslist.length() > 0) {
+                        Mydb mydb = new Mydb(getApplicationContext());
                         for (int i = 0; i < messageslist.length(); i++) {
                             JSONObject msgObj = messageslist.getJSONObject(i);
                             MessageBean messageBean = new MessageBean();
+
+                            try {
+                                Cursor cursor = mydb.query("select userid from user_tb where userid=" + message.getInt("userid"));
+                                if(cursor!=null && cursor.getCount()==0){
+                                    mydb.execute("insert into user_tb values ("+message.getInt("userid")+",'','"+message.getString("mobile_number")+"','','','','',0,0))");
+                                }
+                            } catch (Exception e) {
+
+                            }
                             messageBean.id = msgObj.getInt("id");
                             messageBean.userid = message.getInt("userid");
                             messageBean.friendid = Pref.getValue(getApplicationContext(), Config.PREF_USERID, 0);
