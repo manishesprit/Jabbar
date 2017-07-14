@@ -5,10 +5,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-/**
- * Created by hardikjani on 6/14/17.
- */
-
 public class Mydb extends SQLiteOpenHelper {
 
     private Context context;
@@ -70,10 +66,6 @@ public class Mydb extends SQLiteOpenHelper {
             doUpdate0();
         } else if (level == 1) {
             doUpdate1();
-        } else if (level == 2) {
-            doUpdate2();
-        } else if (level == 3) {
-            doUpdate3();
         }
     }
 
@@ -81,17 +73,9 @@ public class Mydb extends SQLiteOpenHelper {
         Log.print("=======level====" + Pref.getValue(context, Config.PREF_DB_LEVEL, 0));
         SQLiteDatabase db = this.getWritableDatabase();
 
-        db.execSQL("CREATE TABLE IF NOT EXISTS user_tb (userid INTEGER,name TEXT,mobile_number TEXT,status TEXT,avatar TEXT,location TEXT,last_seen TEXT,is_favorite INTEGER DEFAULT 0)");
-        int level = Pref.getValue(context, Config.PREF_DB_LEVEL, 0) + 1;
-        Pref.setValue(context, Config.PREF_DB_LEVEL, level);
-        doUpdate1();
-    }
-
-    public void doUpdate1() {
-        Log.print("=======level====" + Pref.getValue(context, Config.PREF_DB_LEVEL, 0));
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        db.execSQL("CREATE TABLE IF NOT EXISTS message_tb (id INTEGER,userid INTEGER,friendid INTEGER,message TEXT,create_time TEXT,isread INTEGER)");
+        db.execSQL("CREATE TABLE IF NOT EXISTS user_tb (userid INTEGER,name TEXT,mobile_number TEXT,status TEXT,avatar TEXT,location TEXT,last_seen TEXT,is_favorite INTEGER DEFAULT 0,is_contact INTEGER DEFAULT 1)");
+        db.execSQL("CREATE TABLE IF NOT EXISTS story (id INTEGER PRIMARY KEY, userid INTEGER, image TEXT, caption TEXT, time TEXT, is_seen INTEGER)");
+        db.execSQL("CREATE TABLE IF NOT EXISTS message_tb (id INTEGER,userid INTEGER,friendid INTEGER,message TEXT,create_time TEXT,isread INTEGER, tempId TEXT)");
         db.execSQL("CREATE TABLE IF NOT EXISTS default_status (id INTEGER PRIMARY KEY AUTOINCREMENT,status TEXT)");
 
         db.execSQL("INSERT INTO default_status (status) values ('" + Mydb.getDBStr("Hi! i'm using Jabbar") + "')");
@@ -100,25 +84,13 @@ public class Mydb extends SQLiteOpenHelper {
         db.execSQL("INSERT INTO default_status (status) values ('" + Mydb.getDBStr("can't talk only message") + "')");
         db.execSQL("INSERT INTO default_status (status) values ('" + Mydb.getDBStr("I'm sleeping now") + "')");
 
-
         int level = Pref.getValue(context, Config.PREF_DB_LEVEL, 0) + 1;
         Pref.setValue(context, Config.PREF_DB_LEVEL, level);
-        doUpdate2();
+        doUpdate1();
     }
 
-    public void doUpdate2() {
+    public void doUpdate1() {
         Log.print("=======level====" + Pref.getValue(context, Config.PREF_DB_LEVEL, 0));
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("CREATE TABLE IF NOT EXISTS story (id INTEGER PRIMARY KEY, userid INTEGER, image TEXT, caption TEXT, time TEXT, is_seen INTEGER)");
-        db.execSQL("ALTER TABLE message_tb ADD COLUMN tempId TEXT");
-        int level = Pref.getValue(context, Config.PREF_DB_LEVEL, 0) + 1;
-        Pref.setValue(context, Config.PREF_DB_LEVEL, level);
-        doUpdate3();
-    }
-
-    public void doUpdate3() {
-        Log.print("=======level====" + Pref.getValue(context, Config.PREF_DB_LEVEL, 0));
-
     }
 
     public static String getDBStr(String str) {

@@ -12,7 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jabbar.Bean.ContactsBean;
-import com.jabbar.MyClickListener;
+import com.jabbar.Listener.MyClickListener;
 import com.jabbar.R;
 import com.jabbar.Ui.ChatNewActivity;
 import com.jabbar.Ui.ProfileActivity;

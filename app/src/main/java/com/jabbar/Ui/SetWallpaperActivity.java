@@ -21,9 +21,10 @@ public class SetWallpaperActivity extends BaseActivity implements View.OnClickLi
     private ImageView imgwallpaper2;
     private ImageView imgwallpaper3;
     private ImageView imgwallpaper4;
-    private ImageView imgwallpaper5;
     private Toolbar toolbar;
     private LinearLayout root_view;
+
+    private Drawable drawable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,35 +42,19 @@ public class SetWallpaperActivity extends BaseActivity implements View.OnClickLi
         imgwallpaper2 = (ImageView) findViewById(R.id.imgwallpaper2);
         imgwallpaper3 = (ImageView) findViewById(R.id.imgwallpaper3);
         imgwallpaper4 = (ImageView) findViewById(R.id.imgwallpaper4);
-        imgwallpaper5 = (ImageView) findViewById(R.id.imgwallpaper5);
 
         try {
-            Drawable d = Drawable.createFromStream(getAssets().open("wallpaper1.jpg"), null);
-            imgwallpaper1.setImageDrawable(d);
-        } catch (Exception e) {
-        }
+            drawable = Drawable.createFromStream(getAssets().open("wallpaper1.jpg"), null);
+            imgwallpaper1.setImageDrawable(drawable);
 
-        try {
-            Drawable d = Drawable.createFromStream(getAssets().open("wallpaper2.jpg"), null);
-            imgwallpaper2.setImageDrawable(d);
-        } catch (Exception e) {
-        }
+            drawable = Drawable.createFromStream(getAssets().open("wallpaper2.jpg"), null);
+            imgwallpaper2.setImageDrawable(drawable);
 
-        try {
-            Drawable d = Drawable.createFromStream(getAssets().open("wallpaper3.jpg"), null);
-            imgwallpaper3.setImageDrawable(d);
-        } catch (Exception e) {
-        }
+            drawable = Drawable.createFromStream(getAssets().open("wallpaper3.jpg"), null);
+            imgwallpaper3.setImageDrawable(drawable);
 
-        try {
-            Drawable d = Drawable.createFromStream(getAssets().open("wallpaper4.jpg"), null);
-            imgwallpaper4.setImageDrawable(d);
-        } catch (Exception e) {
-        }
-
-        try {
-            Drawable d = Drawable.createFromStream(getAssets().open("wallpaper5.jpg"), null);
-            imgwallpaper5.setImageDrawable(d);
+            drawable = Drawable.createFromStream(getAssets().open("wallpaper4.jpg"), null);
+            imgwallpaper4.setImageDrawable(drawable);
         } catch (Exception e) {
         }
 
@@ -77,7 +62,6 @@ public class SetWallpaperActivity extends BaseActivity implements View.OnClickLi
         imgwallpaper2.setOnClickListener(this);
         imgwallpaper3.setOnClickListener(this);
         imgwallpaper4.setOnClickListener(this);
-        imgwallpaper5.setOnClickListener(this);
 
 
     }
@@ -102,11 +86,6 @@ public class SetWallpaperActivity extends BaseActivity implements View.OnClickLi
 
             case R.id.imgwallpaper4:
                 Pref.setValue(this, Config.PREF_WALLPAPER, "wallpaper4.jpg");
-                finish();
-                break;
-
-            case R.id.imgwallpaper5:
-                Pref.setValue(this, Config.PREF_WALLPAPER, "wallpaper5.jpg");
                 finish();
                 break;
         }

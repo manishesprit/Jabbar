@@ -24,7 +24,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.ImageViewTarget;
 import com.jabbar.Bean.StoryBean;
 import com.jabbar.Bll.StoryBll;
-import com.jabbar.OnNextSlideChange;
+import com.jabbar.Listener.OnNextSlideChange;
 import com.jabbar.R;
 import com.jabbar.Utils.Config;
 import com.jabbar.Utils.Log;

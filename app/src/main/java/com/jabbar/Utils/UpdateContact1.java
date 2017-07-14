@@ -1,4 +1,4 @@
-package com.jabbar.Ui;
+package com.jabbar.Utils;
 
 import android.content.ContentResolver;
 import android.content.Context;
@@ -9,9 +9,6 @@ import android.provider.ContactsContract;
 import com.jabbar.Bean.ContactsBean;
 import com.jabbar.Bean.ExitsContactBean;
 import com.jabbar.Bll.UserBll;
-import com.jabbar.Utils.Config;
-import com.jabbar.Utils.Log;
-import com.jabbar.Utils.Pref;
 
 import java.util.ArrayList;
 
@@ -90,7 +87,7 @@ public class UpdateContact1 extends AsyncTask<String, String, Boolean> {
                                     ContactsBean contactsBean = new ContactsBean();
                                     contactsBean.name = exitsContactBean.name;
                                     contactsBean.mobile_number = exitsContactBean.mobile_number;
-                                    new UserBll(context).updateContact(contactsBean);
+                                    new UserBll(context).updateUserName(contactsBean);
                                 } else {
                                     Log.print("=========NEW=====" + exitsContactBean.mobile_number);
                                     exitsContactBean.isDelate = false;

@@ -15,10 +15,10 @@ import com.jabbar.API.UpdateStatusAPI;
 import com.jabbar.Bll.StatusBll;
 import com.jabbar.R;
 import com.jabbar.Utils.Config;
-import com.jabbar.Utils.JabbarDialog;
+import com.jabbar.Uc.JabbarDialog;
 import com.jabbar.Utils.Mydb;
 import com.jabbar.Utils.Pref;
-import com.jabbar.Utils.ResponseListener;
+import com.jabbar.Listener.ResponseListener;
 import com.jabbar.Utils.Utils;
 
 import org.apache.commons.lang3.StringEscapeUtils;

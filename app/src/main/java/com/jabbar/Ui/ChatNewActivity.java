@@ -37,7 +37,7 @@ import com.jabbar.Utils.BadgeUtils;
 import com.jabbar.Utils.Config;
 import com.jabbar.Utils.Log;
 import com.jabbar.Utils.Pref;
-import com.jabbar.Utils.ResponseListener;
+import com.jabbar.Listener.ResponseListener;
 import com.jabbar.Utils.Utils;
 
 import java.util.ArrayList;

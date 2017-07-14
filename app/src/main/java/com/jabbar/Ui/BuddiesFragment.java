@@ -23,13 +23,14 @@ import com.jabbar.Bean.ExitsContactBean;
 import com.jabbar.Bean.StoryBean;
 import com.jabbar.Bll.StoryBll;
 import com.jabbar.Bll.UserBll;
-import com.jabbar.MyClickListener;
+import com.jabbar.Listener.MyClickListener;
 import com.jabbar.R;
 import com.jabbar.Utils.Config;
 import com.jabbar.Utils.GetLocation;
-import com.jabbar.Utils.JabbarDialog;
+import com.jabbar.Uc.JabbarDialog;
 import com.jabbar.Utils.Pref;
-import com.jabbar.Utils.ResponseListener;
+import com.jabbar.Listener.ResponseListener;
+import com.jabbar.Utils.UpdateContact1;
 import com.jabbar.Utils.Utils;
 
 import java.util.ArrayList;
@@ -76,7 +77,6 @@ public class BuddiesFragment extends Fragment implements ResponseListener, GetLo
 
     public void ListUpdate() {
         if (contactsBeanArrayList != null) {
-            new UserBll(getContext()).UpdateDirectContact(contactsBeanArrayList);
             contactsBeanArrayList.clear();
             contactsBeanArrayList.addAll(new UserBll(getContext()).geBuddiestList(false));
             buddiesAdapter.notifyDataSetChanged();

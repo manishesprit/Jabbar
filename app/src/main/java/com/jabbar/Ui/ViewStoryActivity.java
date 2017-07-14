@@ -9,9 +9,9 @@ import android.support.v4.view.ViewPager;
 import com.jabbar.Adapter.StoryFragment;
 import com.jabbar.Adapter.StoryFragmentAdapter;
 import com.jabbar.Bean.StoryBean;
-import com.jabbar.OnNextSlideChange;
+import com.jabbar.Listener.OnNextSlideChange;
 import com.jabbar.R;
-import com.jabbar.RotateDown;
+import com.jabbar.Uc.RotateDown;
 import com.jabbar.Utils.Log;
 import com.jabbar.Utils.Utils;
 

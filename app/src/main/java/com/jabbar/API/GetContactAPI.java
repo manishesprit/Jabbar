@@ -10,7 +10,7 @@ import com.jabbar.R;
 import com.jabbar.Utils.Config;
 import com.jabbar.Utils.Log;
 import com.jabbar.Utils.Pref;
-import com.jabbar.Utils.ResponseListener;
+import com.jabbar.Listener.ResponseListener;
 import com.jabbar.Utils.Utils;
 
 import org.json.JSONObject;
@@ -25,10 +25,6 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;
 
-
-/**
- * Created by admin on 10/1/17.
- */
 
 public class GetContactAPI {
     public Context context;

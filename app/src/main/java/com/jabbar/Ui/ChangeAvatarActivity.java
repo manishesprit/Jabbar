@@ -19,10 +19,10 @@ import com.jabbar.MasterCrop.Crop;
 import com.jabbar.R;
 import com.jabbar.Utils.Config;
 import com.jabbar.Utils.FileUtils;
-import com.jabbar.Utils.JabbarDialog;
+import com.jabbar.Uc.JabbarDialog;
 import com.jabbar.Utils.Log;
 import com.jabbar.Utils.Pref;
-import com.jabbar.Utils.ResponseListener;
+import com.jabbar.Listener.ResponseListener;
 import com.jabbar.Utils.Utils;
 
 import java.io.File;

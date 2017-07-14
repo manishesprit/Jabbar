@@ -21,10 +21,10 @@ import com.jabbar.API.VerifyCodeAPI;
 import com.jabbar.Bean.ExitsContactBean;
 import com.jabbar.R;
 import com.jabbar.Utils.Config;
-import com.jabbar.Utils.JabbarDialog;
+import com.jabbar.Uc.JabbarDialog;
 import com.jabbar.Utils.Log;
 import com.jabbar.Utils.Pref;
-import com.jabbar.Utils.ResponseListener;
+import com.jabbar.Listener.ResponseListener;
 import com.jabbar.Utils.Utils;
 
 import java.util.ArrayList;

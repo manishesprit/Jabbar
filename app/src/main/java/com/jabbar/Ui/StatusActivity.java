@@ -2,27 +2,22 @@ package com.jabbar.Ui;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.jabbar.API.UpdateStatusAPI;
-import com.jabbar.Bll.MessageBll;
 import com.jabbar.Bll.StatusBll;
 import com.jabbar.R;
 import com.jabbar.Utils.Config;
-import com.jabbar.Utils.JabbarDialog;
+import com.jabbar.Uc.JabbarDialog;
 import com.jabbar.Utils.Mydb;
 import com.jabbar.Utils.Pref;
-import com.jabbar.Utils.ResponseListener;
+import com.jabbar.Listener.ResponseListener;
 import com.jabbar.Utils.Utils;
 
 import org.apache.commons.lang3.StringEscapeUtils;

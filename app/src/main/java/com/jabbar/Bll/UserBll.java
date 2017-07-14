@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 
 import com.jabbar.Bean.ContactsBean;
+import com.jabbar.Bean.StoryBean;
 import com.jabbar.Utils.Config;
 import com.jabbar.Utils.Log;
 import com.jabbar.Utils.Mydb;
@@ -29,14 +30,13 @@ public class UserBll {
         try {
 
             Mydb mydb = new Mydb(this.context);
-            mydb.execute("delete from user_tb");
+            mydb.execute("update user_tb set is_contact=0,name=''");
             mydb.close();
             mydb = null;
             System.gc();
 
             for (ContactsBean contactsBean : contactsBeanArrayList) {
-                insertContact(contactsBean);
-
+                verify(contactsBean);
             }
 
         } catch (Exception e) {
@@ -46,6 +46,25 @@ public class UserBll {
         }
     }
 
+    public void verify(ContactsBean contactsBean) {
+        String sql = "";
+        Mydb dbHelper = null;
+        Cursor cursor;
+        try {
+            sql = "SELECT userid FROM user_tb where userid=" + contactsBean.userid;
+            System.out.println("=====sql====" + sql);
+            dbHelper = new Mydb(context);
+            cursor = dbHelper.query(sql);
+
+            if (cursor != null && cursor.getCount() > 0) {
+                updateContact(contactsBean);
+            } else {
+                insertContact(contactsBean);
+            }
+        } catch (Exception e) {
+
+        }
+    }
 
     // Insert new records.
     public void insertContact(ContactsBean contactsBean) {
@@ -62,6 +81,29 @@ public class UserBll {
 
         } catch (Exception e) {
             Log.print(this.getClass() + " :: insert()" + " " + e);
+        } finally {
+            if (dbHelper != null)
+                dbHelper.close();
+            // release
+            dbHelper = null;
+            sql = null;
+            contactsBean = null;
+            System.gc();
+        }
+    }
+
+    public void updateContact(ContactsBean contactsBean) {
+        Mydb dbHelper = null;
+        String sql = null;
+        try {
+
+            dbHelper = new Mydb(this.context);
+            sql = "UPDATE user_tb SET name='" + Mydb.getDBStr(contactsBean.name) + "', status='" + StringEscapeUtils.unescapeJava(contactsBean.status) + "',avatar='" + Mydb.getDBStr(contactsBean.avatar) + "',last_seen='" + Mydb.getDBStr(contactsBean.last_seen) + "',location='" + Mydb.getDBStr(contactsBean.location) + "',is_contact=1 where userid=" + contactsBean.userid;
+            dbHelper.execute(sql);
+
+
+        } catch (Exception e) {
+            Log.print(this.getClass() + " :: update()" + "===" + e);
         } finally {
             if (dbHelper != null)
                 dbHelper.close();
@@ -97,7 +139,7 @@ public class UserBll {
     }
 
 
-    public void updateContact(ContactsBean contactsBean) {
+    public void updateUserName(ContactsBean contactsBean) {
         Mydb dbHelper = null;
         String sql = null;
         try {
@@ -142,12 +184,6 @@ public class UserBll {
         }
     }
 
-    public void UpdateDirectContact(ArrayList<ContactsBean> contactsBeanArrayList) {
-        for (ContactsBean contactsBean : contactsBeanArrayList) {
-            updateContact(contactsBean);
-        }
-    }
-
 
     public ArrayList<ContactsBean> geBuddiestList(boolean isFavorite) {
         Mydb mydb = null;
@@ -171,7 +207,7 @@ public class UserBll {
                 while (cursor.moveToNext()) {
                     contactsBean = new ContactsBean();
                     contactsBean.userid = cursor.getInt(0);
-                    contactsBean.name = cursor.getString(1);
+                    contactsBean.name = cursor.getString(1).toString().equalsIgnoreCase("") ? cursor.getString(2) : cursor.getString(1);
                     contactsBean.mobile_number = cursor.getString(2);
                     contactsBean.status = cursor.getString(3);
                     contactsBean.avatar = cursor.getString(4);
@@ -179,9 +215,9 @@ public class UserBll {
                     contactsBean.last_seen = Utils.convertStringDateToStringDate(Config.WebDateFormatter, Config.AppChatDateFormatter, cursor.getString(6));
                     contactsBean.isFavorite = cursor.getInt(7);
                     contactsBean.cntUnReasMsg = cursor.getInt(8);
-                    if (isFavorite ) {
-                        if(!contactsBean.location.equalsIgnoreCase(""))
-                        contactBeanArrayList.add(contactsBean);
+                    if (isFavorite) {
+                        if (!contactsBean.location.equalsIgnoreCase(""))
+                            contactBeanArrayList.add(contactsBean);
                     } else {
                         contactBeanArrayList.add(contactsBean);
                     }

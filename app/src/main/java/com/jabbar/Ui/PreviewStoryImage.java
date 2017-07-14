@@ -23,10 +23,10 @@ import com.jabbar.ImageViewer.ImageViewTouch;
 import com.jabbar.ImageViewer.ImageViewTouchBase;
 import com.jabbar.R;
 import com.jabbar.Utils.Config;
-import com.jabbar.Utils.JabbarDialog;
+import com.jabbar.Uc.JabbarDialog;
 import com.jabbar.Utils.Log;
 import com.jabbar.Utils.Pref;
-import com.jabbar.Utils.ResponseListener;
+import com.jabbar.Listener.ResponseListener;
 import com.jabbar.Utils.Utils;
 
 import org.apache.commons.lang3.StringEscapeUtils;

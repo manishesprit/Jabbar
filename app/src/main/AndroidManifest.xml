@@ -151,13 +151,13 @@
             android:theme="@android:style/Theme.Dialog" />
 
 
-        <receiver android:name=".Utils.IncomingSmsReceiver">
+        <receiver android:name=".Listener.IncomingSmsReceiver">
             <intent-filter>
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".Utils.NetworkReceiver">
+        <receiver android:name=".Listener.NetworkReceiver">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
                 <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />

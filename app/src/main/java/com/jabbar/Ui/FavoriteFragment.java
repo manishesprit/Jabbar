@@ -27,7 +27,7 @@ import com.jabbar.Bll.UserBll;
 import com.jabbar.R;
 import com.jabbar.Utils.Config;
 import com.jabbar.Utils.GetLocation;
-import com.jabbar.Utils.JabbarDialog;
+import com.jabbar.Uc.JabbarDialog;
 import com.jabbar.Utils.Pref;
 
 import java.util.ArrayList;
