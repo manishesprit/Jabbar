@@ -27,7 +27,6 @@ public class ViewStoryActivity extends BaseActivity implements OnNextSlideChange
     private StoryFragmentAdapter storyFragmentAdapter;
     private ArrayList<StoryBean> storyBeanArrayList;
     private int pos = 0;
-    public boolean isDirect = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

@@ -86,7 +86,9 @@ public class HomeActivity extends BaseActivity {
                     }
                 }
                 if (position == 1 && adapter != null) {
-                    menu.findItem(R.id.menu_refresh).setVisible(false);
+                    if (menu != null) {
+                        menu.findItem(R.id.menu_refresh).setVisible(false);
+                    }
                     if (chatsFragment == null) {
                         chatsFragment = (ChatsFragment) adapter.getItem(1);
                     }

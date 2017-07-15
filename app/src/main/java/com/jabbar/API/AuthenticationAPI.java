@@ -32,11 +32,9 @@ import retrofit2.http.POST;
  */
 
 public class AuthenticationAPI {
-    public Context context;
     public ResponseListener responseListener;
 
     public AuthenticationAPI(final Context context, final ResponseListener responseListener, final String mobile_number, final ArrayList<ExitsContactBean> exitsContactBeanArrayList) {
-        this.context = context;
         this.responseListener = responseListener;
         HashMap<String, String> mParams = new HashMap<String, String>();
         mParams.put("mobile_number", mobile_number);

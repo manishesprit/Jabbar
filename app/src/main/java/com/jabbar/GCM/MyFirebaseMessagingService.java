@@ -7,7 +7,6 @@ import android.os.Bundle;
 import com.google.android.gms.gcm.GcmListenerService;
 import com.jabbar.Bean.MessageBean;
 import com.jabbar.Bll.MessageBll;
-import com.jabbar.Ui.AuthenticationAlertActivity;
 import com.jabbar.Ui.ChatNewActivity;
 import com.jabbar.Utils.Config;
 import com.jabbar.Utils.Log;
@@ -39,10 +38,7 @@ public class MyFirebaseMessagingService extends GcmListenerService {
         try {
             JSONObject jsonObject = new JSONObject(data.get("data").toString());
             if (jsonObject.has("type") && jsonObject.getInt("type") == 1 && Pref.getValue(getApplicationContext(), Config.PREF_USERID, 0) != 0) {
-                Utils.closeAllScreens();
-                Intent intent = new Intent(getApplicationContext(), AuthenticationAlertActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
+                Utils.ClearAllDataAndRestartApp(getApplicationContext());
             } else if (jsonObject.has("type") && jsonObject.getInt("type") == 2) {
                 if (jsonObject.has("userid") && jsonObject.getInt("userid") == Pref.getValue(getApplicationContext(), Config.PREF_USERID, 0)) {
 
@@ -56,8 +52,8 @@ public class MyFirebaseMessagingService extends GcmListenerService {
 
                             try {
                                 Cursor cursor = mydb.query("select userid from user_tb where userid=" + message.getInt("userid"));
-                                if(cursor!=null && cursor.getCount()==0){
-                                    mydb.execute("insert into user_tb values ("+message.getInt("userid")+",'','"+message.getString("mobile_number")+"','','','','',0,0))");
+                                if (cursor != null && cursor.getCount() == 0) {
+                                    mydb.execute("insert into user_tb values (" + message.getInt("userid") + ",'','" + message.getString("mobile_number") + "','','','','',0,0))");
                                 }
                             } catch (Exception e) {
 

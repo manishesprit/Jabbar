@@ -8,8 +8,6 @@ import com.jabbar.Utils.Utils;
 
 import org.json.JSONObject;
 
-import java.io.InputStream;
-
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -17,9 +15,6 @@ import okhttp3.Response;
 public class VerifyCodeAPI extends AsyncTask<String, Void, Boolean> {
 
     JSONObject j_object = null;
-    String str = "";
-    InputStream is = null;
-    Context context;
 
     public Utils.MyListener myListener;
     public String code;
@@ -30,7 +25,6 @@ public class VerifyCodeAPI extends AsyncTask<String, Void, Boolean> {
         this.code = code;
         this.session_id = session_id;
         this.myListener = myListener;
-        this.context = context;
     }
 
     @Override

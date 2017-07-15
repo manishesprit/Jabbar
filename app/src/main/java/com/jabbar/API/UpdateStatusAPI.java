@@ -29,11 +29,9 @@ import retrofit2.http.POST;
  */
 
 public class UpdateStatusAPI {
-    public Context context;
     public ResponseListener responseListener;
 
     public UpdateStatusAPI(final Context context, final ResponseListener responseListener, final String status) {
-        this.context = context;
         this.responseListener = responseListener;
         HashMap<String, String> mParams = new HashMap<String, String>();
         mParams.put("userid", String.valueOf(Pref.getValue(context, Config.PREF_USERID, 0)));

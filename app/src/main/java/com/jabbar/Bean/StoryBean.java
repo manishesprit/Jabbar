@@ -12,7 +12,6 @@ public class StoryBean implements Serializable {
     public String story_image;
     public String caption;
     public String create_time;
-    public int isShow;
     public String userName;
     public String userAvatar;
 }

@@ -18,7 +18,6 @@ import java.util.Map;
 
 public class StoryFragmentAdapter extends FragmentPagerAdapter {
 
-    private Context context;
     private ArrayList<StoryBean> storyBeanArrayList;
     private StoryFragment storyFragment;
     private Map<Integer, String> mFragmentTags;
@@ -26,7 +25,6 @@ public class StoryFragmentAdapter extends FragmentPagerAdapter {
 
     public StoryFragmentAdapter(Context context, FragmentManager fragmentManager, ArrayList<StoryBean> storyBeanArrayList) {
         super(fragmentManager);
-        this.context = context;
         this.storyBeanArrayList = storyBeanArrayList;
         this.mFragmentManager = fragmentManager;
         mFragmentTags = new HashMap<Integer, String>();

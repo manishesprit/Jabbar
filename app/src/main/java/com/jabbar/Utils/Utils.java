@@ -2,6 +2,7 @@ package com.jabbar.Utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
@@ -26,6 +27,7 @@ import com.jabbar.Bean.ContactsBean;
 import com.jabbar.Bean.ExitsContactBean;
 import com.jabbar.R;
 import com.jabbar.Uc.JabbarDialog;
+import com.jabbar.Ui.AuthenticationAlertActivity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -214,7 +216,7 @@ public class Utils {
                 @Override
                 public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                     super.onResourceReady(resource, glideAnimation);
-                    ConvertImage(context,resource,fileName);
+                    ConvertImage(context, resource, fileName);
                     if (isCircle) {
                         RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(context.getResources(), resource);
                         circularBitmapDrawable.setCircular(true);
@@ -385,6 +387,13 @@ public class Utils {
         } catch (Exception e) {
 
         }
+    }
+
+    public static void ClearAllDataAndRestartApp(Context context) {
+        Utils.closeAllScreens();
+        Intent intent = new Intent(context, AuthenticationAlertActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
     }
 
 }

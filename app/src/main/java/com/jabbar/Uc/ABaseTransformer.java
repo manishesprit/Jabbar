@@ -102,26 +102,7 @@ public abstract class ABaseTransformer implements PageTransformer {
             page.setAlpha(1f);
         }
     }
-
-    /**
-     * Called each {@link #transformPage(View, float)} after {@link #onTransform(View, float)}.
-     *
-     * @param page     Apply the transformation to this page
-     * @param position Position of page relative to the current front-and-center position of the pager. 0 is front and
-     *                 center. 1 is one full page position to the right, and -1 is one page position to the left.
-     */
     protected void onPostTransform(View page, float position) {
-    }
-
-    /**
-     * Same as {@link Math#min(double, double)} without double casting, zero closest to infinity handling, or NaN support.
-     *
-     * @param val
-     * @param min
-     * @return
-     */
-    protected static final float min(float val, float min) {
-        return val < min ? min : val;
     }
 
 }

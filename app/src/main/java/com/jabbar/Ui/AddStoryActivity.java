@@ -69,7 +69,6 @@ public class AddStoryActivity extends BaseActivity {
     private ArrayList<ImageBean> imageArrayList;
     private RelativeLayout rlBack;
     private ImageView conversation_contact_photo;
-    public static Activity activity;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -77,7 +76,6 @@ public class AddStoryActivity extends BaseActivity {
 
         setContentView(R.layout.activity_add_story);
         Utils.addActivities(this);
-        activity = this;
 
         camera_switcher = (CameraSwitchView) findViewById(R.id.camera_switcher);
         record_button = (RecordButton) findViewById(R.id.record_button);

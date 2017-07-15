@@ -82,6 +82,7 @@ public class AccountActivity extends BaseActivity implements View.OnClickListene
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
+
                                 Pref.setValue(AccountActivity.this, Config.PREF_USERID, 0);
                                 Pref.setValue(AccountActivity.this, Config.PREF_NAME, "");
                                 Pref.setValue(AccountActivity.this, Config.PREF_MOBILE_NUMBER, "");

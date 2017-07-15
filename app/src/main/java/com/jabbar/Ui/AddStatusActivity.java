@@ -12,13 +12,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jabbar.API.UpdateStatusAPI;
-import com.jabbar.Bll.StatusBll;
+import com.jabbar.Listener.ResponseListener;
 import com.jabbar.R;
-import com.jabbar.Utils.Config;
 import com.jabbar.Uc.JabbarDialog;
+import com.jabbar.Utils.Config;
 import com.jabbar.Utils.Mydb;
 import com.jabbar.Utils.Pref;
-import com.jabbar.Listener.ResponseListener;
 import com.jabbar.Utils.Utils;
 
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -30,7 +29,6 @@ import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
 public class AddStatusActivity extends BaseActivity implements View.OnClickListener {
 
     private Toolbar toolbar;
-    public StatusBll statusBll;
     private LinearLayout rootView;
     private EmojiconEditText edit_msg;
     private ImageView img_emoji;
@@ -58,8 +56,6 @@ public class AddStatusActivity extends BaseActivity implements View.OnClickListe
         progressDialog.setCancelable(false);
 
         setToolbar(toolbar, true);
-        statusBll = new StatusBll(this);
-
         emojIcon = new EmojIconActions(this, rootView, edit_msg, img_emoji);
         emojIcon.setUseSystemEmoji(false);
         emojIcon.ShowEmojIcon();
