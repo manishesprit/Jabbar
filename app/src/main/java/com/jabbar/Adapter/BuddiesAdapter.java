@@ -96,7 +96,6 @@ public class BuddiesAdapter extends RecyclerView.Adapter<BuddiesAdapter.MyHolder
 
         public RelativeLayout rlRow;
         public ImageView imgAvatar;
-        public TextView txtNoMsg;
         public TextView txtName;
         public EmojiconTextView txtstatus;
         public ImageView imgfavorite;
@@ -105,7 +104,6 @@ public class BuddiesAdapter extends RecyclerView.Adapter<BuddiesAdapter.MyHolder
             super(view);
             rlRow = (RelativeLayout) view.findViewById(R.id.rlRow);
             imgAvatar = (ImageView) view.findViewById(R.id.imgAvatar);
-            txtNoMsg = (TextView) view.findViewById(R.id.txtNoMsg);
             txtName = (TextView) view.findViewById(R.id.txtName);
             txtstatus = (EmojiconTextView) view.findViewById(R.id.txtstatus);
             imgfavorite = (ImageView) view.findViewById(R.id.imgfavorite);

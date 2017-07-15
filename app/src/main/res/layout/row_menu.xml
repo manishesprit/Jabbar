@@ -11,7 +11,8 @@
         android:layout_gravity="center_horizontal"
         android:src="@drawable/app_icon" />
 
-    <TextView
+    <com.jabbar.Uc.JabbarTextView
+        android:tag="100"
         android:id="@+id/txtmanuName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

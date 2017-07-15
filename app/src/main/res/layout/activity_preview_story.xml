@@ -15,30 +15,35 @@
         android:orientation="horizontal"
         android:padding="10dp">
 
-        <TextView
+        <com.jabbar.Uc.JabbarTextView
+            android:tag="100"
             android:id="@+id/cancel_media_action"
             style="@style/PreviewButtonsStyle"
             android:drawableTop="@drawable/ic_clear_white_24dp"
             android:text="@string/preview_controls_cancel" />
 
-        <TextView
+        <com.jabbar.Uc.JabbarTextView
+            android:tag="100"
             android:id="@+id/crop_image"
             style="@style/PreviewButtonsStyle"
             android:drawableTop="@drawable/ic_crop_white_24dp"
             android:text="@string/preview_controls_crop" />
 
-        <TextView
+        <com.jabbar.Uc.JabbarTextView
+            android:tag="100"
             android:id="@+id/ratio_image"
             style="@style/PreviewButtonsStyle"
             android:drawableTop="@drawable/ic_image_aspect_ratio_white_24dp" />
 
-        <TextView
+        <com.jabbar.Uc.JabbarTextView
+            android:tag="100"
             android:id="@+id/re_take_media"
             style="@style/PreviewButtonsStyle"
             android:drawableTop="@drawable/ic_replay_white_24dp"
             android:text="@string/preview_controls_retake" />
 
-        <TextView
+        <com.jabbar.Uc.JabbarTextView
+            android:tag="100"
             android:id="@+id/confirm_media_result"
             style="@style/PreviewButtonsStyle"
             android:drawableTop="@drawable/ic_done_white_24dp"

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
-import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,12 +20,12 @@ import com.jabbar.CameraMaster.internal.enums.MediaAction;
 import com.jabbar.ImageViewer.DecodeUtils;
 import com.jabbar.ImageViewer.ImageViewTouch;
 import com.jabbar.ImageViewer.ImageViewTouchBase;
+import com.jabbar.Listener.ResponseListener;
 import com.jabbar.R;
-import com.jabbar.Utils.Config;
 import com.jabbar.Uc.JabbarDialog;
+import com.jabbar.Utils.Config;
 import com.jabbar.Utils.Log;
 import com.jabbar.Utils.Pref;
-import com.jabbar.Listener.ResponseListener;
 import com.jabbar.Utils.Utils;
 
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -45,10 +44,8 @@ public class PreviewStoryImage extends BaseActivity {
     private ProgressDialog progressDialog;
     private final static String MEDIA_ACTION_ARG = "media_action_arg";
     private final static String FILE_PATH_ARG = "file_path_arg";
-    private final static String FILE_STORAGE = "FILE_STORAGE";
 
     private int mediaAction;
-    private boolean isStorage;
     private RelativeLayout rlBack;
     private ImageView conversation_contact_photo;
     ImageViewTouch mImage;
@@ -61,11 +58,10 @@ public class PreviewStoryImage extends BaseActivity {
     private String fileName;
 
 
-    public static Intent newIntentPhoto(Context context, String filePath, boolean isStorage) {
+    public static Intent newIntentPhoto(Context context, String filePath) {
         return new Intent(context, PreviewStoryImage.class)
                 .putExtra(MEDIA_ACTION_ARG, MediaAction.ACTION_PHOTO)
-                .putExtra(FILE_PATH_ARG, filePath)
-                .putExtra(FILE_STORAGE, isStorage);
+                .putExtra(FILE_PATH_ARG, filePath);
     }
 
 
@@ -104,6 +100,7 @@ public class PreviewStoryImage extends BaseActivity {
             public void onClick(View v) {
                 if (Utils.isOnline(PreviewStoryImage.this)) {
                     progressDialog.show();
+
                     new AddStoryAPI(PreviewStoryImage.this, fileName, StringEscapeUtils.escapeJava(edit_msg.getText().toString().trim()), new ResponseListener() {
                         @Override
                         public void onResponce(String tag, int result, Object obj) {
@@ -141,7 +138,6 @@ public class PreviewStoryImage extends BaseActivity {
         mImage.setDisplayType(ImageViewTouchBase.DisplayType.FIT_IF_BIGGER);
         fileName = getIntent().getStringExtra(FILE_PATH_ARG);
         Log.print("=====length====" + new File(fileName).length() / 1024);
-        isStorage = getIntent().getBooleanExtra(FILE_PATH_ARG, false);
         LoadImage(Uri.parse(getIntent().getStringExtra(FILE_PATH_ARG)));
         mImage.setSingleTapListener(
                 new ImageViewTouch.OnImageViewTouchSingleTapListener() {
@@ -179,8 +175,6 @@ public class PreviewStoryImage extends BaseActivity {
         super.onConfigurationChanged(newConfig);
     }
 
-    Matrix imageMatrix;
-
     public void LoadImage(Uri imageUri) {
 
         Log.print(imageUri.toString());
@@ -188,36 +182,6 @@ public class PreviewStoryImage extends BaseActivity {
         final DisplayMetrics metrics = getResources().getDisplayMetrics();
         int size = (int) (Math.min(metrics.widthPixels, metrics.heightPixels) / 0.55);
 
-//        if ("http".equals(imageUri.getScheme()) || "https".equals(imageUri.getScheme())) {
-//
-//            Glide.with(this).load(imageUri).asBitmap().placeholder(R.drawable.ic_gallery).error(R.drawable.ic_gallery).into(new BitmapImageViewTarget(mImage) {
-//                @Override
-//                protected void setResource(Bitmap resource) {
-//                    super.setResource(resource);
-//                    bitmap = resource;
-//
-//                    if (null != bitmap) {
-//                        com.jabbar.Utils.Log.print("screen size: " + metrics.widthPixels + "x" + metrics.heightPixels);
-//                        com.jabbar.Utils.Log.print("bitmap size: " + bitmap.getWidth() + "x" + bitmap.getHeight());
-//
-//                        mImage.setOnDrawableChangedListener(
-//                                new ImageViewTouchBase.OnDrawableChangeListener() {
-//                                    @Override
-//                                    public void onDrawableChanged(final Drawable drawable) {
-//                                        com.jabbar.Utils.Log.print("image scale: " + mImage.getScale() + "/" + mImage.getMinScale());
-//                                        com.jabbar.Utils.Log.print("scale type: " + mImage.getDisplayType() + "/" + mImage.getScaleType());
-//
-//                                    }
-//                                }
-//                        );
-//                        mImage.setImageBitmap(bitmap, null, -1, -1);
-//
-//                    } else {
-//                        Toast.makeText(this, "Failed to load the image", Toast.LENGTH_LONG).show();
-//                    }
-//                }
-//            });
-//        } else {
         bitmap = DecodeUtils.decode(this, imageUri, size, size);
 
         if (null != bitmap) {
@@ -239,8 +203,5 @@ public class PreviewStoryImage extends BaseActivity {
         } else {
             Toast.makeText(this, "Failed to load the image", Toast.LENGTH_LONG).show();
         }
-//        }
-
-
     }
 }

@@ -11,45 +11,29 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <RelativeLayout
-            android:id="@+id/rlAvatar"
-            android:layout_width="@dimen/avatar_out"
-            android:layout_height="@dimen/avatar_out">
 
-            <ImageView
-                android:id="@+id/imgAvatar"
-                android:layout_width="@dimen/avatar"
-                android:layout_height="@dimen/avatar"
-                android:src="@drawable/default_user" />
+        <ImageView
+            android:id="@+id/imgAvatar"
+            android:layout_width="@dimen/avatar"
+            android:layout_height="@dimen/avatar"
+            android:src="@drawable/default_user" />
 
-            <TextView
-                android:id="@+id/txtNoMsg"
-                android:layout_width="@dimen/noOfMsg"
-                android:layout_height="@dimen/noOfMsg"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"
-                android:background="@drawable/drawable_round"
-                android:gravity="center"
-                android:text="0"
-                android:textColor="@color/colorAccent"
-                android:textSize="@dimen/textSmall"
-                android:visibility="gone" />
-        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/imgfavorite"
-            android:layout_toRightOf="@+id/rlAvatar"
+            android:layout_toRightOf="@+id/imgAvatar"
             android:orientation="vertical"
             android:paddingLeft="@dimen/MarginFive">
 
-            <TextView
+            <com.jabbar.Uc.JabbarTextView
                 android:id="@+id/txtName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
+                android:tag="100"
                 android:text="Hello"
                 android:textColor="@color/color_title"
                 android:textSize="@dimen/textMediumExtra" />
@@ -76,8 +60,7 @@
             android:layout_centerVertical="true"
             android:background="?attr/selectableItemBackground"
             android:padding="@dimen/MarginFive"
-            android:src="@drawable/ic_star_unfill"
-            android:visibility="gone" />
+            android:src="@drawable/ic_star_unfill" />
 
     </RelativeLayout>
 

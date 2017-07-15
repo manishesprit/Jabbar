@@ -31,7 +31,8 @@
             android:background="@drawable/circle"
             android:scaleType="fitXY" />
 
-        <TextView
+        <com.jabbar.Uc.JabbarTextView
+            android:tag="100"
             android:id="@+id/txtName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -41,7 +42,8 @@
             android:textSize="18dp"
             android:textStyle="bold" />
 
-        <TextView
+        <com.jabbar.Uc.JabbarTextView
+            android:tag="100"
             android:id="@+id/txtTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

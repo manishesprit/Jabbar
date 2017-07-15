@@ -4,8 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.Typeface;
 import android.media.ExifInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -193,18 +193,6 @@ public class Utils {
     }
 
 
-    public static void ConvertImage(final Context context, Bitmap bitmap, String name) {
-        try {
-            File imageFile = new File(context.getApplicationInfo().dataDir, name);
-            OutputStream os;
-            os = new FileOutputStream(imageFile);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
-            os.flush();
-            os.close();
-        } catch (Exception e) {
-        }
-    }
-
     public static void setGlideImage(final Context context, final String fileName, final ImageView imageView, final boolean isCircle) {
         File file = new File(context.getApplicationInfo().dataDir, "/" + fileName);
         if (file != null && file.exists()) {
@@ -226,7 +214,7 @@ public class Utils {
                 @Override
                 public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                     super.onResourceReady(resource, glideAnimation);
-                    ConvertImage(context, resource, fileName);
+                    ConvertImage(context,resource,fileName);
                     if (isCircle) {
                         RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(context.getResources(), resource);
                         circularBitmapDrawable.setCircular(true);
@@ -342,31 +330,58 @@ public class Utils {
         return dir.delete();
     }
 
+    public static Typeface getFont(Context context, int tag) {
 
-    public static void AvatarResize(String path) {
-        File file = new File(path);
-        Log.print("============Before Size======" + file.length() / 1024);
+        if (tag == 100) {
+            return Typeface.createFromAsset(context.getAssets(), "Roboto-Regular.ttf");
+        } else if (tag == 200) {
+            return Typeface.createFromAsset(context.getAssets(), "Roboto-Medium.ttf");
+        } else if (tag == 300) {
+            return Typeface.createFromAsset(context.getAssets(), "Roboto_Bold.ttf");
+        }
+        return Typeface.DEFAULT;
+    }
+
+    public static void ConvertImage(final Context context, Bitmap bitmap, String name) {
         try {
-            if (file.exists()) {
-                Bitmap b = BitmapFactory.decodeFile(file.getAbsolutePath());
-                int origWidth = b.getWidth();
-                int origHeight = b.getHeight();
+            File imageFile = new File(context.getApplicationInfo().dataDir, name);
+            OutputStream os;
+            os = new FileOutputStream(imageFile);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
+            os.flush();
+            os.close();
+        } catch (Exception e) {
+        }
+    }
 
-                int destWidth = 640;//or the width you need
-                int destHeight = origHeight / (origWidth / destWidth);
 
-                if (origWidth > destWidth) {
-                    Bitmap b2 = Bitmap.createScaledBitmap(b, destWidth, destHeight, false);
-                    ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-                    b2.compress(Bitmap.CompressFormat.JPEG, 70, outStream);
-                    File f = new File(path);
-                    f.createNewFile();
-                    FileOutputStream fo = new FileOutputStream(f);
-                    fo.write(outStream.toByteArray());
-                    fo.close();
-                    Log.print("============After Size======" + f.length() / 1024);
-                }
+    public static void AvatarResize(Bitmap b, String newpath, int maxWidth) {
+
+        try {
+            float origWidth = b.getWidth();
+            float origHeight = b.getHeight();
+
+            Log.print("===origWidth===" + origWidth + "======origHeight======" + origHeight);
+
+            float destWidth = maxWidth;//or the width you need
+            float destHeight = origHeight / (origWidth / destWidth);
+
+            Log.print("===destWidth===" + destWidth + "======destHeight======" + destHeight);
+
+            if (origWidth > destWidth) {
+            } else {
             }
+            Bitmap b2 = Bitmap.createScaledBitmap(b, (int) destWidth, (int) destHeight, false);
+            ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+            b2.compress(Bitmap.CompressFormat.JPEG, 80, outStream);
+            File f = new File(newpath);
+            f.createNewFile();
+            FileOutputStream fo = new FileOutputStream(f);
+            fo.write(outStream.toByteArray());
+            fo.close();
+            Log.print("============After Size======" + f.length() / 1024);
+
+
         } catch (Exception e) {
 
         }

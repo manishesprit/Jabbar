@@ -12,7 +12,9 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/MarginSaven"
+        android:layout_marginTop="@dimen/MarginSaven">
 
         <RelativeLayout
             android:id="@+id/rlBack"
@@ -33,9 +35,6 @@
                 android:id="@+id/conversation_contact_photo"
                 android:layout_width="@dimen/avatar"
                 android:layout_height="@dimen/avatar"
-                android:layout_marginBottom="@dimen/MarginSaven"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="@dimen/MarginSaven"
                 android:layout_toRightOf="@+id/imgBack"
                 android:scaleType="fitCenter"
                 android:src="@drawable/default_user" />
@@ -62,7 +61,7 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp" />
 
-            <TextView
+            <com.jabbar.Uc.JabbarTextView
                 android:id="@+id/record_duration_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -70,16 +69,18 @@
                 android:drawablePadding="@dimen/MarginFive"
                 android:gravity="center"
                 android:padding="@dimen/MarginFive"
+                android:tag="100"
                 android:textColor="@android:color/white"
                 android:textSize="14dp"
                 android:visibility="gone" />
 
-            <TextView
+            <com.jabbar.Uc.JabbarTextView
                 android:id="@+id/record_size_mb_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:padding="@dimen/MarginFive"
+                android:tag="100"
                 android:textColor="@android:color/white"
                 android:textSize="14dp"
                 android:visibility="gone" />
@@ -131,12 +132,12 @@
     </RelativeLayout>
 
     <!--<android.support.v7.widget.RecyclerView-->
-        <!--android:id="@+id/rv_image_panel"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="170dp"-->
-        <!--android:layout_alignParentBottom="true"-->
-        <!--android:layout_alignParentLeft="true"-->
-        <!--android:visibility="gone" />-->
+    <!--android:id="@+id/rv_image_panel"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="170dp"-->
+    <!--android:layout_alignParentBottom="true"-->
+    <!--android:layout_alignParentLeft="true"-->
+    <!--android:visibility="gone" />-->
 
     <GridView
         android:id="@+id/rv_image_panel"

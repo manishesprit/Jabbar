@@ -35,7 +35,7 @@ public class HomeActivity extends BaseActivity {
     private ViewPagerAdapter adapter;
 
     private FavoriteFragment favoriteFragment;
-    private BuddiesFragment buddiesFragment;
+    private ChatsFragment chatsFragment;
     public static final int CODE_CHAT = 100;
     public static boolean isFavoriteUpdate = true;
 
@@ -87,8 +87,8 @@ public class HomeActivity extends BaseActivity {
                 }
                 if (position == 1 && adapter != null) {
                     menu.findItem(R.id.menu_refresh).setVisible(false);
-                    if (buddiesFragment == null) {
-                        buddiesFragment = (BuddiesFragment) adapter.getItem(1);
+                    if (chatsFragment == null) {
+                        chatsFragment = (ChatsFragment) adapter.getItem(1);
                     }
                 }
 
@@ -110,8 +110,8 @@ public class HomeActivity extends BaseActivity {
             public void run() {
                 handler.postDelayed(runnable, 10000);
                 if (viewPager.getCurrentItem() == 1) {
-                    if (buddiesFragment != null) {
-                        buddiesFragment.ListUpdate();
+                    if (chatsFragment != null) {
+                        chatsFragment.ListUpdate();
                     }
                 }
             }
@@ -146,7 +146,7 @@ public class HomeActivity extends BaseActivity {
     private void setupViewPager(ViewPager viewPager) {
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new FavoriteFragment(), "FAVORITE");
-        adapter.addFragment(new BuddiesFragment(), "BUDDIES");
+        adapter.addFragment(new ChatsFragment(), "CHATS");
         viewPager.setAdapter(adapter);
     }
 
@@ -235,8 +235,8 @@ public class HomeActivity extends BaseActivity {
 
         if (intent != null && intent.getIntExtra("type", 0) == 2) {
             viewPager.setCurrentItem(1);
-            if (buddiesFragment != null) {
-                buddiesFragment.ListUpdate();
+            if (chatsFragment != null) {
+                chatsFragment.ListUpdate();
             }
         }
     }

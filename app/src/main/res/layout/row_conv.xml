@@ -14,10 +14,11 @@
         android:gravity="left"
         android:orientation="horizontal">
 
-        <TextView
+        <com.jabbar.Uc.JabbarTextView
             android:layout_width="15dp"
             android:layout_height="20dp"
-            android:background="@drawable/pink_arrow" />
+            android:background="@drawable/pink_arrow"
+            android:tag="100" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -36,19 +37,21 @@
                 android:id="@+id/txt_message_left"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:textColor="@color/color_title"
-                android:textSize="@dimen/textMediumExtra"
-                emojicon:emojiconSize="@dimen/textLarge" />  
+                android:textSize="@dimen/textMedium1"
+                emojicon:emojiconSize="@dimen/txtlargeNormal" />  
 
 
-            <TextView
+            <com.jabbar.Uc.JabbarTextView
                 android:id="@+id/txt_time_left"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/txt_message"
                 android:layout_gravity="right"
+                android:tag="100"
                 android:textColor="@color/color_title_sub"
-                android:textSize="@dimen/textMedium" />
+                android:textSize="@dimen/textSmall" />
 
         </LinearLayout>
 
@@ -83,25 +86,28 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:textColor="@color/color_title"
-                android:textSize="@dimen/textMediumExtra"
-                emojicon:emojiconSize="@dimen/textLarge" />  
+                android:textSize="@dimen/textMedium1"
+                emojicon:emojiconSize="@dimen/txtlargeNormal" />  
 
 
-            <TextView
+            <com.jabbar.Uc.JabbarTextView
                 android:id="@+id/txt_time_right"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
                 android:drawablePadding="@dimen/MarginThree"
-                android:textSize="@dimen/textMedium" />
+                android:tag="100"
+                android:textSize="@dimen/textSmall" />
 
         </LinearLayout>
 
-        <TextView
+        <com.jabbar.Uc.JabbarTextView
             android:layout_width="15dp"
             android:layout_height="20dp"
-            android:background="@drawable/green_arrow" />
+            android:background="@drawable/green_arrow"
+            android:tag="100" />
 
 
     </LinearLayout>

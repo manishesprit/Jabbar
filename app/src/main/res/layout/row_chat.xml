@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:emojicon="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rlRow"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -33,22 +34,24 @@
                 android:layout_centerVertical="true"
                 android:orientation="horizontal">
 
-                <TextView
+                <com.jabbar.Uc.JabbarTextView
                     android:id="@+id/txtName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_toLeftOf="@+id/txtTime"
                     android:singleLine="true"
+                    android:tag="200"
                     android:text="Hello"
                     android:textColor="@color/color_title"
                     android:textSize="@dimen/textMediumExtra" />
 
-                <TextView
+                <com.jabbar.Uc.JabbarTextView
                     android:id="@+id/txtTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
+                    android:tag="100"
                     android:textColor="@color/color_title_sub"
                     android:textSize="@dimen/textSmall"
                     android:visibility="visible" />
@@ -61,21 +64,31 @@
                 android:layout_centerVertical="true"
                 android:orientation="horizontal">
 
-                <hani.momanii.supernova_emoji_library.Helper.EmojiconTextView xmlns:android="http://schemas.android.com/apk/res/android"
-                    xmlns:emojicon="http://schemas.android.com/apk/res-auto"
+                <ImageView
+                    android:id="@+id/imgUnsend"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/MarginFive"
+                    android:src="@drawable/ic_error_outline"
+                    android:visibility="gone" />
+
+                <hani.momanii.supernova_emoji_library.Helper.EmojiconTextView
                     android:id="@+id/txtstatus"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
                     android:layout_toLeftOf="@+id/txtNoMsg"
-                    android:gravity="center_vertical"
+                    android:layout_toRightOf="@+id/imgUnsend"
                     android:singleLine="true"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
                     android:textColor="@color/color_title_sub"
                     android:textSize="@dimen/textMedium"
                     android:visibility="visible"
-                    android:text="😂😂a"
-                    emojicon:emojiconSize="@dimen/textMedium" />
+                    emojicon:emojiconSize="@dimen/textMediumExtra" />
 
-                <TextView
+                <com.jabbar.Uc.JabbarTextView
                     android:id="@+id/txtNoMsg"
                     android:layout_width="@dimen/noOfMsg"
                     android:layout_height="@dimen/noOfMsg"
@@ -83,10 +96,11 @@
                     android:layout_centerVertical="true"
                     android:background="@drawable/drawable_round"
                     android:gravity="center"
+                    android:tag="100"
                     android:text="0"
                     android:textColor="@color/colorAccent"
                     android:textSize="@dimen/textSmall"
-                    android:visibility="gone" />
+                    android:visibility="invisible" />
 
             </RelativeLayout>
 

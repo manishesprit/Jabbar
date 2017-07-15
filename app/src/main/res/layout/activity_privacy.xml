@@ -21,7 +21,8 @@
         android:orientation="vertical">
 
 
-        <TextView
+        <com.jabbar.Uc.JabbarTextView
+            android:tag="100"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorAccent"
@@ -40,7 +41,8 @@
             android:clickable="true"
             android:paddingTop="@dimen/MarginTen">
 
-            <TextView
+            <com.jabbar.Uc.JabbarTextView
+                android:tag="100"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="@dimen/MarginSaven"
@@ -51,7 +53,8 @@
                 android:textColor="@color/color_title"
                 android:textSize="@dimen/textMediumExtra" />
 
-            <TextView
+            <com.jabbar.Uc.JabbarTextView
+                android:tag="100"
                 android:id="@+id/txtStatus"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -72,7 +75,8 @@
             android:clickable="true"
             android:paddingTop="@dimen/MarginTen">
 
-            <TextView
+            <com.jabbar.Uc.JabbarTextView
+                android:tag="100"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="@dimen/MarginSaven"
@@ -83,7 +87,8 @@
                 android:textColor="@color/color_title"
                 android:textSize="@dimen/textMediumExtra" />
 
-            <TextView
+            <com.jabbar.Uc.JabbarTextView
+                android:tag="100"
                 android:id="@+id/txtProfile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -104,7 +109,8 @@
             android:orientation="vertical"
             android:paddingTop="@dimen/MarginTen">
 
-            <TextView
+            <com.jabbar.Uc.JabbarTextView
+                android:tag="100"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="@dimen/MarginSaven"
@@ -115,7 +121,8 @@
                 android:textColor="@color/color_title"
                 android:textSize="@dimen/textMediumExtra" />
 
-            <TextView
+            <com.jabbar.Uc.JabbarTextView
+                android:tag="100"
                 android:id="@+id/txtLastSeen"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -135,7 +142,8 @@
             android:orientation="vertical"
             android:paddingTop="@dimen/MarginTen">
 
-            <TextView
+            <com.jabbar.Uc.JabbarTextView
+                android:tag="100"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="@dimen/MarginSaven"
@@ -146,7 +154,8 @@
                 android:textColor="@color/color_title"
                 android:textSize="@dimen/textMediumExtra" />
 
-            <TextView
+            <com.jabbar.Uc.JabbarTextView
+                android:tag="100"
                 android:id="@+id/txtLocation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

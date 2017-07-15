@@ -46,7 +46,8 @@
         </RelativeLayout>
 
 
-        <TextView
+        <com.jabbar.Uc.JabbarTextView
+            android:tag="100"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/MarginThirty"
@@ -73,7 +74,8 @@
             android:layout_height="2dp"
             android:background="@color/color_dark_white"></View>
 
-        <TextView
+        <com.jabbar.Uc.JabbarTextView
+            android:tag="100"
             android:id="@+id/txtnumber"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -83,7 +85,8 @@
             android:textColor="@color/color_title"
             android:textSize="@dimen/textMediumExtra" />
 
-        <TextView
+        <com.jabbar.Uc.JabbarTextView
+            android:tag="100"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/MarginThirty"
@@ -93,7 +96,8 @@
             android:textColor="@color/colorPrimary"
             android:textSize="@dimen/textMediumExtra" />
 
-        <TextView
+        <com.jabbar.Uc.JabbarTextView
+            android:tag="100"
             android:id="@+id/txtname"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Build;
@@ -235,8 +236,11 @@ public class AddStoryActivity extends BaseActivity {
 
                 @Override
                 public void onPhotoTaken(byte[] bytes, String filePath) {
-
-                    Intent intent = PreviewStoryImage.newIntentPhoto(AddStoryActivity.this, filePath, false);
+                    Log.print("=======filePath========" + filePath);
+                    int degree = Utils.getCameraPhotoOrientation(AddStoryActivity.this, Uri.fromFile(new File(filePath)), filePath);
+                    Log.print("==degree===" + degree);
+                    Utils.AvatarResize(Utils.rotateBitmap(BitmapFactory.decodeFile(filePath), degree), filePath, 1200);
+                    Intent intent = PreviewStoryImage.newIntentPhoto(AddStoryActivity.this, filePath);
                     startActivityForResult(intent, REQUEST_PREVIEW_CODE);
                 }
             });
@@ -391,7 +395,7 @@ public class AddStoryActivity extends BaseActivity {
         Collections.sort(imageArrayList, new Comparator<ImageBean>() {
             @Override
             public int compare(ImageBean o1, ImageBean o2) {
-                return o1.DATE_TAKEN.compareTo(o2.DATE_TAKEN);
+                return o2.DATE_TAKEN.compareTo(o1.DATE_TAKEN);
             }
         });
         System.out.println("=========imageBeanArrayList=====" + imageArrayList.size());
@@ -474,7 +478,12 @@ public class AddStoryActivity extends BaseActivity {
             picturesView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = PreviewStoryImage.newIntentPhoto(AddStoryActivity.this, imageArrayList.get(position).path, true);
+
+                    Log.print("=======filePath========" + imageArrayList.get(position).path);
+                    int degree = Utils.getCameraPhotoOrientation(AddStoryActivity.this, Uri.fromFile(new File(imageArrayList.get(position).path)), imageArrayList.get(position).path);
+                    Log.print("==degree===" + degree);
+                    Utils.AvatarResize(Utils.rotateBitmap(BitmapFactory.decodeFile(imageArrayList.get(position).path), degree), getCacheDir().toString() + "/story.jpg", 1200);
+                    Intent intent = PreviewStoryImage.newIntentPhoto(AddStoryActivity.this, getCacheDir().toString() + "/story.jpg");
                     startActivityForResult(intent, REQUEST_PREVIEW_CODE);
                 }
             });

@@ -1,6 +1,8 @@
 package com.jabbar.Ui;
 
+import android.app.NotificationManager;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +14,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.jabbar.R;
+import com.jabbar.Utils.BadgeUtils;
 import com.jabbar.Utils.Config;
 import com.jabbar.Utils.Mydb;
 import com.jabbar.Utils.Pref;
@@ -94,6 +97,11 @@ public class AccountActivity extends BaseActivity implements View.OnClickListene
                                 mydb.execute("delete from user_tb");
                                 mydb.execute("delete from story");
                                 mydb.close();
+
+                                NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                                mNotificationManager.cancelAll();
+                                BadgeUtils.clearBadge(AccountActivity.this);
+
                                 progressDialog.dismiss();
                                 Utils.closeAllScreens();
                                 finish();

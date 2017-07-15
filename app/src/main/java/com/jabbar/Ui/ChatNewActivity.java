@@ -128,7 +128,8 @@ public class ChatNewActivity extends BaseActivity implements View.OnClickListene
             imgBack = (ImageView) findViewById(R.id.imgBack);
 
             txtBuddiesName.setText(contactsBean.name);
-//            txtLastSeen.setText(contactsBean.last_seen);
+
+            conversation_contact_photo.setOnClickListener(this);
 
 
             Utils.setGlideImage(this, contactsBean.avatar, conversation_contact_photo, true);
@@ -169,12 +170,22 @@ public class ChatNewActivity extends BaseActivity implements View.OnClickListene
             window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
         }
 
-        emojIcon = new EmojIconActions(ChatNewActivity.this, rootView, edit_msg, img_emoji);
-        emojIcon.setUseSystemEmoji(false);
-        emojIcon.ShowEmojIcon();
-        emojIcon.setIconsIds(R.drawable.ic_action_keyboard, R.drawable.smiley);
 
-        img_emoji.performClick();
+        emojIcon = new EmojIconActions(this, rootView, edit_msg, img_emoji);
+        emojIcon.ShowEmojIcon();
+        emojIcon.setUseSystemEmoji(false);
+        emojIcon.setIconsIds(R.drawable.ic_action_keyboard, R.drawable.smiley);
+        emojIcon.setKeyboardListener(new EmojIconActions.KeyboardListener() {
+            @Override
+            public void onKeyboardOpen() {
+                Log.print("=========Keyboard opened!");
+            }
+
+            @Override
+            public void onKeyboardClose() {
+                Log.print("==========Keyboard closed");
+            }
+        });
 
 
         edit_msg.addTextChangedListener(new TextWatcher() {
@@ -268,6 +279,7 @@ public class ChatNewActivity extends BaseActivity implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.imgBack:
+            case R.id.conversation_contact_photo:
                 finish();
                 break;
 
@@ -279,7 +291,7 @@ public class ChatNewActivity extends BaseActivity implements View.OnClickListene
                     messageBean.friendid = contactsBean.userid;
                     messageBean.msg = edit_msg.getText().toString().trim();
                     messageBean.isread = 0;
-                    messageBean.id = messageBeanArrayList.get(messageBeanArrayList.size() - 1).id + 1;
+                    messageBean.id = messageBeanArrayList.size() == 0 ? 1 : (messageBeanArrayList.get(messageBeanArrayList.size() - 1).id + 1);
                     messageBean.create_time = Config.WebDateFormatter.format(new Date());
                     messageBean.tempId = "" + (System.currentTimeMillis() / 1000);
                     messageBll.InsertNewMessage(messageBean, false);

@@ -40,21 +40,23 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <TextView
+                    <com.jabbar.Uc.JabbarTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
+                        android:tag="100"
                         android:text="Current status"
                         android:textColor="@color/colorPrimary"
                         android:textSize="@dimen/textMediumExtra" />
 
-                    <TextView
+                    <com.jabbar.Uc.JabbarTextView
                         android:id="@+id/txtCounter"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
+                        android:tag="100"
                         android:text="0/30"
                         android:textColor="@color/color_title_sub"
                         android:textSize="@dimen/textMedium1" />
@@ -71,11 +73,12 @@
                         android:layout_centerVertical="true"
                         android:layout_toLeftOf="@+id/img_emoji"
                         android:background="@null"
+                        android:maxLength="100"
                         android:padding="3dp"
                         android:singleLine="true"
-                        android:maxLength="100"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
                         android:textColor="@color/color_title"
-                        android:textSize="@dimen/textMediumExtra"
+                        android:textSize="@dimen/textMedium1"
                         emojicon:emojiconSize="@dimen/textLarge" />
 
 
@@ -86,7 +89,7 @@
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:padding="5dp"
-                        android:src="@drawable/emoji" />
+                        android:src="@drawable/smiley" />
 
                 </RelativeLayout>
             </LinearLayout>
@@ -102,7 +105,7 @@
             android:orientation="horizontal"
             android:weightSum="2">
 
-            <TextView
+            <com.jabbar.Uc.JabbarTextView
                 android:id="@+id/txtCanel"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -110,11 +113,12 @@
                 android:background="?attr/selectableItemBackground"
                 android:gravity="center"
                 android:padding="@dimen/MarginFifteen"
+                android:tag="100"
                 android:text="Cancel"
                 android:textColor="@color/color_title"
                 android:textSize="@dimen/textMediumExtra" />
 
-            <TextView
+            <com.jabbar.Uc.JabbarTextView
                 android:id="@+id/txtOk"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -122,6 +126,7 @@
                 android:background="?attr/selectableItemBackground"
                 android:gravity="center"
                 android:padding="@dimen/MarginFifteen"
+                android:tag="100"
                 android:text="Ok"
                 android:textColor="@color/color_title"
                 android:textSize="@dimen/textMediumExtra" />

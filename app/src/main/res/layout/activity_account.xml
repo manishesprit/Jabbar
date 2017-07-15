@@ -20,13 +20,15 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <TextView
+        <com.jabbar.Uc.JabbarTextView
+            android:tag="100"
             android:id="@+id/txtPrivacy"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackground"
             android:gravity="center_vertical"
             android:padding="@dimen/MarginFifteen"
+
             android:text="Privacy"
             android:textColor="@color/color_title"
             android:textSize="@dimen/textMediumExtra" />
@@ -36,7 +38,8 @@
             android:layout_height="0.5dp"
             android:background="@color/color_gray"></View>
 
-        <TextView
+        <com.jabbar.Uc.JabbarTextView
+            android:tag="100"
             android:id="@+id/txtChange_number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -52,7 +55,8 @@
             android:layout_height="0.5dp"
             android:background="@color/color_gray"></View>
 
-        <TextView
+        <com.jabbar.Uc.JabbarTextView
+            android:tag="100"
             android:id="@+id/txtRemove_account"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

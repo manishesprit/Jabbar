@@ -27,11 +27,13 @@ public class ChangeAvatarAPI extends AsyncTask<Void, Void, Integer> {
     private String imagename;
     public int code = 1;
     public String message = "";
+    public boolean isRemove;
 
-    public ChangeAvatarAPI(Context context, String imagename, ResponseListener handler) {
+    public ChangeAvatarAPI(Context context, String imagename, ResponseListener handler, boolean isRemove) {
         this.context = context;
         this.handler = handler;
         this.imagename = imagename;
+        this.isRemove = isRemove;
     }
 
     protected Integer doInBackground(Void... params) {
@@ -41,23 +43,32 @@ public class ChangeAvatarAPI extends AsyncTask<Void, Void, Integer> {
 
             multipartReq = new MultipartRequest(context);
 
-            if (imagename != null && (imagename != "" || !imagename.equals("") || !imagename.equals("null"))) {
-                file = new File(context.getApplicationInfo().dataDir, "/" + imagename);
-                if (file.exists()) {
-                    multipartReq.addFile("avatar", file.toString(), file.getName(), "image/jpeg");
-                    multipartReq.addString("userid", String.valueOf(Pref.getValue(context, Config.PREF_USERID, 0)));
-                    multipartReq.addString("location", String.valueOf(Pref.getValue(context, Config.PREF_LOCATION, "0,0")));
-                    Log.print("=========url=========" + Config.HOST + Config.API_CHANGE_AVATAR);
+            if (isRemove) {
+                multipartReq.addString("userid", String.valueOf(Pref.getValue(context, Config.PREF_USERID, 0)));
+                multipartReq.addString("location", String.valueOf(Pref.getValue(context, Config.PREF_LOCATION, "0,0")));
+                multipartReq.addString("isremove", "1");
 
-                    result = parse(multipartReq.execute(Config.HOST + Config.API_CHANGE_AVATAR));
+                result = parse(multipartReq.execute(Config.HOST + Config.API_CHANGE_AVATAR));
 
+            } else {
+                if (imagename != null && (imagename != "" || !imagename.equals("") || !imagename.equals("null"))) {
+                    file = new File(context.getApplicationInfo().dataDir, "/" + imagename);
+                    if (file.exists()) {
+                        multipartReq.addFile("avatar", file.toString(), file.getName(), "image/jpeg");
+                        multipartReq.addString("userid", String.valueOf(Pref.getValue(context, Config.PREF_USERID, 0)));
+                        multipartReq.addString("location", String.valueOf(Pref.getValue(context, Config.PREF_LOCATION, "0,0")));
+                        Log.print("=========url=========" + Config.HOST + Config.API_CHANGE_AVATAR);
+
+                        result = parse(multipartReq.execute(Config.HOST + Config.API_CHANGE_AVATAR));
+
+                    } else {
+                        result = 1;
+                        message = "Unable to upload please try again.";
+                    }
                 } else {
                     result = 1;
                     message = "Unable to upload please try again.";
                 }
-            } else {
-                result = 1;
-                message = "Unable to upload please try again.";
             }
 
 
@@ -90,7 +101,12 @@ public class ChangeAvatarAPI extends AsyncTask<Void, Void, Integer> {
             code = jsonDoc.getInt("code");
 
             if (code == 0) {
-                Pref.setValue(context, Config.PREF_AVATAR, imagename);
+                if (isRemove) {
+                    Pref.setValue(context, Config.PREF_AVATAR, "");
+                } else {
+                    Pref.setValue(context, Config.PREF_AVATAR, jsonDoc.getString("avatarname"));
+                }
+
                 Log.print("====PREF_IMAGE===" + Pref.getValue(context, Config.PREF_AVATAR, ""));
             }
             file = null;

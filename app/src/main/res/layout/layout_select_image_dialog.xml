@@ -8,11 +8,13 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <TextView
+        <com.jabbar.Uc.JabbarTextView
+            android:tag="100"
             style="@style/headingTextDialog"
             android:text="@string/select_image_dialog_title" />
 
-        <TextView
+        <com.jabbar.Uc.JabbarTextView
+            android:tag="100"
             android:id="@+id/txtCamera"
             style="@style/DialogListItem"
             android:drawableLeft="@drawable/ic_camera_black"
@@ -20,14 +22,16 @@
             android:text="@string/camera"
             android:textColor="@color/color_title" />
 
-        <TextView
+        <com.jabbar.Uc.JabbarTextView
+            android:tag="100"
             android:id="@+id/txtGallery"
             style="@style/DialogListItem"
             android:drawableLeft="@drawable/ic_camera_black"
             android:gravity="center_vertical"
             android:text="@string/gallery" />
 
-        <TextView
+        <com.jabbar.Uc.JabbarTextView
+            android:tag="100"
             android:id="@+id/txtRemove"
             style="@style/DialogListItem"
             android:drawableLeft="@drawable/ic_clear"

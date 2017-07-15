@@ -20,7 +20,8 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <TextView
+        <com.jabbar.Uc.JabbarTextView
+            android:tag="100"
             android:id="@+id/txtSetWallpaper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

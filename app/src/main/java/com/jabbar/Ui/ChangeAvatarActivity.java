@@ -76,8 +76,11 @@ public class ChangeAvatarActivity extends BaseActivity implements View.OnClickLi
         txtStatus.setOnClickListener(this);
         imgSelectImage.setOnClickListener(this);
 
-        Utils.setGlideImage(this, Pref.getValue(this, Config.PREF_AVATAR, ""), imgAvatar,true);
-
+        if (Pref.getValue(this, Config.PREF_AVATAR, "").equalsIgnoreCase("")) {
+            imgAvatar.setImageResource(R.drawable.default_user);
+        } else {
+            Utils.setGlideImage(this, Pref.getValue(this, Config.PREF_AVATAR, ""), imgAvatar, true);
+        }
     }
 
     @Override
@@ -128,12 +131,35 @@ public class ChangeAvatarActivity extends BaseActivity implements View.OnClickLi
             }
         });
 
+        if (Pref.getValue(this, Config.PREF_AVATAR, "").equalsIgnoreCase("")) {
+            txtRemove.setVisibility(View.GONE);
+        } else {
+            txtRemove.setVisibility(View.VISIBLE);
+        }
+
         txtRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (dialog != null && dialog.isShowing())
                     dialog.dismiss();
 
+                if (Utils.isOnline(ChangeAvatarActivity.this)) {
+                    progressDialog.show();
+                    changeAvatarAPI = new ChangeAvatarAPI(ChangeAvatarActivity.this, "", new ResponseListener() {
+                        @Override
+                        public void onResponce(String tag, int result, Object obj) {
+                            progressDialog.dismiss();
+                            if (tag.equalsIgnoreCase(Config.TAG_CHANGE_AVATAR) && result == 0) {
+                                imgAvatar.setImageResource(R.drawable.default_user);
+                            } else {
+                                new JabbarDialog(ChangeAvatarActivity.this, "Upload fail").show();
+                            }
+                        }
+                    }, true);
+                    changeAvatarAPI.execute();
+                } else {
+                    new JabbarDialog(ChangeAvatarActivity.this, getString(R.string.no_internet)).show();
+                }
             }
         });
 
@@ -180,7 +206,6 @@ public class ChangeAvatarActivity extends BaseActivity implements View.OnClickLi
 
         if (resultCode == RESULT_OK) {
 
-
             Log.print("=======destination=========" + destination);
             if (requestCode == CHANGE_STATUS_CODE) {
                 txtStatus.setText(Pref.getValue(this, Config.PREF_STATUS, ""));
@@ -210,8 +235,7 @@ public class ChangeAvatarActivity extends BaseActivity implements View.OnClickLi
                     Log.print("=======destination=========" + destination);
                     int degree = Utils.getCameraPhotoOrientation(this, Uri.fromFile(file_avatar), file_avatar.getPath());
                     Log.print("==degree===" + degree);
-                    Utils.ConvertImage(this, Utils.rotateBitmap(BitmapFactory.decodeFile(file_avatar.getPath()), degree), file_avatar.getName());
-                    Utils.AvatarResize(file_avatar.getAbsolutePath());
+                    Utils.AvatarResize(Utils.rotateBitmap(BitmapFactory.decodeFile(file_avatar.getPath()), degree), getApplicationInfo().dataDir + "/" + file_avatar.getName(),640);
                     imgAvatar.setImageDrawable(null);
 
                     if (Utils.isOnline(this)) {
@@ -221,12 +245,12 @@ public class ChangeAvatarActivity extends BaseActivity implements View.OnClickLi
                             public void onResponce(String tag, int result, Object obj) {
                                 progressDialog.dismiss();
                                 if (tag.equalsIgnoreCase(Config.TAG_CHANGE_AVATAR) && result == 0) {
-                                    Utils.setGlideImage(ChangeAvatarActivity.this, Pref.getValue(ChangeAvatarActivity.this, Config.PREF_AVATAR, ""), imgAvatar,true);
+                                    Utils.setGlideImage(ChangeAvatarActivity.this, Pref.getValue(ChangeAvatarActivity.this, Config.PREF_AVATAR, ""), imgAvatar, true);
                                 } else {
                                     new JabbarDialog(ChangeAvatarActivity.this, "Upload fail").show();
                                 }
                             }
-                        });
+                        }, false);
                         changeAvatarAPI.execute();
                     } else {
                         new JabbarDialog(this, getString(R.string.no_internet)).show();

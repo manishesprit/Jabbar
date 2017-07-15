@@ -44,6 +44,8 @@
                     android:layout_centerVertical="true"
                     android:layout_toRightOf="@+id/img_emoji"
                     android:background="@null"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
                     android:maxLines="3"
                     android:padding="3dp"
                     android:textSize="@dimen/textMediumExtra"
@@ -83,7 +85,7 @@
         </RelativeLayout>
 
 
-        <TextView
+        <com.jabbar.Uc.JabbarTextView
             android:id="@+id/txtNoOfUnreadMsg"
             android:layout_width="@dimen/MarginTwety"
             android:layout_height="@dimen/MarginTwety"
@@ -92,6 +94,7 @@
             android:layout_margin="@dimen/MarginTwety"
             android:background="@drawable/small_round"
             android:gravity="center"
+            android:tag="100"
             android:textColor="@color/colorAccent"
             android:textSize="@dimen/textSmall"
             android:visibility="gone" />

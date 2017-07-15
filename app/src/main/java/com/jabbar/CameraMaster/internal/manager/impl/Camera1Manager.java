@@ -282,8 +282,7 @@ public class Camera1Manager extends BaseCameraManager<Integer, SurfaceHolder.Cal
                     configurationProvider.getMediaQuality() == Configuration.MEDIA_QUALITY_AUTO
                             ? Configuration.MEDIA_QUALITY_HIGHEST : configurationProvider.getMediaQuality());
 
-            if (configurationProvider.getMediaAction() == Configuration.MEDIA_ACTION_PHOTO
-                    || configurationProvider.getMediaAction() == Configuration.MEDIA_ACTION_UNSPECIFIED) {
+            if (configurationProvider.getMediaAction() == Configuration.MEDIA_ACTION_PHOTO  || configurationProvider.getMediaAction() == Configuration.MEDIA_ACTION_UNSPECIFIED) {
                 previewSize = CameraHelper.getSizeWithClosestRatio(previewSizes, photoSize.getWidth(), photoSize.getHeight());
             } else {
                 previewSize = CameraHelper.getSizeWithClosestRatio(previewSizes, videoSize.getWidth(), videoSize.getHeight());

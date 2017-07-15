@@ -370,7 +370,7 @@ public class UserBll {
 
         try {
 
-            sql = "SELECT userid,name,mobile_number,status,avatar,location,last_seen,is_favorite from user_tb where is_contact=1 ORDER BY name ASC";
+            sql = "SELECT userid,name,mobile_number,status,avatar,location,last_seen,is_favorite from user_tb where is_contact = 1 ORDER BY name ASC";
 
             contactBeanArrayList = new ArrayList<>();
             mydb = new Mydb(this.context);

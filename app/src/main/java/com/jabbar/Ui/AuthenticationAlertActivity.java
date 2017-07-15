@@ -1,6 +1,8 @@
 package com.jabbar.Ui;
 
 import android.app.Activity;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,6 +11,7 @@ import android.view.Window;
 import android.widget.Button;
 
 import com.jabbar.R;
+import com.jabbar.Utils.BadgeUtils;
 import com.jabbar.Utils.Config;
 import com.jabbar.Utils.Mydb;
 import com.jabbar.Utils.Pref;
@@ -43,6 +46,10 @@ public class AuthenticationAlertActivity extends Activity {
         mydb.execute("delete from message_tb");
         mydb.execute("delete from user_tb");
         mydb.execute("delete from story");
+        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.cancelAll();
+        BadgeUtils.clearBadge(this);
+
         mydb.close();
 
         btnVerify = (Button) findViewById(R.id.btnVerify);

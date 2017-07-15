@@ -51,23 +51,21 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.MyHolder> {
         holder.txtTime.setText(contactBeanArrayList.get(position).create_time);
         holder.txtstatus.setVisibility(View.VISIBLE);
 
-        if (contactBeanArrayList.get(position).isread == 0 && contactBeanArrayList.get(position).users == false) {
-            holder.txtTime.setTextColor(context.getResources().getColor(R.color.colorPrimary));
-            holder.txtNoMsg.setText("" + contactBeanArrayList.get(position).cntUnReasMsg);
-            holder.txtNoMsg.setVisibility(View.VISIBLE);
+        if (contactBeanArrayList.get(position).isread == 0) {
+            if (contactBeanArrayList.get(position).users == false) {
+                holder.txtTime.setTextColor(context.getResources().getColor(R.color.colorPrimary));
+                holder.txtNoMsg.setText("" + contactBeanArrayList.get(position).cntUnReasMsg);
+                holder.txtNoMsg.setVisibility(View.VISIBLE);
+            } else {
+                holder.imgUnsend.setVisibility(View.VISIBLE);
+                holder.txtTime.setTextColor(context.getResources().getColor(R.color.color_title_sub));
+                holder.txtNoMsg.setVisibility(View.INVISIBLE);
+            }
         } else {
             holder.txtTime.setTextColor(context.getResources().getColor(R.color.color_title_sub));
-            holder.txtNoMsg.setVisibility(View.GONE);
+            holder.txtNoMsg.setVisibility(View.INVISIBLE);
+            holder.imgUnsend.setVisibility(View.GONE);
         }
-
-
-//        if (contactBeanArrayList.get(position).cntUnReasMsg > 0) {
-//            holder.txtNoMsg.setText("" + contactBeanArrayList.get(position).cntUnReasMsg);
-//            holder.txtNoMsg.setVisibility(View.VISIBLE);
-//        } else {
-//            holder.txtNoMsg.setVisibility(View.GONE);
-//        }
-
 
         holder.rlRow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,6 +98,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.MyHolder> {
         public TextView txtNoMsg;
         public TextView txtName;
         public TextView txtTime;
+        public ImageView imgUnsend;
         public EmojiconTextView txtstatus;
 
         public MyHolder(View view) {
@@ -109,6 +108,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.MyHolder> {
             txtNoMsg = (TextView) view.findViewById(R.id.txtNoMsg);
             txtName = (TextView) view.findViewById(R.id.txtName);
             txtTime = (TextView) view.findViewById(R.id.txtTime);
+            imgUnsend = (ImageView) view.findViewById(R.id.imgUnsend);
             txtstatus = (EmojiconTextView) view.findViewById(R.id.txtstatus);
         }
     }
