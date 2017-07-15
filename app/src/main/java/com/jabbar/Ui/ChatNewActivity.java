@@ -68,8 +68,6 @@ public class ChatNewActivity extends BaseActivity implements View.OnClickListene
     private SendMessageNewAPI sendMessageNewAPI;
     private ContactsBean contactsBean;
     public static Activity chatActivity = null;
-    private boolean isFirst = true;
-    public int lastid = 0;
     private TextView txtNoOfUnreadMsg;
     private int totalUnreadMsg = 0;
     public int totalVisibleMsg;
@@ -135,7 +133,7 @@ public class ChatNewActivity extends BaseActivity implements View.OnClickListene
 
             Utils.setGlideImage(this, contactsBean.avatar, conversation_contact_photo, true);
 
-            messageBeanArrayList = messageBll.geNewMessageList(contactsBean.userid, lastid);
+            messageBeanArrayList = messageBll.geNewMessageList(contactsBean.userid);
             conversionAdpater = new ConversionAdpater(this, messageBeanArrayList);
             recyclerview_chat.setAdapter(conversionAdpater);
             recyclerview_chat.smoothScrollToPosition(messageBeanArrayList.size());
@@ -281,7 +279,7 @@ public class ChatNewActivity extends BaseActivity implements View.OnClickListene
                     messageBean.friendid = contactsBean.userid;
                     messageBean.msg = edit_msg.getText().toString().trim();
                     messageBean.isread = 0;
-                    messageBean.id = 0;
+                    messageBean.id = messageBeanArrayList.get(messageBeanArrayList.size() - 1).id + 1;
                     messageBean.create_time = Config.WebDateFormatter.format(new Date());
                     messageBean.tempId = "" + (System.currentTimeMillis() / 1000);
                     messageBll.InsertNewMessage(messageBean, false);
@@ -313,7 +311,7 @@ public class ChatNewActivity extends BaseActivity implements View.OnClickListene
 
             if (tag.equalsIgnoreCase(Config.TAG_SEND_MESSAGE) && result == 0) {
                 messageBeanArrayList.clear();
-                messageBeanArrayList.addAll(messageBll.geNewMessageList(contactsBean.userid, 0));
+                messageBeanArrayList.addAll(messageBll.geNewMessageList(contactsBean.userid));
                 conversionAdpater.notifyDataSetChanged();
             }
         }

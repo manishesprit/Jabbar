@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.ConnectivityManager;
@@ -26,6 +27,7 @@ import com.jabbar.Bean.ExitsContactBean;
 import com.jabbar.R;
 import com.jabbar.Uc.JabbarDialog;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -338,6 +340,36 @@ public class Utils {
 
         // The directory is now empty so delete it
         return dir.delete();
+    }
+
+
+    public static void AvatarResize(String path) {
+        File file = new File(path);
+        Log.print("============Before Size======" + file.length() / 1024);
+        try {
+            if (file.exists()) {
+                Bitmap b = BitmapFactory.decodeFile(file.getAbsolutePath());
+                int origWidth = b.getWidth();
+                int origHeight = b.getHeight();
+
+                int destWidth = 640;//or the width you need
+                int destHeight = origHeight / (origWidth / destWidth);
+
+                if (origWidth > destWidth) {
+                    Bitmap b2 = Bitmap.createScaledBitmap(b, destWidth, destHeight, false);
+                    ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+                    b2.compress(Bitmap.CompressFormat.JPEG, 70, outStream);
+                    File f = new File(path);
+                    f.createNewFile();
+                    FileOutputStream fo = new FileOutputStream(f);
+                    fo.write(outStream.toByteArray());
+                    fo.close();
+                    Log.print("============After Size======" + f.length() / 1024);
+                }
+            }
+        } catch (Exception e) {
+
+        }
     }
 
 }

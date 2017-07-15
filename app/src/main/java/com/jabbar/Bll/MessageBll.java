@@ -242,7 +242,7 @@ public class MessageBll {
         return messageBeanArrayList;
     }
 
-    public ArrayList<MessageBean> geNewMessageList(int friendid, int lastid) {
+    public ArrayList<MessageBean> geNewMessageList(int friendid) {
         Mydb mydb = null;
         String sql = null;
         Cursor cursor = null;
@@ -251,7 +251,7 @@ public class MessageBll {
 
         try {
 
-            sql = "SELECT id,userid,friendid,message,create_time,tempId,isread from message_tb where ((userid=" + Pref.getValue(context, Config.PREF_USERID, 0) + " AND friendid=" + friendid + " ) OR (userid=" + friendid + " AND friendid=" + Pref.getValue(context, Config.PREF_USERID, 0) + ")) AND id > " + lastid + " order by id asc ";
+            sql = "SELECT id,userid,friendid,message,create_time,tempId,isread from message_tb where ((userid=" + Pref.getValue(context, Config.PREF_USERID, 0) + " AND friendid=" + friendid + " ) OR (userid=" + friendid + " AND friendid=" + Pref.getValue(context, Config.PREF_USERID, 0) + ")) order by id asc ";
 
             messageBeanArrayList = new ArrayList<>();
             mydb = new Mydb(this.context);

@@ -72,7 +72,8 @@
                     android:textColor="@color/color_title_sub"
                     android:textSize="@dimen/textMedium"
                     android:visibility="visible"
-                    emojicon:emojiconSize="@dimen/textMediumExtra" />
+                    android:text="😂😂a"
+                    emojicon:emojiconSize="@dimen/textMedium" />
 
                 <TextView
                     android:id="@+id/txtNoMsg"

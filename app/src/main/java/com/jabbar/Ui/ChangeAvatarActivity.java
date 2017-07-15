@@ -211,6 +211,7 @@ public class ChangeAvatarActivity extends BaseActivity implements View.OnClickLi
                     int degree = Utils.getCameraPhotoOrientation(this, Uri.fromFile(file_avatar), file_avatar.getPath());
                     Log.print("==degree===" + degree);
                     Utils.ConvertImage(this, Utils.rotateBitmap(BitmapFactory.decodeFile(file_avatar.getPath()), degree), file_avatar.getName());
+                    Utils.AvatarResize(file_avatar.getAbsolutePath());
                     imgAvatar.setImageDrawable(null);
 
                     if (Utils.isOnline(this)) {
