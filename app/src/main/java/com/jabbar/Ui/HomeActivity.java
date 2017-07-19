@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,11 +13,12 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.jabbar.R;
-import com.jabbar.Utils.Config;
 import com.jabbar.Uc.JabbarDialog;
+import com.jabbar.Utils.Config;
 import com.jabbar.Utils.Log;
 import com.jabbar.Utils.Pref;
 import com.jabbar.Utils.Utils;
@@ -37,11 +39,9 @@ public class HomeActivity extends BaseActivity {
     private FavoriteFragment favoriteFragment;
     private ChatsFragment chatsFragment;
     public static final int CODE_CHAT = 100;
-    public static boolean isFavoriteUpdate = true;
-
     public Handler handler;
     public Runnable runnable;
-
+    private FloatingActionButton fabButton;
     private Menu menu;
 
     @Override
@@ -52,12 +52,15 @@ public class HomeActivity extends BaseActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         tabLayout = (TabLayout) findViewById(R.id.tabs);
-
+        fabButton = (FloatingActionButton) findViewById(R.id.fabButton);
         setToolbar(toolbar, false);
         setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
 
         Log.print("====onCreate HOME ====");
+
+        Log.print("==========" + Utils.getAvatarDir(this));
+        Log.print("==========" + Utils.getStoryDir(this));
 
         Pref.setValue(this, Config.PREF_PUSH_ID, FirebaseInstanceId.getInstance().getToken());
         Log.print("=======PREF_PUSH_ID===========" + FirebaseInstanceId.getInstance().getToken());
@@ -76,16 +79,14 @@ public class HomeActivity extends BaseActivity {
             public void onPageSelected(int position) {
 
                 if (position == 0 && adapter != null) {
+                    fabButton.setImageResource(R.drawable.ic_story);
                     menu.findItem(R.id.menu_refresh).setVisible(true);
                     if (favoriteFragment == null) {
                         favoriteFragment = (FavoriteFragment) adapter.getItem(0);
                     }
-                    if (isFavoriteUpdate) {
-                        isFavoriteUpdate = false;
-                        favoriteFragment.UpdateFavorite(true);
-                    }
                 }
                 if (position == 1 && adapter != null) {
+                    fabButton.setImageResource(R.drawable.ic_chat_white);
                     if (menu != null) {
                         menu.findItem(R.id.menu_refresh).setVisible(false);
                     }
@@ -102,6 +103,17 @@ public class HomeActivity extends BaseActivity {
             }
         });
 
+        fabButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (viewPager.getCurrentItem() == 1) {
+                    startActivity(new Intent(HomeActivity.this, BuddiesActivity.class));
+                } else if (viewPager.getCurrentItem() == 0) {
+                    startActivity(new Intent(HomeActivity.this, AddStoryActivity.class));
+                }
+            }
+        });
+
         if (getIntent() != null && getIntent().getIntExtra("type", 0) == 2) {
             viewPager.setCurrentItem(1);
         }
@@ -110,23 +122,26 @@ public class HomeActivity extends BaseActivity {
         runnable = new Runnable() {
             @Override
             public void run() {
-                handler.postDelayed(runnable, 10000);
+                handler.postDelayed(runnable, 1000);
+
                 if (viewPager.getCurrentItem() == 1) {
                     if (chatsFragment != null) {
                         chatsFragment.ListUpdate();
                     }
+                } else {
+//                    if (favoriteFragment != null) {
+//                        favoriteFragment.UpdateFavorite();
+//                    }
                 }
             }
         };
-
-
     }
 
     @Override
     protected void onStart() {
         super.onStart();
 
-        handler.postDelayed(runnable, 2000);
+        handler.postDelayed(runnable, 100);
     }
 
     @Override
@@ -189,7 +204,7 @@ public class HomeActivity extends BaseActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == PERMISSION_CODE && grantResults.length == 2) {
-            favoriteFragment.UpdateFavorite(false);
+            favoriteFragment.UpdateFavorite();
         } else {
             new JabbarDialog(this, getString(R.string.location_permisssion)).show();
         }
@@ -206,28 +221,35 @@ public class HomeActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
-            case R.id.menu_buddies:
-                startActivity(new Intent(this, BuddiesActivity.class));
-                break;
             case R.id.menu_setting:
                 startActivity(new Intent(this, SettingActivity.class));
                 break;
 
             case R.id.menu_refresh:
                 if (viewPager.getCurrentItem() == 0) {
-                    favoriteFragment.UpdateFavorite(false);
+                    FavoriteFragment.isFirst = true;
+                    favoriteFragment.UpdateFavorite();
                 }
                 break;
 
             case R.id.menu_new_broadcast:
 
                 break;
-
         }
 
         return true;
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == CODE_CHAT && resultCode == RESULT_OK) {
+            if (chatsFragment != null) {
+                chatsFragment.ListUpdate();
+            }
+        }
+    }
 
     @Override
     protected void onNewIntent(Intent intent) {

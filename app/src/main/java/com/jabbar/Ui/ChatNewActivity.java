@@ -52,6 +52,7 @@ public class ChatNewActivity extends BaseActivity implements View.OnClickListene
     private LinearLayout rootView;
     private RecyclerView recyclerview_chat;
     private EmojiconEditText edit_msg;
+    private ImageView imgfavorite;
     private ImageView img_emoji;
     private RelativeLayout rel_send;
     private ImageView imgSend;
@@ -104,6 +105,7 @@ public class ChatNewActivity extends BaseActivity implements View.OnClickListene
         rootView = (LinearLayout) findViewById(R.id.root_view);
         edit_msg = (EmojiconEditText) findViewById(R.id.edit_msg);
         img_emoji = (ImageView) findViewById(R.id.img_emoji);
+        imgfavorite = (ImageView) findViewById(R.id.imgfavorite);
         rel_send = (RelativeLayout) findViewById(R.id.rel_send);
         imgSend = (ImageView) findViewById(R.id.img_send);
         txtNoOfUnreadMsg = (TextView) findViewById(R.id.txtNoOfUnreadMsg);
@@ -126,13 +128,10 @@ public class ChatNewActivity extends BaseActivity implements View.OnClickListene
             txtLastSeen = (TextView) findViewById(R.id.txtLastSeen);
             conversation_contact_photo = (ImageView) findViewById(R.id.conversation_contact_photo);
             imgBack = (ImageView) findViewById(R.id.imgBack);
-
             txtBuddiesName.setText(contactsBean.name);
-
             conversation_contact_photo.setOnClickListener(this);
-
-
-            Utils.setGlideImage(this, contactsBean.avatar, conversation_contact_photo, true);
+            if (!contactsBean.avatar.equalsIgnoreCase(""))
+                Utils.setGlideImage(this, contactsBean.avatar, conversation_contact_photo);
 
             messageBeanArrayList = messageBll.geNewMessageList(contactsBean.userid);
             conversionAdpater = new ConversionAdpater(this, messageBeanArrayList);
@@ -149,11 +148,19 @@ public class ChatNewActivity extends BaseActivity implements View.OnClickListene
                     contactsBean = userBll.getUserDetail(contactsBean.userid);
                     txtLastSeen.setText(contactsBean.last_seen);
                     txtLastSeen.setVisibility(View.VISIBLE);
-                    handler.postDelayed(runnable, 15000);
+                    handler.postDelayed(runnable, 5000);
+
+                    if (contactsBean.isFavorite == 1) {
+                        imgfavorite.setImageResource(R.drawable.ic_star_fill);
+                    } else {
+                        imgfavorite.setImageResource(R.drawable.ic_star_unfill);
+                    }
+
+                    imgfavorite.setOnClickListener(ChatNewActivity.this);
                 }
             };
 
-            handler.postDelayed(runnable, 2000);
+            handler.postDelayed(runnable, 1000);
 
         } else {
             finish();
@@ -170,22 +177,23 @@ public class ChatNewActivity extends BaseActivity implements View.OnClickListene
             window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
         }
 
-
         emojIcon = new EmojIconActions(this, rootView, edit_msg, img_emoji);
         emojIcon.ShowEmojIcon();
-        emojIcon.setUseSystemEmoji(false);
         emojIcon.setIconsIds(R.drawable.ic_action_keyboard, R.drawable.smiley);
         emojIcon.setKeyboardListener(new EmojIconActions.KeyboardListener() {
             @Override
             public void onKeyboardOpen() {
-                Log.print("=========Keyboard opened!");
+                Log.print("NO " + "Keyboard opened!");
             }
 
             @Override
             public void onKeyboardClose() {
-                Log.print("==========Keyboard closed");
+                Log.print("NO " + "Keyboard closed");
             }
         });
+
+        edit_msg.setFocusable(true);
+        edit_msg.requestFocus();
 
 
         edit_msg.addTextChangedListener(new TextWatcher() {
@@ -281,6 +289,18 @@ public class ChatNewActivity extends BaseActivity implements View.OnClickListene
             case R.id.imgBack:
             case R.id.conversation_contact_photo:
                 finish();
+                break;
+
+            case R.id.imgfavorite:
+                new UserBll(this).updateFavoriteContact(contactsBean.userid, contactsBean.isFavorite == 0 ? 1 : 0);
+                contactsBean.isFavorite = contactsBean.isFavorite == 0 ? 1 : 0;
+
+                if (contactsBean.isFavorite == 1) {
+                    imgfavorite.setImageResource(R.drawable.ic_star_fill);
+                } else {
+                    imgfavorite.setImageResource(R.drawable.ic_star_unfill);
+                }
+
                 break;
 
             case R.id.rel_send:

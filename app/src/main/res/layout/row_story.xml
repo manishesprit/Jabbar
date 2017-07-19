@@ -11,6 +11,7 @@
         android:layout_height="@dimen/avatar"
         android:adjustViewBounds="true"
         android:background="@drawable/circle"
+        android:src="@drawable/default_user"
         android:scaleType="fitXY" />
 
     <com.jabbar.Uc.JabbarTextView

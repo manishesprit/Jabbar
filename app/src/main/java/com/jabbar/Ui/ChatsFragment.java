@@ -18,7 +18,6 @@ import com.jabbar.Bean.ContactsBean;
 import com.jabbar.Bean.StoryBean;
 import com.jabbar.Bll.StoryBll;
 import com.jabbar.Bll.UserBll;
-import com.jabbar.Listener.MyClickListener;
 import com.jabbar.Listener.ResponseListener;
 import com.jabbar.R;
 import com.jabbar.Uc.JabbarDialog;
@@ -73,7 +72,7 @@ public class ChatsFragment extends Fragment implements ResponseListener {
         mLayoutManager = new LinearLayoutManager(getContext());
         rlFriendList.setLayoutManager(mLayoutManager);
         contactsBeanArrayList = new UserBll(getContext()).getChatList();
-        chatsAdapter = new ChatsAdapter(getContext(), contactsBeanArrayList, myClickListener);
+        chatsAdapter = new ChatsAdapter(getContext(), contactsBeanArrayList);
         rlFriendList.setAdapter(chatsAdapter);
         txtNoChats = (TextView) mView.findViewById(R.id.txtNoChats);
         rcvStory = (RecyclerView) mView.findViewById(R.id.rcvStory);
@@ -119,15 +118,5 @@ public class ChatsFragment extends Fragment implements ResponseListener {
                 new JabbarDialog(getContext(), obj.toString()).show();
         }
     }
-
-    public MyClickListener myClickListener = new MyClickListener() {
-        @Override
-        public void onClick(int pos) {
-            new UserBll(getContext()).updateFavoriteContact(contactsBeanArrayList.get(pos).userid, contactsBeanArrayList.get(pos).isFavorite == 0 ? 1 : 0);
-            contactsBeanArrayList.get(pos).isFavorite = contactsBeanArrayList.get(pos).isFavorite == 0 ? 1 : 0;
-            chatsAdapter.notifyDataSetChanged();
-            HomeActivity.isFavoriteUpdate = true;
-        }
-    };
 
 }

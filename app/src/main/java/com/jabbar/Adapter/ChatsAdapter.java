@@ -12,7 +12,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jabbar.Bean.ContactsBean;
-import com.jabbar.Listener.MyClickListener;
 import com.jabbar.R;
 import com.jabbar.Ui.ChatNewActivity;
 import com.jabbar.Ui.ProfileActivity;
@@ -29,12 +28,10 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.MyHolder> {
 
     private ArrayList<ContactsBean> contactBeanArrayList;
     private Context context;
-    public MyClickListener myClickListener;
 
-    public ChatsAdapter(Context context, ArrayList<ContactsBean> contactBeanArrayList, MyClickListener myClickListener) {
+    public ChatsAdapter(Context context, ArrayList<ContactsBean> contactBeanArrayList) {
         this.context = context;
         this.contactBeanArrayList = contactBeanArrayList;
-        this.myClickListener = myClickListener;
     }
 
     @Override
@@ -81,7 +78,8 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.MyHolder> {
             }
         });
 
-        Utils.setGlideImage(context, contactBeanArrayList.get(position).avatar, holder.imgAvatar, true);
+        if (!contactBeanArrayList.get(position).avatar.equalsIgnoreCase(""))
+            Utils.setGlideImage(context, contactBeanArrayList.get(position).avatar, holder.imgAvatar);
 
     }
 

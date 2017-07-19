@@ -20,16 +20,21 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.firebase.FirebaseException;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.jabbar.API.SendMobileAPI;
 import com.jabbar.R;
+import com.jabbar.Uc.JabbarDialog;
 import com.jabbar.Utils.Config;
 import com.jabbar.Utils.GetLocation;
-import com.jabbar.Uc.JabbarDialog;
 import com.jabbar.Utils.Log;
 import com.jabbar.Utils.Pref;
 import com.jabbar.Utils.UpdateContact1;
 import com.jabbar.Utils.Utils;
+
+import java.util.concurrent.TimeUnit;
 
 
 public class InputDataActivity extends AppCompatActivity implements View.OnClickListener, GetLocation.MyLocationListener {
@@ -38,6 +43,7 @@ public class InputDataActivity extends AppCompatActivity implements View.OnClick
     public static final int PERMISSION_CODE = 150;
     private GetLocation getLocation;
     private Toolbar toolbar;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +52,8 @@ public class InputDataActivity extends AppCompatActivity implements View.OnClick
         Utils.addActivities(this);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        mAuth = FirebaseAuth.getInstance();
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = this.getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -54,9 +62,6 @@ public class InputDataActivity extends AppCompatActivity implements View.OnClick
         }
 
         new UpdateContact1(this).execute();
-
-//        getEdtnumber().setText("8735032992");
-
 
         Pref.setValue(this, Config.PREF_PUSH_ID, FirebaseInstanceId.getInstance().getToken());
         Log.print("=======PREF_PUSH_ID===========" + FirebaseInstanceId.getInstance().getToken());
@@ -98,7 +103,6 @@ public class InputDataActivity extends AppCompatActivity implements View.OnClick
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Loading...");
         progressDialog.setCancelable(false);
-
 
     }
 
@@ -145,20 +149,29 @@ public class InputDataActivity extends AppCompatActivity implements View.OnClick
                     new JabbarDialog(InputDataActivity.this, "please enter mobile number fix 10 digit").show();
                 } else {
                     if (Utils.isOnline(InputDataActivity.this)) {
-                        progressDialog.show();
-                        new SendMobileAPI(InputDataActivity.this, getEdtnumber().getText().toString().trim(), new Utils.MyListener() {
+                        if (!progressDialog.isShowing())
+                            progressDialog.show();
+                        PhoneAuthProvider.getInstance().verifyPhoneNumber("+91" + getEdtnumber().getText().toString().trim(), 60, TimeUnit.SECONDS, InputDataActivity.this, new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
                             @Override
-                            public void OnResponse(Boolean result, String res) {
-                                Log.print("=====res========" + res);
-                                progressDialog.dismiss();
-                                if (result) {
-                                    startActivity(new Intent(InputDataActivity.this, VerifyCodeActivity.class).putExtra("session_id", res).putExtra("number", getEdtnumber().getText().toString().trim()));
-                                    finish();
-                                } else {
-                                    Toast.makeText(InputDataActivity.this, "Error send code.Try again", Toast.LENGTH_SHORT).show();
-                                }
+                            public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
+
                             }
-                        }).execute();
+
+                            @Override
+                            public void onVerificationFailed(FirebaseException e) {
+                                if (progressDialog.isShowing())
+                                    progressDialog.dismiss();
+                                Toast.makeText(InputDataActivity.this, "Error send code.Try again", Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
+                                if (progressDialog.isShowing())
+                                    progressDialog.dismiss();
+                                startActivity(new Intent(InputDataActivity.this, VerifyCodeActivity.class).putExtra("veriId", s).putExtra("number", getEdtnumber().getText().toString().trim()));
+                                finish();
+                            }
+                        });
                     } else {
                         new JabbarDialog(InputDataActivity.this, getString(R.string.no_internet)).show();
                     }

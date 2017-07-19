@@ -57,5 +57,4 @@
     <style name="ThemeFullscreen" parent="AppTheme">
         <item name="android:windowFullscreen">true</item>
     </style>
-
 </resources>

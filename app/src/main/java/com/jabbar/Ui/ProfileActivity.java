@@ -1,7 +1,9 @@
 package com.jabbar.Ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -15,13 +17,12 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.jabbar.Bean.ContactsBean;
+import com.jabbar.DownloadImage;
 import com.jabbar.R;
-import com.jabbar.Utils.Config;
 import com.jabbar.Utils.Utils;
+
+import java.io.File;
 
 import hani.momanii.supernova_emoji_library.Helper.EmojiconTextView;
 
@@ -38,8 +39,7 @@ public class ProfileActivity extends BaseActivity {
     private TextView txtnumber;
     private EmojiconTextView txtStatus;
     private Bitmap bitmap;
-//    private LinearLayout llDownload;
-//    private TextView txtDownload;
+    private File file;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,28 +66,31 @@ public class ProfileActivity extends BaseActivity {
         txtStatus = (EmojiconTextView) findViewById(R.id.txtStatus);
 
 
-        Glide.with(ProfileActivity.this).load(Config.AVATAR_HOST + contactsBean.avatar)
-                .asBitmap()
-                .error(R.drawable.default_user).into(new SimpleTarget<Bitmap>() {
-            @Override
-            public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
-                image.setImageBitmap(resource);
-                bitmap = resource;
-                Palette.from(resource).generate(new Palette.PaletteAsyncListener() {
-                    public void onGenerated(Palette palette) {
+        if (!contactsBean.avatar.equalsIgnoreCase("")) {
+            file = new File(Utils.getAvatarDir(context) + "/" + contactsBean.avatar);
+            if (file != null && file.exists()) {
 
+                bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+                image.setImageBitmap(bitmap);
+
+                Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
+                    public void onGenerated(Palette palette) {
                         applyPalette(palette);
                     }
                 });
+
+            } else {
+                if (!DownloadImage.isDownloading) {
+                    new DownloadImage(this).execute();
+                }
             }
-        });
+        }
 
-        Utils.setGlideImage(this, contactsBean.avatar, image, false);
-
-        image.setOnLongClickListener(new View.OnLongClickListener() {
+        image.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onLongClick(View v) {
-                return false;
+            public void onClick(View v) {
+                if (!contactsBean.avatar.equalsIgnoreCase("") && file != null && file.exists())
+                    startActivity(new Intent(ProfileActivity.this, ProfileFullViewActivity.class).putExtra("path", Utils.getAvatarDir(context) + "/" + contactsBean.avatar));
             }
         });
 
@@ -138,5 +141,15 @@ public class ProfileActivity extends BaseActivity {
         collapsingToolbarLayout.setStatusBarScrimColor(vibrantDarkColor);
 
         supportStartPostponedEnterTransition();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if (bitmap != null) {
+            bitmap.recycle();
+            bitmap = null;
+        }
     }
 }

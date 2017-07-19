@@ -7,9 +7,12 @@ import com.jabbar.Bean.StoryBean;
 import com.jabbar.Utils.Config;
 import com.jabbar.Utils.Log;
 import com.jabbar.Utils.Mydb;
+import com.jabbar.Utils.Pref;
+import com.jabbar.Utils.Utils;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -89,9 +92,28 @@ public class StoryBll {
     }
 
 
+    public boolean getMyStory() {
+        Mydb dbHelper = null;
+        Cursor cursor = null;
+        String sql;
+        try {
+            sql = "SELECT userid FROM story WHERE userid = " + Pref.getValue(context, Config.PREF_USERID, 0);
+            dbHelper = new Mydb(context);
+            cursor = dbHelper.query(sql);
+
+            if (cursor != null && cursor.getCount() > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     public ArrayList<StoryBean> getStoryListWithGroup() {
 
-        DeleteOldStory();
+        DeleteStoryList();
 
         ArrayList<StoryBean> storyBeanArrayList = new ArrayList<StoryBean>();
         Mydb dbHelper = null;
@@ -217,25 +239,40 @@ public class StoryBll {
         return datediff;
     }
 
-    public void DeleteOldStory() {
+    public void DeleteStoryList() {
         Mydb dbHelper = null;
-        String sql = null;
+        Cursor cursor = null;
+        String sql;
 
         try {
-            sql = "delete from story where time < '" + get24HDate() + "'";
-            dbHelper = new Mydb(this.context);
-            dbHelper.execute(sql);
+            sql = "SELECT * FROM story where time < '" + get24HDate() + "'";
+            dbHelper = new Mydb(context);
+            cursor = dbHelper.query(sql);
+
+            if (cursor != null && cursor.getCount() > 0) {
+                while (cursor.moveToNext()) {
+
+                    File file = new File(Utils.getStoryDir(context) + "/" + cursor.getString(2));
+                    if (file.exists()) {
+                        file.delete();
+                    }
+                    sql = "delete from story where id=" + cursor.getInt(0);
+                    dbHelper = new Mydb(this.context);
+                    dbHelper.execute(sql);
+                }
+            }
 
         } catch (Exception e) {
-            Log.print(this.getClass() + " :: delete()" + " " + e);
+            Log.print(this.getClass() + " :: getStatus()" + e);
         } finally {
+            if (cursor != null && !cursor.isClosed())
+                cursor.close();
+
             if (dbHelper != null)
                 dbHelper.close();
-            // release
-            dbHelper = null;
-            sql = null;
-            System.gc();
+
         }
+
     }
 
     public String get24HDate() {

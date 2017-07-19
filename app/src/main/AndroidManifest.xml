@@ -46,7 +46,6 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
 
         <activity
@@ -114,6 +113,12 @@
 
         </activity>
 
+        <!--<activity-->
+        <!--android:name=".TestImage"-->
+        <!--android:screenOrientation="portrait">-->
+        <!---->
+        <!--</activity>-->
+
         <activity
             android:name=".Ui.ChatNewActivity"
             android:launchMode="singleTask"
@@ -124,11 +129,17 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".Ui.ViewStoryActivity"
+            android:name=".Ui.ProfileFullViewActivity"
             android:screenOrientation="portrait" />
 
         <activity
+            android:name=".Ui.ViewStoryActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/ThemeFullscreen" />
+
+        <activity
             android:name=".Ui.BuddiesActivity"
+            android:label="@string/buddies"
             android:screenOrientation="portrait" />
 
 
@@ -146,6 +157,11 @@
 
         <activity
             android:name=".Ui.PreviewStoryImage"
+            android:screenOrientation="portrait"
+            android:theme="@style/ThemeFullscreen" />
+
+        <activity
+            android:name=".Ui.PreviewStoryVideo"
             android:screenOrientation="portrait"
             android:theme="@style/ThemeFullscreen" />
 

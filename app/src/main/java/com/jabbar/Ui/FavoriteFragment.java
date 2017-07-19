@@ -1,15 +1,24 @@
 package com.jabbar.Ui;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -25,10 +34,12 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.jabbar.Bean.ContactsBean;
 import com.jabbar.Bll.UserBll;
 import com.jabbar.R;
+import com.jabbar.Uc.JabbarDialog;
 import com.jabbar.Utils.Config;
 import com.jabbar.Utils.GetLocation;
-import com.jabbar.Uc.JabbarDialog;
+import com.jabbar.Utils.Log;
 import com.jabbar.Utils.Pref;
+import com.jabbar.Utils.Utils;
 
 import java.util.ArrayList;
 
@@ -50,6 +61,8 @@ public class FavoriteFragment extends Fragment implements OnMapReadyCallback, Go
     private LatLng currentLatLong;
     private ProgressDialog progressDialog;
 
+    public static boolean isFirst = true;
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -61,12 +74,8 @@ public class FavoriteFragment extends Fragment implements OnMapReadyCallback, Go
 
     }
 
-    public void UpdateFavorite(boolean onlyDbUpdate) {
-        if (onlyDbUpdate) {
-            AddMarker();
-        } else {
-            setMarker();
-        }
+    public void UpdateFavorite() {
+        setMarker();
     }
 
     @Override
@@ -122,13 +131,14 @@ public class FavoriteFragment extends Fragment implements OnMapReadyCallback, Go
 
     public void setMarker() {
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_PHONE_STATE}, PERMISSION_CODE);
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_CODE);
         } else {
-            googleMap.setOnMarkerClickListener(this);
-            // update current location
-            getLocation = new GetLocation(getContext(), this);
-            getLocation.UpdateLocation();
-
+            if (googleMap != null) {
+                googleMap.setOnMarkerClickListener(this);
+                // update current location
+                getLocation = new GetLocation(getContext(), this);
+                getLocation.UpdateLocation();
+            }
         }
     }
 
@@ -142,7 +152,7 @@ public class FavoriteFragment extends Fragment implements OnMapReadyCallback, Go
                             .position(new LatLng(Double.parseDouble(contactFavoriteBeanArrayList.get(i).location.split(",")[0]), Double.parseDouble(contactFavoriteBeanArrayList.get(i).location.split(",")[1])))
                             .title(contactFavoriteBeanArrayList.get(i).name)
                             .snippet(contactFavoriteBeanArrayList.get(i).status)
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+                            .icon(BitmapDescriptorFactory.fromBitmap(createDrawableFromView(getContext(), contactFavoriteBeanArrayList.get(i).avatar))));
 
                     marker.setTag(contactFavoriteBeanArrayList.get(i));
 
@@ -152,11 +162,37 @@ public class FavoriteFragment extends Fragment implements OnMapReadyCallback, Go
             currentLatLong = new LatLng(Double.parseDouble(Pref.getValue(getContext(), Config.PREF_LOCATION, "0,0").split(",")[0]), Double.parseDouble(Pref.getValue(getContext(), Config.PREF_LOCATION, "0,0").split(",")[1]));
             Marker MyLoc = googleMap.addMarker(new MarkerOptions().position(currentLatLong).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
 
-            CameraPosition cameraPosition = new CameraPosition.Builder().target(MyLoc.getPosition()).zoom(10).build();
-            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            if (isFirst) {
+                isFirst = false;
+                CameraPosition cameraPosition = new CameraPosition.Builder().target(MyLoc.getPosition()).zoom(10).build();
+                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            }
         } else {
             new JabbarDialog(getContext(), "Map not support").show();
         }
+    }
+
+    public static Bitmap createDrawableFromView(Context context, String path) {
+        Log.print("====path===" + path);
+        View view = LayoutInflater.from(context).inflate(R.layout.layout_marker, null);
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        ImageView imageView = (ImageView) view.findViewById(R.id.imgBuddies);
+        if (!path.equalsIgnoreCase("")) {
+            RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(context.getResources(), BitmapFactory.decodeFile(Utils.getAvatarDir(context) + "/" + path));
+            circularBitmapDrawable.setCircular(true);
+            imageView.setImageDrawable(circularBitmapDrawable);
+        }
+        view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        view.measure(displayMetrics.widthPixels, displayMetrics.heightPixels);
+        view.layout(0, 0, displayMetrics.widthPixels, displayMetrics.heightPixels);
+        view.buildDrawingCache();
+        Bitmap bitmap = Bitmap.createBitmap(view.getMeasuredWidth(), view.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+
+        Canvas canvas = new Canvas(bitmap);
+        view.draw(canvas);
+
+        return bitmap;
     }
 
     @Override

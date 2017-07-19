@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -15,16 +16,21 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.jabbar.API.AuthenticationAPI;
-import com.jabbar.API.VerifyCodeAPI;
 import com.jabbar.Bean.ExitsContactBean;
+import com.jabbar.Listener.ResponseListener;
 import com.jabbar.R;
-import com.jabbar.Utils.Config;
 import com.jabbar.Uc.JabbarDialog;
+import com.jabbar.Utils.Config;
 import com.jabbar.Utils.Log;
 import com.jabbar.Utils.Pref;
-import com.jabbar.Listener.ResponseListener;
 import com.jabbar.Utils.Utils;
 
 import java.util.ArrayList;
@@ -38,7 +44,8 @@ public class VerifyCodeActivity extends AppCompatActivity implements View.OnClic
     public static boolean active = false;
     private Toolbar toolbar;
     private String number;
-    private String session_id;
+    private String veriId;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,10 +64,11 @@ public class VerifyCodeActivity extends AppCompatActivity implements View.OnClic
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
         }
+        mAuth = FirebaseAuth.getInstance();
 
         number = getIntent().getStringExtra("number");
-        session_id = getIntent().getStringExtra("session_id");
-        Log.print("==============number==========" + number + "==========session_id======" + session_id);
+        veriId = getIntent().getStringExtra("veriId");
+        Log.print("==============number==========" + number + "==========session_id======" + veriId);
 
 
         findViewById(R.id.btnVerify).setOnClickListener(this);
@@ -72,6 +80,39 @@ public class VerifyCodeActivity extends AppCompatActivity implements View.OnClic
         }
 
         Log.print("======onCreate=====");
+
+
+    }
+
+    private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+
+                        if (task.isSuccessful()) {
+                            ArrayList<ExitsContactBean> exitsContactBeanArrayList = Pref.getArrayValue(VerifyCodeActivity.this, Config.PREF_CONTACT, new ArrayList<ExitsContactBean>());
+                            new AuthenticationAPI(VerifyCodeActivity.this, new ResponseListener() {
+                                @Override
+                                public void onResponce(String tag, int result, Object obj) {
+                                    if (progressDialog.isShowing())
+                                        progressDialog.dismiss();
+                                    if (tag.equalsIgnoreCase(TAG_AUTHENTICATION) && result == API_SUCCESS) {
+                                        startActivity(new Intent(VerifyCodeActivity.this, HomeActivity.class));
+                                        finish();
+                                    } else {
+                                        Toast.makeText(VerifyCodeActivity.this, obj.toString(), Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            }, number, exitsContactBeanArrayList);
+
+                        } else {
+                            if (progressDialog.isShowing())
+                                progressDialog.dismiss();
+                            Toast.makeText(VerifyCodeActivity.this, "Error send code.Try again", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 
     private EditText getEdtcode() {
@@ -84,33 +125,12 @@ public class VerifyCodeActivity extends AppCompatActivity implements View.OnClic
             case R.id.btnVerify:
                 if (!getEdtcode().getText().toString().trim().equalsIgnoreCase("") && getEdtcode().getText().toString().trim().length() > 3) {
                     if (Utils.isOnline(VerifyCodeActivity.this)) {
-                        progressDialog.show();
+                        if (!progressDialog.isShowing())
+                            progressDialog.show();
 
-                        new VerifyCodeAPI(VerifyCodeActivity.this, getEdtcode().getText().toString().trim(), session_id, new Utils.MyListener() {
-                            @Override
-                            public void OnResponse(Boolean result, final String res) {
+                        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(veriId, getEdtcode().getText().toString().trim());
+                        signInWithPhoneAuthCredential(credential);
 
-                                if (result) {
-                                    ArrayList<ExitsContactBean> exitsContactBeanArrayList = Pref.getArrayValue(VerifyCodeActivity.this, Config.PREF_CONTACT, new ArrayList<ExitsContactBean>());
-                                    new AuthenticationAPI(VerifyCodeActivity.this, new ResponseListener() {
-                                        @Override
-                                        public void onResponce(String tag, int result, Object obj) {
-                                            progressDialog.dismiss();
-                                            if (tag.equalsIgnoreCase(TAG_AUTHENTICATION) && result == API_SUCCESS) {
-                                                startActivity(new Intent(VerifyCodeActivity.this, HomeActivity.class));
-                                                finish();
-                                            } else {
-                                                Toast.makeText(VerifyCodeActivity.this, obj.toString(), Toast.LENGTH_SHORT).show();
-                                            }
-                                        }
-                                    }, number, exitsContactBeanArrayList);
-
-                                } else {
-                                    progressDialog.dismiss();
-                                    Toast.makeText(VerifyCodeActivity.this, "Error send code.Try again", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        }).execute();
                     } else {
                         new JabbarDialog(VerifyCodeActivity.this, getString(R.string.no_internet)).show();
                     }

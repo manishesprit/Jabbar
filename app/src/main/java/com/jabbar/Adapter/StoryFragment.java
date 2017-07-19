@@ -2,8 +2,8 @@ package com.jabbar.Adapter;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Point;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -20,16 +20,19 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.ImageViewTarget;
 import com.jabbar.Bean.StoryBean;
 import com.jabbar.Bll.StoryBll;
 import com.jabbar.Listener.OnNextSlideChange;
 import com.jabbar.R;
+import com.jabbar.Utils.BasicImageDownloader;
 import com.jabbar.Utils.Config;
 import com.jabbar.Utils.Log;
+import com.jabbar.Utils.Pref;
 import com.jabbar.Utils.Utils;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 
 import hani.momanii.supernova_emoji_library.Helper.EmojiconTextView;
@@ -41,7 +44,7 @@ import hani.momanii.supernova_emoji_library.Helper.EmojiconTextView;
 public class StoryFragment extends Fragment {
 
     private View view;
-
+    private RelativeLayout rlBack;
     private RelativeLayout rlMain;
     private LinearLayout llstoryProgress;
     private ImageView imgAvatar;
@@ -50,7 +53,7 @@ public class StoryFragment extends Fragment {
 
     private ImageView imgStoryPic;
     private EmojiconTextView txtCaption;
-
+    private ImageView imgStoryDelete;
     private StoryBean storyBean;
     private OnNextSlideChange onNextSlideChange;
     private ProgressBar progress;
@@ -87,6 +90,8 @@ public class StoryFragment extends Fragment {
 
         System.out.println("=====onActivityCreated======" + storyBean.userid);
         rlMain = (RelativeLayout) view.findViewById(R.id.rlMain);
+        rlBack = (RelativeLayout) view.findViewById(R.id.rlBack);
+        imgStoryDelete = (ImageView) view.findViewById(R.id.imgStoryDelete);
         llstoryProgress = (LinearLayout) view.findViewById(R.id.llstatusProgress);
         imgAvatar = (ImageView) view.findViewById(R.id.imgAvatar);
         txtName = (TextView) view.findViewById(R.id.txtName);
@@ -99,6 +104,18 @@ public class StoryFragment extends Fragment {
         Point size = new Point();
         display.getSize(size);
         width = size.x;
+
+        if (storyBean.userid == Pref.getValue(getContext(), Config.PREF_USERID, 0)) {
+            imgStoryDelete.setVisibility(View.VISIBLE);
+            imgStoryDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    isPlay = false;
+                }
+            });
+        } else {
+            imgStoryDelete.setVisibility(View.GONE);
+        }
 
         rlMain.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -116,12 +133,19 @@ public class StoryFragment extends Fragment {
             }
         });
 
+        rlBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().finish();
+            }
+        });
         storyBeanArrayList = new StoryBll(getContext()).getStoryListByUserId(storyBean.userid);
 
 
         txtName.setText(storyBean.userName);
 
-        Utils.setGlideImage(getContext(), storyBean.userAvatar, imgAvatar, true);
+        if (!storyBean.userAvatar.equalsIgnoreCase(""))
+            Utils.setGlideImage(getContext(), storyBean.userAvatar, imgAvatar);
 
         imgStoryPic.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -215,24 +239,58 @@ public class StoryFragment extends Fragment {
                                         txtTime.setText(storyBeanArrayList.get(pos).create_time);
                                         txtCaption.setText(storyBeanArrayList.get(pos).caption);
                                         System.out.println("============statusBeanArrayList.get(pos).statusPic=========" + storyBeanArrayList.get(pos).story_image);
-                                        Glide.with(getContext()).load(Config.STORY_HOST + storyBeanArrayList.get(pos).story_image).asBitmap().placeholder(R.drawable.ic_gallery).into(new ImageViewTarget<Bitmap>(imgStoryPic) {
-                                            @Override
-                                            protected void setResource(Bitmap resource) {
-                                                progress.setVisibility(View.GONE);
-                                                imgStoryPic.setImageBitmap(resource);
-                                                if (handler != null) {
-                                                    handler.postDelayed(runnable, 40);
-                                                } else {
-                                                    System.out.println("========handler != null======");
-                                                }
+                                        if (new File(Utils.getStoryDir(getContext()) + "/" + storyBeanArrayList.get(pos).story_image).exists()) {
+
+                                            imgStoryPic.setImageBitmap(BitmapFactory.decodeFile(Utils.getStoryDir(getContext()) + "/" + storyBeanArrayList.get(pos).story_image));
+                                            if (handler != null) {
+                                                handler.postDelayed(runnable, 40);
+                                            } else {
+                                                System.out.println("========handler != null======");
                                             }
 
-                                            @Override
-                                            public void onLoadStarted(Drawable placeholder) {
-                                                super.onLoadStarted(placeholder);
-                                                progress.setVisibility(View.VISIBLE);
-                                            }
-                                        });
+                                        } else {
+
+                                            BasicImageDownloader basicImageDownloader = new BasicImageDownloader(new BasicImageDownloader.OnImageLoaderListener() {
+                                                @Override
+                                                public void onError(BasicImageDownloader.ImageError error) {
+
+                                                }
+
+                                                @Override
+                                                public void onProgressChange(int percent) {
+                                                    progress.setVisibility(View.VISIBLE);
+                                                    progress.setProgress(percent);
+                                                }
+
+                                                @Override
+                                                public void onComplete(Bitmap result) {
+                                                    Log.print("======ConvertImage===origWidth===" + result.getWidth() + "======origHeight======" + result.getHeight());
+                                                    progress.setVisibility(View.GONE);
+                                                    try {
+
+                                                        File imageFile = new File(Utils.getStoryDir(getContext()) + "/" + storyBeanArrayList.get(pos).story_image);
+                                                        OutputStream os;
+                                                        os = new FileOutputStream(imageFile);
+                                                        result.compress(Bitmap.CompressFormat.JPEG, 60, os);
+                                                        os.flush();
+                                                        os.close();
+
+                                                    } catch (Exception e) {
+                                                    }
+
+                                                    imgStoryPic.setImageBitmap(result);
+                                                    if (handler != null) {
+                                                        handler.postDelayed(runnable, 40);
+                                                    } else {
+                                                        System.out.println("========handler != null======");
+                                                    }
+
+                                                }
+                                            });
+                                            basicImageDownloader.download(Config.STORY_HOST + storyBeanArrayList.get(pos).story_image, false);
+
+                                        }
+
                                     } catch (Exception e) {
                                     }
 
@@ -257,24 +315,57 @@ public class StoryFragment extends Fragment {
                 txtTime.setText(storyBeanArrayList.get(pos).create_time);
                 txtCaption.setText(storyBeanArrayList.get(pos).caption);
                 System.out.println("============statusBeanArrayList.get(pos).statusPic=========" + storyBeanArrayList.get(pos).story_image);
-                Glide.with(getContext()).load(Config.STORY_HOST + storyBeanArrayList.get(pos).story_image).asBitmap().placeholder(R.drawable.ic_gallery).into(new ImageViewTarget<Bitmap>(imgStoryPic) {
-                    @Override
-                    protected void setResource(Bitmap resource) {
-                        progress.setVisibility(View.GONE);
-                        imgStoryPic.setImageBitmap(resource);
-                        if (handler != null) {
-                            handler.postDelayed(runnable, 40);
-                        } else {
-                            System.out.println("========handler != null======");
-                        }
+                if (new File(Utils.getStoryDir(getContext()) + "/" + storyBeanArrayList.get(pos).story_image).exists()) {
+
+                    imgStoryPic.setImageBitmap(BitmapFactory.decodeFile(Utils.getStoryDir(getContext()) + "/" + storyBeanArrayList.get(pos).story_image));
+                    if (handler != null) {
+                        handler.postDelayed(runnable, 40);
+                    } else {
+                        System.out.println("========handler != null======");
                     }
 
-                    @Override
-                    public void onLoadStarted(Drawable placeholder) {
-                        super.onLoadStarted(placeholder);
-                        progress.setVisibility(View.VISIBLE);
-                    }
-                });
+
+                } else {
+
+                    BasicImageDownloader basicImageDownloader = new BasicImageDownloader(new BasicImageDownloader.OnImageLoaderListener() {
+                        @Override
+                        public void onError(BasicImageDownloader.ImageError error) {
+
+                        }
+
+                        @Override
+                        public void onProgressChange(int percent) {
+                            progress.setVisibility(View.VISIBLE);
+                            progress.setProgress(percent);
+                        }
+
+                        @Override
+                        public void onComplete(Bitmap result) {
+                            Log.print("======ConvertImage===origWidth===" + result.getWidth() + "======origHeight======" + result.getHeight());
+                            progress.setVisibility(View.GONE);
+                            try {
+
+                                File imageFile = new File(Utils.getStoryDir(getContext()) + "/" + storyBeanArrayList.get(pos).story_image);
+                                OutputStream os;
+                                os = new FileOutputStream(imageFile);
+                                result.compress(Bitmap.CompressFormat.JPEG, 60, os);
+                                os.flush();
+                                os.close();
+
+                            } catch (Exception e) {
+                            }
+
+                            imgStoryPic.setImageBitmap(result);
+                            if (handler != null) {
+                                handler.postDelayed(runnable, 40);
+                            } else {
+                                System.out.println("========handler != null======");
+                            }
+
+                        }
+                    });
+                    basicImageDownloader.download(Config.STORY_HOST + storyBeanArrayList.get(pos).story_image, false);
+                }
 
             } catch (Exception e) {
             }

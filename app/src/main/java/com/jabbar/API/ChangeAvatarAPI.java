@@ -3,10 +3,11 @@ package com.jabbar.API;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import com.jabbar.Listener.ResponseListener;
 import com.jabbar.Utils.Config;
 import com.jabbar.Utils.Log;
 import com.jabbar.Utils.Pref;
-import com.jabbar.Listener.ResponseListener;
+import com.jabbar.Utils.Utils;
 
 import org.json.JSONObject;
 
@@ -52,7 +53,7 @@ public class ChangeAvatarAPI extends AsyncTask<Void, Void, Integer> {
 
             } else {
                 if (imagename != null && (imagename != "" || !imagename.equals("") || !imagename.equals("null"))) {
-                    file = new File(context.getApplicationInfo().dataDir, "/" + imagename);
+                    file = new File(imagename);
                     if (file.exists()) {
                         multipartReq.addFile("avatar", file.toString(), file.getName(), "image/jpeg");
                         multipartReq.addString("userid", String.valueOf(Pref.getValue(context, Config.PREF_USERID, 0)));
@@ -102,8 +103,18 @@ public class ChangeAvatarAPI extends AsyncTask<Void, Void, Integer> {
 
             if (code == 0) {
                 if (isRemove) {
+                    file = new File(Utils.getAvatarDir(context) + "/" + Pref.getValue(context, Config.PREF_AVATAR, ""));
+                    file.delete();
                     Pref.setValue(context, Config.PREF_AVATAR, "");
                 } else {
+                    String renamepath = file.getParent() + "/" + jsonDoc.getString("avatarname");
+                    Log.print("=====renamepath====" + renamepath);
+                    file.renameTo(new File(renamepath));
+                    if (!Pref.getValue(context, Config.PREF_AVATAR, "").equalsIgnoreCase("")) {
+                        file = new File(Utils.getAvatarDir(context) + "/" + Pref.getValue(context, Config.PREF_AVATAR, ""));
+                        if (file.exists())
+                            file.delete();
+                    }
                     Pref.setValue(context, Config.PREF_AVATAR, jsonDoc.getString("avatarname"));
                 }
 

@@ -39,8 +39,7 @@ public class ViewStoryActivity extends BaseActivity implements OnNextSlideChange
         storyFragmentAdapter = new StoryFragmentAdapter(context, getSupportFragmentManager(), storyBeanArrayList);
         vwpImage.setAdapter(storyFragmentAdapter);
         vwpImage.setPageTransformer(true, new RotateDown());
-        pos = getIntent().getIntExtra("pos", 0);
-        pos--;
+
         vwpImage.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {

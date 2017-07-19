@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -43,6 +44,7 @@ public class AddStatusActivity extends BaseActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_status);
         Utils.addActivities(this);
+
         rootView = (LinearLayout) findViewById(R.id.root_view);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         edit_msg = (EmojiconEditText) findViewById(R.id.edit_msg);
@@ -56,10 +58,21 @@ public class AddStatusActivity extends BaseActivity implements View.OnClickListe
         progressDialog.setCancelable(false);
 
         setToolbar(toolbar, true);
+
         emojIcon = new EmojIconActions(this, rootView, edit_msg, img_emoji);
-        emojIcon.setUseSystemEmoji(false);
         emojIcon.ShowEmojIcon();
         emojIcon.setIconsIds(R.drawable.ic_action_keyboard, R.drawable.smiley);
+        emojIcon.setKeyboardListener(new EmojIconActions.KeyboardListener() {
+            @Override
+            public void onKeyboardOpen() {
+                Log.e("NO", "Keyboard opened!");
+            }
+
+            @Override
+            public void onKeyboardClose() {
+                Log.e("NO", "Keyboard closed");
+            }
+        });
 
         edit_msg.setText(Pref.getValue(this, Config.PREF_STATUS, ""));
         edit_msg.setSelection(edit_msg.getText().length());

@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "935330984509-q8ofmjjd7a188sjor53d0u4r8eskvtb2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.jabbar",
+            "certificate_hash": "9496977c36925169fce36eced712a586af618d90"
+          }
+        },
+        {
           "client_id": "935330984509-oe6j7ajg2pqbghdqoi817g087f5blcvq.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,8 +37,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "935330984509-oe6j7ajg2pqbghdqoi817g087f5blcvq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2

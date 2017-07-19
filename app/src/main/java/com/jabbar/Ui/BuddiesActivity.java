@@ -103,7 +103,6 @@ public class BuddiesActivity extends BaseActivity implements View.OnClickListene
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
-        menu.findItem(R.id.menu_buddies).setVisible(false);
         menu.findItem(R.id.menu_new_broadcast).setVisible(false);
         return true;
     }
@@ -122,7 +121,6 @@ public class BuddiesActivity extends BaseActivity implements View.OnClickListene
             new UserBll(BuddiesActivity.this).updateFavoriteContact(contactsBeanArrayList.get(pos).userid, contactsBeanArrayList.get(pos).isFavorite == 0 ? 1 : 0);
             contactsBeanArrayList.get(pos).isFavorite = contactsBeanArrayList.get(pos).isFavorite == 0 ? 1 : 0;
             buddiesAdapter.notifyDataSetChanged();
-            HomeActivity.isFavoriteUpdate = true;
         }
     };
 
@@ -193,7 +191,6 @@ public class BuddiesActivity extends BaseActivity implements View.OnClickListene
             contactsBeanArrayList.clear();
             contactsBeanArrayList.addAll(new UserBll(this).geBuddiestList());
             buddiesAdapter.notifyDataSetChanged();
-            HomeActivity.isFavoriteUpdate = true;
         } else {
             new JabbarDialog(this, obj.toString()).show();
         }

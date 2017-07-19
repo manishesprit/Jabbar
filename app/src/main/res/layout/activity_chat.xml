@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:emojicon="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -48,6 +50,7 @@
                     android:focusableInTouchMode="true"
                     android:maxLines="3"
                     android:padding="3dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
                     android:textSize="@dimen/textMediumExtra"
                     emojicon:emojiconSize="@dimen/textLarge" />
 

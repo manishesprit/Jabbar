@@ -1,58 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#000000"
     android:orientation="vertical">
-
-    <LinearLayout
-        android:id="@+id/llstatusProgress"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="3dp">
-
-    </LinearLayout>
-
-    <RelativeLayout
-        android:id="@+id/llAvatar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/progress_time"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:padding="5dp">
-
-        <ImageView
-            android:id="@+id/imgAvatar"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:adjustViewBounds="true"
-            android:background="@drawable/circle"
-            android:scaleType="fitXY" />
-
-        <com.jabbar.Uc.JabbarTextView
-            android:tag="100"
-            android:id="@+id/txtName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/imgAvatar"
-            android:paddingLeft="5dp"
-            android:textColor="#ffffff"
-            android:textSize="18dp"
-            android:textStyle="bold" />
-
-        <com.jabbar.Uc.JabbarTextView
-            android:tag="100"
-            android:id="@+id/txtTime"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/txtName"
-            android:layout_toRightOf="@+id/imgAvatar"
-            android:paddingLeft="5dp"
-            android:textColor="#ffffff"
-            android:textSize="14dp" />
-    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/rlMain"
@@ -76,8 +27,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="10dp"
-            android:paddingBottom="5dp"
+            android:layout_marginBottom="@dimen/MarginTwety"
+            android:padding="@dimen/MarginTen"
             android:textColor="#ffffff"
             android:textSize="@dimen/textMedium1"
             android:visibility="visible"
@@ -94,5 +45,90 @@
 
     </RelativeLayout>
 
+    <LinearLayout
+        android:id="@+id/llstatusProgress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="3dp">
 
-</LinearLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/llAvatar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/llstatusProgress"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="5dp">
+
+
+        <RelativeLayout
+            android:id="@+id/rlBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true">
+
+            <ImageView
+                android:id="@+id/imgBack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:paddingLeft="@dimen/MarginFive"
+                android:src="@drawable/ic_arrow_back" />
+
+            <ImageView
+                android:id="@+id/imgAvatar"
+                android:layout_width="@dimen/avatar"
+                android:layout_height="@dimen/avatar"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@+id/imgBack"
+                android:adjustViewBounds="true"
+                android:background="@drawable/circle"
+                android:scaleType="fitXY"
+                android:src="@drawable/default_user" />
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/imgStoryDelete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:visibility="gone"
+            android:layout_centerVertical="true"
+            android:padding="@dimen/MarginFive"
+            android:src="@drawable/ic_delete" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/imgStoryDelete"
+            android:layout_toRightOf="@+id/rlBack"
+            android:orientation="vertical">
+
+            <com.jabbar.Uc.JabbarTextView
+                android:id="@+id/txtName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5dp"
+                android:tag="100"
+                android:textColor="#ffffff"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+
+            <com.jabbar.Uc.JabbarTextView
+                android:id="@+id/txtTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txtName"
+                android:paddingLeft="5dp"
+                android:tag="100"
+                android:textColor="#ffffff"
+                android:textSize="14dp" />
+        </LinearLayout>
+    </RelativeLayout>
+
+
+</RelativeLayout>

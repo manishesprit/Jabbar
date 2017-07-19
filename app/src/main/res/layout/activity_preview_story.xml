@@ -26,7 +26,7 @@
             android:tag="100"
             android:id="@+id/crop_image"
             style="@style/PreviewButtonsStyle"
-            android:drawableTop="@drawable/ic_crop_white_24dp"
+            android:drawableTop="@drawable/ic_crop_white"
             android:text="@string/preview_controls_crop" />
 
         <com.jabbar.Uc.JabbarTextView

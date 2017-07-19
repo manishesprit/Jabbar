@@ -2,6 +2,7 @@ package com.jabbar.Ui;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -50,6 +51,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+
 public class AddStoryActivity extends BaseActivity {
 
 
@@ -69,6 +71,8 @@ public class AddStoryActivity extends BaseActivity {
     private ArrayList<ImageBean> imageArrayList;
     private RelativeLayout rlBack;
     private ImageView conversation_contact_photo;
+    //    private FFmpeg fFmpeg = null;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -76,6 +80,8 @@ public class AddStoryActivity extends BaseActivity {
 
         setContentView(R.layout.activity_add_story);
         Utils.addActivities(this);
+
+//        fFmpeg = FFmpeg.getInstance(AddStoryActivity.this);
 
         camera_switcher = (CameraSwitchView) findViewById(R.id.camera_switcher);
         record_button = (RecordButton) findViewById(R.id.record_button);
@@ -90,8 +96,11 @@ public class AddStoryActivity extends BaseActivity {
         rlBack = (RelativeLayout) findViewById(R.id.rlBack);
         conversation_contact_photo = (ImageView) findViewById(R.id.conversation_contact_photo);
 
-        rv_image_panel.setNumColumns(4);
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Compressing...");
+        progressDialog.setCancelable(false);
 
+        rv_image_panel.setNumColumns(4);
         rlBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -99,7 +108,8 @@ public class AddStoryActivity extends BaseActivity {
             }
         });
 
-        Utils.setGlideImage(this, Pref.getValue(this, Config.PREF_AVATAR, ""), conversation_contact_photo, true);
+        if (!Pref.getValue(this, Config.PREF_AVATAR, "").equalsIgnoreCase(""))
+            Utils.setGlideImage(this, Pref.getValue(this, Config.PREF_AVATAR, ""), conversation_contact_photo);
 
 
         if (Build.VERSION.SDK_INT > 15) {
@@ -228,8 +238,9 @@ public class AddStoryActivity extends BaseActivity {
             cameraFragment.setResultListener(new CameraFragmentResultListener() {
                 @Override
                 public void onVideoRecorded(String filePath) {
-                    Intent intent = PreviewStoryActivity.newIntentVideo(AddStoryActivity.this, filePath);
-                    startActivityForResult(intent, REQUEST_PREVIEW_CODE);
+//                    LoadFFMPEG(filePath);
+//                    Intent intent = new Intent(AddStoryActivity.this, PreviewStoryVideo.class).putExtra("path", filePath);
+//                    startActivityForResult(intent, REQUEST_PREVIEW_CODE);
                 }
 
                 @Override
@@ -237,8 +248,8 @@ public class AddStoryActivity extends BaseActivity {
                     Log.print("=======filePath========" + filePath);
                     int degree = Utils.getCameraPhotoOrientation(AddStoryActivity.this, Uri.fromFile(new File(filePath)), filePath);
                     Log.print("==degree===" + degree);
-                    Utils.AvatarResize(Utils.rotateBitmap(BitmapFactory.decodeFile(filePath), degree), filePath, 1200);
-                    Intent intent = PreviewStoryImage.newIntentPhoto(AddStoryActivity.this, filePath);
+                    Utils.AvatarResize(Utils.rotateBitmap(BitmapFactory.decodeFile(filePath), degree), filePath, 1400);
+                    Intent intent = new Intent(AddStoryActivity.this, PreviewStoryImage.class).putExtra("path", filePath);
                     startActivityForResult(intent, REQUEST_PREVIEW_CODE);
                 }
             });
@@ -480,8 +491,8 @@ public class AddStoryActivity extends BaseActivity {
                     Log.print("=======filePath========" + imageArrayList.get(position).path);
                     int degree = Utils.getCameraPhotoOrientation(AddStoryActivity.this, Uri.fromFile(new File(imageArrayList.get(position).path)), imageArrayList.get(position).path);
                     Log.print("==degree===" + degree);
-                    Utils.AvatarResize(Utils.rotateBitmap(BitmapFactory.decodeFile(imageArrayList.get(position).path), degree), getCacheDir().toString() + "/story.jpg", 1200);
-                    Intent intent = PreviewStoryImage.newIntentPhoto(AddStoryActivity.this, getCacheDir().toString() + "/story.jpg");
+                    Utils.AvatarResize(Utils.rotateBitmap(BitmapFactory.decodeFile(imageArrayList.get(position).path), degree), getCacheDir().toString() + "/story.jpg", 1400);
+                    Intent intent = new Intent(AddStoryActivity.this, PreviewStoryImage.class).putExtra("path", getCacheDir().toString() + "/story.jpg");
                     startActivityForResult(intent, REQUEST_PREVIEW_CODE);
                 }
             });
@@ -493,4 +504,85 @@ public class AddStoryActivity extends BaseActivity {
             return picturesView;
         }
     }
+
+//    public void LoadFFMPEG(final String path) {
+//        try {
+//
+//            fFmpeg.loadBinary(new LoadBinaryResponseHandler() {
+//
+//                @Override
+//                public void onStart() {
+//                    if (!progressDialog.isShowing())
+//                        progressDialog.show();
+//                }
+//
+//                @Override
+//                public void onFailure() {
+//                    if (progressDialog.isShowing())
+//                        progressDialog.dismiss();
+//                    Toast.makeText(AddStoryActivity.this, "Fail compressing.Try again", Toast.LENGTH_SHORT).show();
+//                }
+//
+//                @Override
+//                public void onSuccess() {
+//                    ConvertVideo(path);
+//                }
+//
+//                @Override
+//                public void onFinish() {
+//
+//                }
+//            });
+//
+//
+//        } catch (FFmpegNotSupportedException e) {
+//            // Handle if FFmpeg is not supported by device
+//        }
+//    }
+
+//    public void ConvertVideo(final String path) {
+//        try {
+//            Log.print("=======before Convert Size====" + new File(path).length() / 1024);
+//            String command = "ffmpeg -i " + path + " -b 1000000 " + path;
+//            fFmpeg.execute(command.split(" "), new ExecuteBinaryResponseHandler() {
+//
+//                @Override
+//                public void onStart() {
+//                    super.onStart();
+//
+//                }
+//
+//                @Override
+//                public void onFailure(String message) {
+//                    super.onFailure(message);
+//                    Log.print("========onFailure===" + message);
+//                    if (progressDialog.isShowing())
+//                        progressDialog.dismiss();
+//                    Toast.makeText(AddStoryActivity.this, "Fail compressing.Try again", Toast.LENGTH_SHORT).show();
+//                }
+//
+//                @Override
+//                public void onProgress(String message) {
+//                    super.onProgress(message);
+//                }
+//
+//                @Override
+//                public void onFinish() {
+//                    super.onFinish();
+//
+//                    if (progressDialog.isShowing())
+//                        progressDialog.dismiss();
+//                    Toast.makeText(AddStoryActivity.this, "Compressing success", Toast.LENGTH_SHORT).show();
+//                    Log.print("=======After Convert Size====" + new File(path).length() / 1024);
+//                    Intent intent = new Intent(AddStoryActivity.this, PreviewStoryVideo.class).putExtra("path", path);
+//                    startActivityForResult(intent, REQUEST_PREVIEW_CODE);
+//                }
+//            });
+//        } catch (Exception e) {
+//
+//        }
+
+//    }
+
+
 }

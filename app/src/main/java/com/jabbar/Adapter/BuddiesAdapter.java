@@ -82,7 +82,11 @@ public class BuddiesAdapter extends RecyclerView.Adapter<BuddiesAdapter.MyHolder
             }
         });
 
-        Utils.setGlideImage(context, contactBeanArrayList.get(position).avatar, holder.imgAvatar, true);
+        if (!contactBeanArrayList.get(position).avatar.equalsIgnoreCase("")) {
+            Utils.setGlideImage(context, contactBeanArrayList.get(position).avatar, holder.imgAvatar);
+        } else {
+            holder.imgAvatar.setImageResource(R.drawable.default_user);
+        }
 
     }
 

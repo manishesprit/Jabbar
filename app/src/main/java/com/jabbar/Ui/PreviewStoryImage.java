@@ -1,26 +1,19 @@
 package com.jabbar.Ui;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.jabbar.API.AddStoryAPI;
-import com.jabbar.CameraMaster.internal.enums.MediaAction;
-import com.jabbar.ImageViewer.DecodeUtils;
-import com.jabbar.ImageViewer.ImageViewTouch;
-import com.jabbar.ImageViewer.ImageViewTouchBase;
 import com.jabbar.Listener.ResponseListener;
+import com.jabbar.MasterCrop.Crop;
 import com.jabbar.R;
 import com.jabbar.Uc.JabbarDialog;
 import com.jabbar.Utils.Config;
@@ -41,14 +34,12 @@ import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
 
 public class PreviewStoryImage extends BaseActivity {
 
+    private RelativeLayout root_view;
     private ProgressDialog progressDialog;
-    private final static String MEDIA_ACTION_ARG = "media_action_arg";
-    private final static String FILE_PATH_ARG = "file_path_arg";
-
-    private int mediaAction;
+    private ImageView imgCrop;
     private RelativeLayout rlBack;
     private ImageView conversation_contact_photo;
-    ImageViewTouch mImage;
+    private ImageView mImage;
     Bitmap bitmap = null;
     private EmojiconEditText edit_msg;
     private ImageView img_emoji;
@@ -56,13 +47,6 @@ public class PreviewStoryImage extends BaseActivity {
     private ImageView imgSend;
     private EmojIconActions emojIcon;
     private String fileName;
-
-
-    public static Intent newIntentPhoto(Context context, String filePath) {
-        return new Intent(context, PreviewStoryImage.class)
-                .putExtra(MEDIA_ACTION_ARG, MediaAction.ACTION_PHOTO)
-                .putExtra(FILE_PATH_ARG, filePath);
-    }
 
 
     @Override
@@ -77,10 +61,11 @@ public class PreviewStoryImage extends BaseActivity {
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Loading...");
         progressDialog.setCancelable(false);
-        mediaAction = args.getInt(MEDIA_ACTION_ARG);
 
-        mImage = (ImageViewTouch) findViewById(R.id.image);
+        root_view = (RelativeLayout) findViewById(R.id.root_view);
+        mImage = (ImageView) findViewById(R.id.image);
         rlBack = (RelativeLayout) findViewById(R.id.rlBack);
+        imgCrop = (ImageView) findViewById(R.id.imgCrop);
         conversation_contact_photo = (ImageView) findViewById(R.id.conversation_contact_photo);
 
         edit_msg = (EmojiconEditText) findViewById(R.id.edit_msg);
@@ -100,7 +85,7 @@ public class PreviewStoryImage extends BaseActivity {
             public void onClick(View v) {
                 if (Utils.isOnline(PreviewStoryImage.this)) {
                     progressDialog.show();
-
+                    Log.print("====fileName====" + fileName);
                     new AddStoryAPI(PreviewStoryImage.this, fileName, StringEscapeUtils.escapeJava(edit_msg.getText().toString().trim()), new ResponseListener() {
                         @Override
                         public void onResponce(String tag, int result, Object obj) {
@@ -120,88 +105,59 @@ public class PreviewStoryImage extends BaseActivity {
             }
         });
 
-        Utils.setGlideImage(this, Pref.getValue(this, Config.PREF_AVATAR, ""), conversation_contact_photo, true);
+        imgCrop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Crop.of(Uri.fromFile(new File(fileName)), Uri.fromFile(new File(fileName))).start(PreviewStoryImage.this);
+            }
+        });
+        if (!Pref.getValue(this, Config.PREF_AVATAR, "").equalsIgnoreCase(""))
+            Utils.setGlideImage(this, Pref.getValue(this, Config.PREF_AVATAR, ""), conversation_contact_photo);
 
-        img_emoji.setOnClickListener(null);
-        emojIcon = new EmojIconActions(this, rel_send, edit_msg, img_emoji);
-        emojIcon.setUseSystemEmoji(false);
+        emojIcon = new EmojIconActions(this, root_view, edit_msg, img_emoji);
         emojIcon.ShowEmojIcon();
         emojIcon.setIconsIds(R.drawable.ic_action_keyboard, R.drawable.smiley);
+        emojIcon.setKeyboardListener(new EmojIconActions.KeyboardListener() {
+            @Override
+            public void onKeyboardOpen() {
+                Log.print("NO" + "Keyboard opened!");
+            }
+
+            @Override
+            public void onKeyboardClose() {
+                Log.print("NO" + "Keyboard closed");
+            }
+        });
 
 
+        fileName = getIntent().getStringExtra("path");
+        bitmap = BitmapFactory.decodeFile(fileName);
+        if (bitmap != null) {
+            mImage.setImageBitmap(bitmap);
+        }
     }
 
     @Override
-    public void onContentChanged() {
-        super.onContentChanged();
-        mImage = (ImageViewTouch) findViewById(R.id.image);
-        mImage.setDisplayType(ImageViewTouchBase.DisplayType.FIT_IF_BIGGER);
-        fileName = getIntent().getStringExtra(FILE_PATH_ARG);
-        Log.print("=====length====" + new File(fileName).length() / 1024);
-        LoadImage(Uri.parse(getIntent().getStringExtra(FILE_PATH_ARG)));
-        mImage.setSingleTapListener(
-                new ImageViewTouch.OnImageViewTouchSingleTapListener() {
+    protected void onDestroy() {
+        super.onDestroy();
 
-                    @Override
-                    public void onSingleTapConfirmed() {
-                        com.jabbar.Utils.Log.print("onSingleTapConfirmed");
-                    }
-                }
-        );
-
-        mImage.setDoubleTapListener(
-                new ImageViewTouch.OnImageViewTouchDoubleTapListener() {
-
-                    @Override
-                    public void onDoubleTap() {
-                        com.jabbar.Utils.Log.print("onDoubleTap");
-                    }
-                }
-        );
-
-        mImage.setOnDrawableChangedListener(
-                new ImageViewTouchBase.OnDrawableChangeListener() {
-
-                    @Override
-                    public void onDrawableChanged(Drawable drawable) {
-                        com.jabbar.Utils.Log.print("onBitmapChanged: " + drawable);
-                    }
-                }
-        );
+        if (bitmap != null) {
+            bitmap.recycle();
+            bitmap = null;
+        }
     }
 
     @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-    }
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
-    public void LoadImage(Uri imageUri) {
-
-        Log.print(imageUri.toString());
-
-        final DisplayMetrics metrics = getResources().getDisplayMetrics();
-        int size = (int) (Math.min(metrics.widthPixels, metrics.heightPixels) / 0.55);
-
-        bitmap = DecodeUtils.decode(this, imageUri, size, size);
-
-        if (null != bitmap) {
-            com.jabbar.Utils.Log.print("screen size: " + metrics.widthPixels + "x" + metrics.heightPixels);
-            com.jabbar.Utils.Log.print("bitmap size: " + bitmap.getWidth() + "x" + bitmap.getHeight());
-
-            mImage.setOnDrawableChangedListener(
-                    new ImageViewTouchBase.OnDrawableChangeListener() {
-                        @Override
-                        public void onDrawableChanged(final Drawable drawable) {
-                            com.jabbar.Utils.Log.print("image scale: " + mImage.getScale() + "/" + mImage.getMinScale());
-                            com.jabbar.Utils.Log.print("scale type: " + mImage.getDisplayType() + "/" + mImage.getScaleType());
-
-                        }
-                    }
-            );
-            mImage.setImageBitmap(bitmap, null, -1, -1);
-
-        } else {
-            Toast.makeText(this, "Failed to load the image", Toast.LENGTH_LONG).show();
+        if (resultCode == RESULT_OK) {
+            if (requestCode == Crop.REQUEST_CROP) {
+                bitmap = BitmapFactory.decodeFile(fileName);
+                if (bitmap != null) {
+                    mImage.setImageBitmap(bitmap);
+                }
+            }
         }
     }
 }

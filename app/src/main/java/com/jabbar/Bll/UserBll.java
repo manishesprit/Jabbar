@@ -115,6 +115,8 @@ public class UserBll {
         }
     }
 
+
+
     public void updateContactOnline(ContactsBean contactsBean) {
         Mydb dbHelper = null;
         String sql = null;
@@ -184,6 +186,51 @@ public class UserBll {
         }
     }
 
+
+    public void getUser(int userid, String mobile_number) {
+        String sql = "";
+        Mydb dbHelper = null;
+        Cursor cursor;
+        try {
+            sql = "SELECT userid FROM user_tb where userid=" + userid;
+            System.out.println("=====sql====" + sql);
+            dbHelper = new Mydb(context);
+            cursor = dbHelper.query(sql);
+
+            if (cursor != null && cursor.getCount() > 0) {
+            } else {
+                insertDirect(userid, mobile_number);
+            }
+        } catch (Exception e) {
+
+        }
+    }
+
+
+    public void insertDirect(int userid, String mobile_number) {
+        Log.print("===insertDirect==");
+        Mydb dbHelper = null;
+        String sql = null;
+
+        try {
+            sql = "INSERT INTO user_tb (userid,name,mobile_number,status,avatar,location,last_seen,is_favorite,is_contact) VALUES (" + userid + ",'','" + mobile_number + "','','','','',0,0)";
+            Log.print("===sql==" + sql);
+            dbHelper = new Mydb(this.context);
+
+            dbHelper.execute(sql);
+
+        } catch (Exception e) {
+            Log.print(this.getClass() + " :: insert()" + " " + e);
+        } finally {
+            if (dbHelper != null)
+                dbHelper.close();
+            // release
+            dbHelper = null;
+            sql = null;
+            System.gc();
+        }
+        //
+    }
 
     public ArrayList<ContactsBean> getChatList() {
         Mydb mydb = null;
@@ -326,7 +373,7 @@ public class UserBll {
 
         try {
 
-            sql = "SELECT userid,name,status,location from user_tb where is_favorite=1 ORDER BY name ASC";
+            sql = "SELECT userid,name,status,location,avatar from user_tb where is_favorite=1 ORDER BY name ASC";
 
             contactBeanArrayList = new ArrayList<>();
             mydb = new Mydb(this.context);
@@ -340,6 +387,7 @@ public class UserBll {
                     contactsBean.name = cursor.getString(1).toString();
                     contactsBean.status = cursor.getString(2);
                     contactsBean.location = cursor.getString(3);
+                    contactsBean.avatar = cursor.getString(4);
                     contactBeanArrayList.add(contactsBean);
                 }
 
@@ -420,7 +468,7 @@ public class UserBll {
 
         try {
 
-            sql = "SELECT userid,status,avatar,location,last_seen,name,mobile_number from user_tb where userid=" + userid;
+            sql = "SELECT userid,status,avatar,location,last_seen,name,mobile_number,is_favorite from user_tb where userid=" + userid;
 
             mydb = new Mydb(this.context);
             cursor = mydb.query(sql);
@@ -436,6 +484,8 @@ public class UserBll {
                 contactsBean.last_seen = Utils.getLastSeen(Config.WebDateFormatter, cursor.getString(4));
                 contactsBean.name = cursor.getString(5);
                 contactsBean.mobile_number = cursor.getString(6);
+                contactsBean.isFavorite = cursor.getInt(7);
+
                 Log.print("=======contactsBean.last_seen=======" + contactsBean.last_seen);
 
             }

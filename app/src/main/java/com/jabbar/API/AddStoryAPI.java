@@ -3,6 +3,8 @@ package com.jabbar.API;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import com.jabbar.Bean.StoryBean;
+import com.jabbar.Bll.StoryBll;
 import com.jabbar.Utils.Config;
 import com.jabbar.Utils.Log;
 import com.jabbar.Utils.Pref;
@@ -11,6 +13,7 @@ import com.jabbar.Listener.ResponseListener;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.util.Date;
 
 
 /**
@@ -56,17 +59,17 @@ public class AddStoryAPI extends AsyncTask<Void, Void, Integer> {
 
                 } else {
                     result = 1;
-                    message = "Unable to upload please try again.";
+                    message = "Unable to upload please try again3.";
                 }
             } else {
                 result = 1;
-                message = "Unable to upload please try again.";
+                message = "Unable to upload please try again2.";
             }
 
 
         } catch (Exception e) {
             result = 1;
-            message = "Unable to upload please try again.";
+            message = "Unable to upload please try again1.";
             Log.print("" + e.toString());
         }
         return result;
@@ -93,6 +96,17 @@ public class AddStoryAPI extends AsyncTask<Void, Void, Integer> {
             code = jsonDoc.getInt("code");
 
             if (code == 0) {
+
+                int story_id = jsonDoc.getInt("story_id");
+                String story_image = jsonDoc.getString("story_image");
+
+                StoryBean storyBean = new StoryBean();
+                storyBean.id = story_id;
+                storyBean.userid = Pref.getValue(context, Config.PREF_USERID, 0);
+                storyBean.create_time = Config.WebDateFormatter.format(new Date());
+                storyBean.story_image = story_image;
+                storyBean.caption = caption;
+                new StoryBll(context).insertStory(storyBean);
 
                 if (file != null && file.exists() && file.getAbsolutePath().contains(context.getCacheDir().toString() + "/story")) {
                     file.delete();

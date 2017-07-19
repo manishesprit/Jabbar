@@ -117,6 +117,7 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="20dp"
             android:checked="false"
+            android:visibility="invisible"
             android:gravity="center" />
 
 
@@ -130,14 +131,6 @@
             android:layout_marginRight="20dp" />
 
     </RelativeLayout>
-
-    <!--<android.support.v7.widget.RecyclerView-->
-    <!--android:id="@+id/rv_image_panel"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="170dp"-->
-    <!--android:layout_alignParentBottom="true"-->
-    <!--android:layout_alignParentLeft="true"-->
-    <!--android:visibility="gone" />-->
 
     <GridView
         android:id="@+id/rv_image_panel"

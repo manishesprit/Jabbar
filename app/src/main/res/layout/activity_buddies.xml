@@ -15,27 +15,22 @@
         app:layout_scrollFlags="scroll|snap"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"></android.support.v7.widget.Toolbar>
 
-    <android.support.v4.widget.NestedScrollView
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <RelativeLayout
+        <ProgressBar
+            android:id="@+id/progress_refresh"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
 
-            <ProgressBar
-                android:id="@+id/progress_refresh"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone" />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rlFriendList"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@+id/progress_refresh" />
-        </RelativeLayout>
-    </android.support.v4.widget.NestedScrollView>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rlFriendList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/progress_refresh" />
+    </RelativeLayout>
 
 </LinearLayout>

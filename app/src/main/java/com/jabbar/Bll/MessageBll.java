@@ -298,7 +298,7 @@ public class MessageBll {
 
         try {
 
-            sql = "select message_tb.userid, message_tb.message,user_tb.name,user_tb.avatar,message_tb.create_time from message_tb join user_tb on message_tb.userid=user_tb.userid where message_tb.isread=0 order by message_tb.create_time desc";
+            sql = "select message_tb.userid, message_tb.message,user_tb.name,user_tb.avatar,message_tb.create_time,user_tb.mobile_number from message_tb join user_tb on message_tb.userid=user_tb.userid where message_tb.isread=0 order by message_tb.create_time desc";
 
             mydb = new Mydb(this.context);
             cursor = mydb.query(sql);
@@ -309,7 +309,7 @@ public class MessageBll {
                     notificationBean = new NotificationBean();
                     notificationBean.userid = cursor.getInt(0);
                     notificationBean.message = cursor.getString(1);
-                    notificationBean.name = cursor.getString(2);
+                    notificationBean.name = cursor.getString(2).toString().trim().equalsIgnoreCase("") ? cursor.getString(5) : cursor.getString(2);
                     notificationBean.avatar = cursor.getString(3);
                     notificationBeanArrayList.add(notificationBean);
                 }

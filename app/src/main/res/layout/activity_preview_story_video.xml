@@ -1,19 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:emojicon="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/root_view"
     android:background="#000000">
 
-    <ImageView
-        android:id="@+id/image"
+
+    <com.jabbar.CameraMaster.internal.ui.view.AspectFrameLayout
+        android:id="@+id/previewAspectFrameLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:adjustViewBounds="true" />
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true">
+
+        <SurfaceView
+            android:id="@+id/video_preview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+    </com.jabbar.CameraMaster.internal.ui.view.AspectFrameLayout>
 
     <RelativeLayout
         android:id="@+id/rlTop"
@@ -55,7 +59,8 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/MarginTwety"
             android:padding="@dimen/MarginFive"
-            android:src="@drawable/ic_crop_white" />
+            android:src="@drawable/ic_crop_white"
+            android:visibility="gone" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -82,7 +87,6 @@
                 android:maxLines="1"
                 android:padding="3dp"
                 android:singleLine="true"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:textColor="@color/color_title"
                 android:textSize="@dimen/textMediumExtra"
                 emojicon:emojiconSize="@dimen/textLarge" />

@@ -21,10 +21,11 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.google.android.gms.maps.model.LatLng;
 import com.jabbar.Bean.ContactsBean;
 import com.jabbar.Bean.ExitsContactBean;
+import com.jabbar.DownloadImage;
 import com.jabbar.R;
 import com.jabbar.Uc.JabbarDialog;
 import com.jabbar.Ui.AuthenticationAlertActivity;
@@ -43,6 +44,7 @@ import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static com.jabbar.R.id.imgAvatar;
 import static com.jabbar.Utils.Config.OtpAPIKey;
 
 /**
@@ -195,37 +197,26 @@ public class Utils {
     }
 
 
-    public static void setGlideImage(final Context context, final String fileName, final ImageView imageView, final boolean isCircle) {
-        File file = new File(context.getApplicationInfo().dataDir, "/" + fileName);
+    public static void setGlideImage(final Context context, final String fileName, final ImageView imageView) {
+
+        File file = new File(Utils.getAvatarDir(context), "/" + fileName);
         if (file != null && file.exists()) {
-            Glide.with(context).load(file.getAbsolutePath()).asBitmap().placeholder(R.drawable.default_user).error(R.drawable.default_user).into(new BitmapImageViewTarget(imageView) {
+            Log.print("====setGlideImage exists====" + fileName);
+
+            Glide.with(context).load(file.getAbsolutePath()).asBitmap().into(new SimpleTarget<Bitmap>() {
                 @Override
                 public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                    super.onResourceReady(resource, glideAnimation);
-                    if (isCircle) {
-                        RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(context.getResources(), resource);
-                        circularBitmapDrawable.setCircular(true);
-                        imageView.setImageDrawable(circularBitmapDrawable);
-                    } else {
-                        imageView.setImageBitmap(resource);
-                    }
+                    RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(context.getResources(), resource);
+                    circularBitmapDrawable.setCircular(true);
+                    imageView.setImageDrawable(circularBitmapDrawable);
                 }
             });
+
         } else {
-            Glide.with(context).load(Config.AVATAR_HOST + fileName).asBitmap().placeholder(R.drawable.default_user).error(R.drawable.default_user).into(new BitmapImageViewTarget(imageView) {
-                @Override
-                public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                    super.onResourceReady(resource, glideAnimation);
-                    ConvertImage(context, resource, fileName);
-                    if (isCircle) {
-                        RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(context.getResources(), resource);
-                        circularBitmapDrawable.setCircular(true);
-                        imageView.setImageDrawable(circularBitmapDrawable);
-                    } else {
-                        imageView.setImageBitmap(resource);
-                    }
-                }
-            });
+            imageView.setImageResource(R.drawable.default_user);
+            if (!DownloadImage.isDownloading) {
+                new DownloadImage(context).execute();
+            }
         }
 
     }
@@ -313,7 +304,6 @@ public class Utils {
                 deleteDir(dir);
             }
         } catch (Exception e) {
-            // TODO: handle exception
         }
     }
 
@@ -344,9 +334,11 @@ public class Utils {
         return Typeface.DEFAULT;
     }
 
-    public static void ConvertImage(final Context context, Bitmap bitmap, String name) {
+    public static void ConvertImage(final Context context, Bitmap bitmap, String fullpath) {
         try {
-            File imageFile = new File(context.getApplicationInfo().dataDir, name);
+
+
+            File imageFile = new File(fullpath);
             OutputStream os;
             os = new FileOutputStream(imageFile);
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
@@ -375,7 +367,7 @@ public class Utils {
             }
             Bitmap b2 = Bitmap.createScaledBitmap(b, (int) destWidth, (int) destHeight, false);
             ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-            b2.compress(Bitmap.CompressFormat.JPEG, 80, outStream);
+            b2.compress(Bitmap.CompressFormat.JPEG, 60, outStream);
             File f = new File(newpath);
             f.createNewFile();
             FileOutputStream fo = new FileOutputStream(f);
@@ -396,4 +388,20 @@ public class Utils {
         context.startActivity(intent);
     }
 
+
+    public static String getAvatarDir(Context context) {
+        File file = new File(context.getApplicationInfo().dataDir + "/avatar");
+        if (!file.exists()) {
+            file.mkdir();
+        }
+        return file.getAbsolutePath();
+    }
+
+    public static String getStoryDir(Context context) {
+        File file = new File(context.getApplicationInfo().dataDir + "/story");
+        if (!file.exists()) {
+            file.mkdir();
+        }
+        return file.getAbsolutePath();
+    }
 }
