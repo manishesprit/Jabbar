@@ -3,7 +3,6 @@ package com.jabbar.Ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -17,7 +16,6 @@ import android.view.View;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.jabbar.R;
-import com.jabbar.Uc.JabbarDialog;
 import com.jabbar.Utils.Config;
 import com.jabbar.Utils.Log;
 import com.jabbar.Utils.Pref;
@@ -26,7 +24,6 @@ import com.jabbar.Utils.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.jabbar.Ui.InputDataActivity.PERMISSION_CODE;
 
 
 public class HomeActivity extends BaseActivity {
@@ -197,17 +194,6 @@ public class HomeActivity extends BaseActivity {
             return mFragmentTitleList.get(position);
         }
 
-    }
-
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == PERMISSION_CODE && grantResults.length == 2) {
-            favoriteFragment.UpdateFavorite();
-        } else {
-            new JabbarDialog(this, getString(R.string.location_permisssion)).show();
-        }
     }
 
     @Override

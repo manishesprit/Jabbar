@@ -17,6 +17,7 @@ import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import android.telephony.TelephonyManager;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -44,7 +45,7 @@ import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import static com.jabbar.R.id.imgAvatar;
+import static android.content.Context.TELEPHONY_SERVICE;
 import static com.jabbar.Utils.Config.OtpAPIKey;
 
 /**
@@ -302,6 +303,8 @@ public class Utils {
             File dir = context.getCacheDir();
             if (dir != null && dir.isDirectory()) {
                 deleteDir(dir);
+            } else {
+                dir.delete();
             }
         } catch (Exception e) {
         }
@@ -403,5 +406,19 @@ public class Utils {
             file.mkdir();
         }
         return file.getAbsolutePath();
+    }
+
+    public static String getMobileNumber(Context context) {
+        TelephonyManager tm = (TelephonyManager) context.getSystemService(TELEPHONY_SERVICE);
+        if (tm != null) {
+            if (tm.getLine1Number() != null && !tm.getLine1Number().equalsIgnoreCase("")) {
+                Log.print("=====getLine1Number====" + tm.getLine1Number());
+                return tm.getLine1Number();
+            } else {
+                return "";
+            }
+        } else {
+            return "";
+        }
     }
 }

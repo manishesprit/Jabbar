@@ -1,16 +1,13 @@
 package com.jabbar.Ui;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
@@ -42,8 +39,6 @@ import com.jabbar.Utils.Pref;
 import com.jabbar.Utils.Utils;
 
 import java.util.ArrayList;
-
-import static com.jabbar.Ui.InputDataActivity.PERMISSION_CODE;
 
 
 /**
@@ -130,15 +125,12 @@ public class FavoriteFragment extends Fragment implements OnMapReadyCallback, Go
     }
 
     public void setMarker() {
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_CODE);
-        } else {
-            if (googleMap != null) {
-                googleMap.setOnMarkerClickListener(this);
-                // update current location
-                getLocation = new GetLocation(getContext(), this);
-                getLocation.UpdateLocation();
-            }
+
+        if (googleMap != null) {
+            googleMap.setOnMarkerClickListener(this);
+            // update current location
+            getLocation = new GetLocation(getContext(), this);
+            getLocation.UpdateLocation();
         }
     }
 
