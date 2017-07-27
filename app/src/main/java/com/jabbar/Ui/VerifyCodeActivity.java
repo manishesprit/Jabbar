@@ -45,6 +45,7 @@ public class VerifyCodeActivity extends AppCompatActivity implements View.OnClic
     private Toolbar toolbar;
     private String number;
     private String veriId;
+    private String internal_code;
     private FirebaseAuth mAuth;
 
     @Override
@@ -67,7 +68,11 @@ public class VerifyCodeActivity extends AppCompatActivity implements View.OnClic
         mAuth = FirebaseAuth.getInstance();
 
         number = getIntent().getStringExtra("number");
-        veriId = getIntent().getStringExtra("veriId");
+        if (getIntent().getBooleanExtra("isDirect", false) == true) {
+            internal_code = getIntent().getStringExtra("internal_code");
+        } else {
+            veriId = getIntent().getStringExtra("veriId");
+        }
         Log.print("==============number==========" + number + "==========session_id======" + veriId);
 
 
@@ -128,8 +133,34 @@ public class VerifyCodeActivity extends AppCompatActivity implements View.OnClic
                         if (!progressDialog.isShowing())
                             progressDialog.show();
 
-                        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(veriId, getEdtcode().getText().toString().trim());
-                        signInWithPhoneAuthCredential(credential);
+                        if (getIntent().getBooleanExtra("isDirect", false) == true) {
+
+                            if (getEdtcode().getText().toString().trim().equalsIgnoreCase(internal_code)) {
+
+                                ArrayList<ExitsContactBean> exitsContactBeanArrayList = Pref.getArrayValue(VerifyCodeActivity.this, Config.PREF_CONTACT, new ArrayList<ExitsContactBean>());
+                                new AuthenticationAPI(VerifyCodeActivity.this, new ResponseListener() {
+                                    @Override
+                                    public void onResponce(String tag, int result, Object obj) {
+                                        if (progressDialog.isShowing())
+                                            progressDialog.dismiss();
+                                        if (tag.equalsIgnoreCase(TAG_AUTHENTICATION) && result == API_SUCCESS) {
+                                            startActivity(new Intent(VerifyCodeActivity.this, HomeActivity.class));
+                                            finish();
+                                        } else {
+                                            Toast.makeText(VerifyCodeActivity.this, obj.toString(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                }, number, exitsContactBeanArrayList);
+
+                            } else {
+                                if (progressDialog.isShowing())
+                                    progressDialog.dismiss();
+                                Toast.makeText(VerifyCodeActivity.this, "Error send code.Try again", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            PhoneAuthCredential credential = PhoneAuthProvider.getCredential(veriId, getEdtcode().getText().toString().trim());
+                            signInWithPhoneAuthCredential(credential);
+                        }
 
                     } else {
                         new JabbarDialog(VerifyCodeActivity.this, getString(R.string.no_internet)).show();

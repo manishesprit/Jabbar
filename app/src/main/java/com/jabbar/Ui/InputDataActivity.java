@@ -8,7 +8,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -144,7 +146,6 @@ public class InputDataActivity extends AppCompatActivity implements View.OnClick
                     if (Utils.isOnline(InputDataActivity.this)) {
                         if (!progressDialog.isShowing())
                             progressDialog.show();
-
                         if (Utils.getMobileNumber(InputDataActivity.this).length() == 13 && Utils.getMobileNumber(InputDataActivity.this).equalsIgnoreCase("+91" + getEdtnumber().getText().toString().trim())) {
                             DirectLogin();
                         } else if (Utils.getMobileNumber(InputDataActivity.this).length() == 11 && Utils.getMobileNumber(InputDataActivity.this).equalsIgnoreCase("+" + getEdtnumber().getText().toString().trim())) {
@@ -152,7 +153,7 @@ public class InputDataActivity extends AppCompatActivity implements View.OnClick
                         } else if (Utils.getMobileNumber(InputDataActivity.this).length() == 10 && Utils.getMobileNumber(InputDataActivity.this).equalsIgnoreCase(getEdtnumber().getText().toString().trim())) {
                             DirectLogin();
                         } else {
-                            sendDirectMsg();
+                            PhoneAuthProvider.getInstance().verifyPhoneNumber("+91" + getEdtnumber().getText().toString().trim(), 60, TimeUnit.SECONDS, InputDataActivity.this, onVerificationStateChangedCallbacks);
                         }
 
                     } else {
@@ -171,6 +172,8 @@ public class InputDataActivity extends AppCompatActivity implements View.OnClick
     public PhoneAuthProvider.OnVerificationStateChangedCallbacks onVerificationStateChangedCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
         @Override
         public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
+
+//            sendDirectMsg();
 
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -191,7 +194,6 @@ public class InputDataActivity extends AppCompatActivity implements View.OnClick
                     }, getEdtnumber().getText().toString().trim(), exitsContactBeanArrayList);
                 }
             }, 6000);
-
         }
 
         @Override
@@ -235,19 +237,62 @@ public class InputDataActivity extends AppCompatActivity implements View.OnClick
 
     public void sendDirectMsg() {
         smsManager = SmsManager.getDefault();
-        String getRandomCode = String.valueOf(System.currentTimeMillis()).toString().substring(0, 6);
-        String phoneNumber = getEdtnumber().getText().toString().trim();
-        String smsBody = getRandomCode + " is code.";
+        final String getRandomCode = String.valueOf(System.currentTimeMillis()).toString().substring(0, 6);
+        final String phoneNumber = getEdtnumber().getText().toString().trim();
+        final String smsBody = getRandomCode + " is code.";
         String SMS_SENT = "SMS_SENT";
         PendingIntent sentPendingIntent = PendingIntent.getBroadcast(this, 0, new Intent(SMS_SENT), 0);
 
         sendMessageReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
+
+                try {
+                    Log.print("Deleting SMS from inbox");
+                    Uri uriSms = Uri.parse("content://sms/");
+                    Cursor c = context.getContentResolver().query(uriSms, new String[]{"_id", "thread_id", "address", "body", "type"}, null, null, null);
+
+                    if (c != null && c.moveToFirst()) {
+                        do {
+                            Log.print("====c.getString(4)====" + c.getString(4) + "===c.getString(2)====" + c.getString(2) + "===c.getString(3)===" + c.getString(3));
+                            if (!c.getString(4).contains("1") && c.getString(2).equalsIgnoreCase(phoneNumber) && c.getString(3).equalsIgnoreCase(smsBody)) {
+                                context.getContentResolver().delete(Uri.parse("content://sms/" + c.getLong(0)), null, null);
+                                break;
+                            }
+                        } while (c.moveToNext());
+                    }
+                } catch (Exception e) {
+                    Log.print("Could not delete SMS from inbox: " + e.getMessage());
+                }
+
                 if (getResultCode() == Activity.RESULT_OK) {
-                    Toast.makeText(InputDataActivity.this, "Code sent.", Toast.LENGTH_SHORT).show();
+
+                    if (progressDialog.isShowing())
+                        progressDialog.dismiss();
+                    startActivity(new Intent(InputDataActivity.this, VerifyCodeActivity.class).putExtra("isDirect", true).putExtra("number", phoneNumber).putExtra("internal_code", getRandomCode));
+                    finish();
+
                 } else {
-                    PhoneAuthProvider.getInstance().verifyPhoneNumber("+91" + getEdtnumber().getText().toString().trim(), 60, TimeUnit.SECONDS, InputDataActivity.this, onVerificationStateChangedCallbacks);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            ArrayList<ExitsContactBean> exitsContactBeanArrayList = Pref.getArrayValue(InputDataActivity.this, Config.PREF_CONTACT, new ArrayList<ExitsContactBean>());
+                            new AuthenticationAPI(InputDataActivity.this, new ResponseListener() {
+                                @Override
+                                public void onResponce(String tag, int result, Object obj) {
+                                    if (progressDialog.isShowing())
+                                        progressDialog.dismiss();
+                                    if (tag.equalsIgnoreCase(TAG_AUTHENTICATION) && result == API_SUCCESS) {
+                                        startActivity(new Intent(InputDataActivity.this, HomeActivity.class));
+                                        finish();
+                                    } else {
+                                        Toast.makeText(InputDataActivity.this, obj.toString(), Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            }, getEdtnumber().getText().toString().trim(), exitsContactBeanArrayList);
+                        }
+                    }, 6000);
+
                 }
 
             }
@@ -255,6 +300,25 @@ public class InputDataActivity extends AppCompatActivity implements View.OnClick
         registerReceiver(sendMessageReceiver, new IntentFilter(SMS_SENT));
 
         smsManager.sendTextMessage(phoneNumber, null, smsBody, sentPendingIntent, null);
+    }
+
+    public void deleteSMS(Context context, String message, String number) {
+        try {
+            Log.print("Deleting SMS from inbox");
+            Uri uriSms = Uri.parse("content://sms/");
+            Cursor c = context.getContentResolver().query(uriSms, new String[]{"_id", "thread_id", "address", "body", "type"}, null, null, null);
+
+            if (c != null && c.moveToFirst()) {
+                do {
+                    if (!c.getString(4).contains("1") && c.getString(2).equalsIgnoreCase(number) && c.getString(3).equalsIgnoreCase(message)) {
+                        context.getContentResolver().delete(Uri.parse("content://sms/" + c.getLong(0)), null, null);
+                        break;
+                    }
+                } while (c.moveToNext());
+            }
+        } catch (Exception e) {
+            Log.print("Could not delete SMS from inbox: " + e.getMessage());
+        }
     }
 
     @Override

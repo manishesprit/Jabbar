@@ -134,13 +134,17 @@ public class ProfileActivity extends BaseActivity {
     }
 
     private void applyPalette(Palette palette) {
-        int vibrantColor = palette.getVibrantColor(getResources().getColor(R.color.colorPrimary));
-        int vibrantDarkColor = palette.getDarkVibrantColor(getResources().getColor(R.color.colorPrimaryDark));
+        try {
+            int vibrantColor = palette.getVibrantColor(getResources().getColor(R.color.colorPrimary));
+            int vibrantDarkColor = palette.getDarkVibrantColor(getResources().getColor(R.color.colorPrimaryDark));
 
-        collapsingToolbarLayout.setContentScrimColor(vibrantColor);
-        collapsingToolbarLayout.setStatusBarScrimColor(vibrantDarkColor);
+            collapsingToolbarLayout.setContentScrimColor(vibrantColor);
+            collapsingToolbarLayout.setStatusBarScrimColor(vibrantDarkColor);
 
-        supportStartPostponedEnterTransition();
+            supportStartPostponedEnterTransition();
+        } catch (Exception e) {
+
+        }
     }
 
     @Override

@@ -214,6 +214,14 @@ public class Utils {
             });
 
         } else {
+            Glide.with(context).load(Config.AVATAR_HOST + fileName).asBitmap().into(new SimpleTarget<Bitmap>() {
+                @Override
+                public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                    RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(context.getResources(), resource);
+                    circularBitmapDrawable.setCircular(true);
+                    imageView.setImageDrawable(circularBitmapDrawable);
+                }
+            });
             imageView.setImageResource(R.drawable.default_user);
             if (!DownloadImage.isDownloading) {
                 new DownloadImage(context).execute();
