@@ -52,7 +52,7 @@ public class UserBll {
         Cursor cursor;
         try {
             sql = "SELECT userid FROM user_tb where userid=" + contactsBean.userid;
-            System.out.println("=====sql====" + sql);
+            Log.print("=====sql====" + sql);
             dbHelper = new Mydb(context);
             cursor = dbHelper.query(sql);
 
@@ -114,7 +114,6 @@ public class UserBll {
             System.gc();
         }
     }
-
 
 
     public void updateContactOnline(ContactsBean contactsBean) {
@@ -193,7 +192,7 @@ public class UserBll {
         Cursor cursor;
         try {
             sql = "SELECT userid FROM user_tb where userid=" + userid;
-            System.out.println("=====sql====" + sql);
+            Log.print("=====sql====" + sql);
             dbHelper = new Mydb(context);
             cursor = dbHelper.query(sql);
 
@@ -458,6 +457,48 @@ public class UserBll {
             System.gc();
         }
         return contactBeanArrayList;
+    }
+
+    public String getUsername(int userid) {
+        Mydb mydb = null;
+        String sql = null;
+        Cursor cursor = null;
+        ContactsBean contactsBean = null;
+
+        try {
+
+            sql = "SELECT name,mobile_number from user_tb where userid=" + userid;
+
+            mydb = new Mydb(this.context);
+            cursor = mydb.query(sql);
+
+            if (cursor != null && cursor.getCount() > 0) {
+                cursor.moveToFirst();
+
+                if (!cursor.getString(0).equalsIgnoreCase("")) {
+                    return cursor.getString(0);
+                } else {
+                    return cursor.getString(1);
+                }
+
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            Log.print(this.getClass() + " ::Exception ()" + " " + e);
+            Log.sendError(e);
+        } finally {
+            if (cursor != null && !cursor.isClosed())
+                cursor.close();
+            if (mydb != null)
+                mydb.close();
+            // release
+            mydb = null;
+            sql = null;
+            cursor = null;
+            System.gc();
+        }
+        return null;
     }
 
     public ContactsBean getUserDetail(int userid) {

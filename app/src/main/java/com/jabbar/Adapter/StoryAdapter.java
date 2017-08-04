@@ -1,5 +1,6 @@
 package com.jabbar.Adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
@@ -35,6 +36,8 @@ public class StoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private static final int TYPE_HEADER = 0;
     private static final int TYPE_ITEM = 1;
 
+    public static final int STORY_CODE = 500;
+
     public StoryAdapter(Context context, ArrayList<StoryBean> storyBeanArrayList) {
         this.context = context;
         this.storyBeanArrayList = storyBeanArrayList;
@@ -69,19 +72,24 @@ public class StoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             headerViewHolder.imgStatusPic.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    context.startActivity(new Intent(context, AddStoryActivity.class));
+                    ((Activity) context).startActivityForResult(new Intent(context, AddStoryActivity.class), STORY_CODE);
                 }
             });
 
+
             if (yourstoryBeanArrayList != null) {
                 headerViewHolder.llYourStory.setVisibility(View.VISIBLE);
+
+                if (!Pref.getValue(context, Config.PREF_AVATAR, "").equalsIgnoreCase(""))
+                    Utils.setGlideImage(context, Pref.getValue(context, Config.PREF_AVATAR, ""), headerViewHolder.imgyour);
+
                 headerViewHolder.imgyour.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(context, ViewStoryActivity.class);
                         intent.putExtra("userBeanArrayList", yourstoryBeanArrayList);
                         intent.putExtra("pos", 1);
-                        context.startActivity(intent);
+                        ((Activity) context).startActivityForResult(intent, STORY_CODE);
                     }
                 });
             } else {

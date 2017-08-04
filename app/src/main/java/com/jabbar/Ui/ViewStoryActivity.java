@@ -44,13 +44,13 @@ public class ViewStoryActivity extends BaseActivity implements OnNextSlideChange
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-                System.out.println("====onPageScrolled=====");
+                Log.print("====onPageScrolled=====");
 
             }
 
             @Override
             public void onPageSelected(int position) {
-                System.out.println("=======onpageSelected======" + position);
+                Log.print("=======onpageSelected======" + position);
 
                 StoryFragment fragment = (StoryFragment) storyFragmentAdapter.getFragment(pos);
                 if (fragment != null) {
@@ -69,7 +69,7 @@ public class ViewStoryActivity extends BaseActivity implements OnNextSlideChange
 
             @Override
             public void onPageScrollStateChanged(int state) {
-                System.out.println("====onPageScrollStateChanged=====");
+                Log.print("====onPageScrollStateChanged=====");
                 if (storyFragmentAdapter != null) {
                     StoryFragment fragment = (StoryFragment) storyFragmentAdapter.getFragment(pos);
                     try {
@@ -77,12 +77,12 @@ public class ViewStoryActivity extends BaseActivity implements OnNextSlideChange
                     } catch (Exception e) {
 
                     }
-                    System.out.println("====Name=====" + fragment.txtName.getText());
+                    Log.print("====Name=====" + fragment.txtName.getText());
                 }
             }
         });
 
-        System.out.println("=======onpos=======" + pos);
+        Log.print("=======onpos=======" + pos);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

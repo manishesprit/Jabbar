@@ -39,11 +39,31 @@
                 android:background="@drawable/edit_border"
                 android:padding="3dp">
 
+
+                <ImageView
+                    android:id="@+id/img_emoji"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:padding="3dp"
+                    android:src="@drawable/smiley" />
+
+                <ImageView
+                    android:id="@+id/img_magic"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:padding="3dp"
+                    android:src="@drawable/ic_notifications"
+                    android:visibility="visible" />
+
                 <hani.momanii.supernova_emoji_library.Helper.EmojiconEditText
                     android:id="@+id/edit_msg"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@+id/img_magic"
                     android:layout_toRightOf="@+id/img_emoji"
                     android:background="@null"
                     android:focusable="true"
@@ -53,15 +73,6 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
                     android:textSize="@dimen/textMediumExtra"
                     emojicon:emojiconSize="@dimen/textLarge" />
-
-
-                <ImageView
-                    android:id="@+id/img_emoji"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:padding="3dp"
-                    android:src="@drawable/smiley" />
 
 
             </RelativeLayout>

@@ -56,21 +56,27 @@ public class SendMessageNewAPI {
 
                 if (response.code() == 200) {
                     if (response.body().code == 0) {
-                        messageBll = new MessageBll(context);
-                        for (DataBean dataBean : response.body().data) {
-                            for (MessageBean messageBean : dataBean.messages) {
-                                messageBll.UpdateMessage(messageBean, dataBean.friendid);
-                            }
-                        }
                         isCallAPI = false;
-                        responseListener.onResponce(Config.TAG_SEND_MESSAGE, Config.API_SUCCESS, response.body());
+                        if (responseListener != null) {
+                            messageBll = new MessageBll(context);
+                            for (DataBean dataBean : response.body().data) {
+                                for (MessageBean messageBean : dataBean.messages) {
+                                    messageBll.UpdateMessage(messageBean, dataBean.friendid);
+                                }
+                            }
+                            responseListener.onResponce(Config.TAG_SEND_MESSAGE, Config.API_SUCCESS, response.body());
+                        }
                     } else {
                         isCallAPI = false;
-                        responseListener.onResponce(Config.TAG_SEND_MESSAGE, Config.API_FAIL, response.body().message);
+                        if (responseListener != null) {
+                            responseListener.onResponce(Config.TAG_SEND_MESSAGE, Config.API_FAIL, response.body().message);
+                        }
                     }
                 } else {
                     isCallAPI = false;
-                    responseListener.onResponce(Config.TAG_SEND_MESSAGE, Config.API_FAIL, context.getString(R.string.server_error));
+                    if (responseListener != null) {
+                        responseListener.onResponce(Config.TAG_SEND_MESSAGE, Config.API_FAIL, context.getString(R.string.server_error));
+                    }
                 }
 
             }
@@ -78,9 +84,10 @@ public class SendMessageNewAPI {
             @Override
             public void onFailure(Call<SendMessageBean> call, Throwable t) {
                 isCallAPI = false;
-                Log.print(t.getMessage());
-                responseListener.onResponce(Config.TAG_SEND_MESSAGE, Config.API_FAIL, context.getString(R.string.server_error));
-
+                if (responseListener != null) {
+                    Log.print(t.getMessage());
+                    responseListener.onResponce(Config.TAG_SEND_MESSAGE, Config.API_FAIL, context.getString(R.string.server_error));
+                }
             }
         });
 

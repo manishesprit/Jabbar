@@ -1,6 +1,7 @@
 package com.jabbar.Utils;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -144,7 +145,7 @@ public class Utils {
             }
         } catch (IOException e) {
             e.printStackTrace();
-            System.out.println("inside camear" + e.toString());
+            Log.print("inside camear" + e.toString());
         }
         return isGoto;
     }
@@ -428,5 +429,15 @@ public class Utils {
         } else {
             return "";
         }
+    }
+
+    public static boolean isMyServiceRunning(Class<?> serviceClass, Context context) {
+        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

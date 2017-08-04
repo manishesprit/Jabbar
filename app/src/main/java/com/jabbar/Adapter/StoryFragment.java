@@ -1,6 +1,7 @@
 package com.jabbar.Adapter;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
@@ -8,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -20,9 +22,11 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.jabbar.API.DeleteStoryAPI;
 import com.jabbar.Bean.StoryBean;
 import com.jabbar.Bll.StoryBll;
 import com.jabbar.Listener.OnNextSlideChange;
+import com.jabbar.Listener.ResponseListener;
 import com.jabbar.R;
 import com.jabbar.Utils.BasicImageDownloader;
 import com.jabbar.Utils.Config;
@@ -50,7 +54,6 @@ public class StoryFragment extends Fragment {
     private ImageView imgAvatar;
     public TextView txtName;
     private TextView txtTime;
-
     private ImageView imgStoryPic;
     private EmojiconTextView txtCaption;
     private ImageView imgStoryDelete;
@@ -64,10 +67,11 @@ public class StoryFragment extends Fragment {
     private Runnable runnable;
     private int width;
     public boolean isPlay = true;
+    public int story_id = 0;
 
     public static StoryFragment addNewFragment(StoryBean storyBean) {
 
-        System.out.println("=====StatusFragment======" + storyBean.userid);
+        Log.print("=====StatusFragment======" + storyBean.userid);
         StoryFragment viewImageFragment = new StoryFragment();
         viewImageFragment.storyBean = storyBean;
 
@@ -77,7 +81,7 @@ public class StoryFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        System.out.println("=====onCreateView======" + storyBean.userid);
+        Log.print("=====onCreateView======" + storyBean.userid);
         view = inflater.inflate(R.layout.fragment_story, container, false);
         return view;
     }
@@ -88,7 +92,7 @@ public class StoryFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
 
-        System.out.println("=====onActivityCreated======" + storyBean.userid);
+        Log.print("=====onActivityCreated======" + storyBean.userid);
         rlMain = (RelativeLayout) view.findViewById(R.id.rlMain);
         rlBack = (RelativeLayout) view.findViewById(R.id.rlBack);
         imgStoryDelete = (ImageView) view.findViewById(R.id.imgStoryDelete);
@@ -111,6 +115,40 @@ public class StoryFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     isPlay = false;
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            if (Utils.isOnline(getContext())) {
+                                progress.setVisibility(View.VISIBLE);
+                                new DeleteStoryAPI(getContext(), new ResponseListener() {
+                                    @Override
+                                    public void onResponce(String tag, int result, Object obj) {
+                                        progress.setVisibility(View.GONE);
+                                        if (tag == Config.TAG_DELETE_STORY && result == Config.API_SUCCESS) {
+                                            getActivity().setResult(Activity.RESULT_OK);
+                                            getActivity().finish();
+                                        } else {
+                                            isPlay = true;
+                                        }
+                                    }
+                                }, story_id);
+                            }
+                        }
+                    });
+                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            isPlay = true;
+                        }
+                    });
+
+                    builder.setCancelable(false);
+                    builder.setMessage("Are you sure you want to delete story?");
+                    builder.show();
                 }
             });
         } else {
@@ -122,10 +160,10 @@ public class StoryFragment extends Fragment {
             public boolean onTouch(View v, MotionEvent event) {
 
                 if (event.getAction() == MotionEvent.ACTION_UP) {
-                    System.out.println("=======ACTION_UP=======");
+                    Log.print("=======ACTION_UP=======");
                     isPlay = true;
                 } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    System.out.println("========ACTION_DOWN=====");
+                    Log.print("========ACTION_DOWN=====");
                     isPlay = false;
                 }
 
@@ -152,11 +190,11 @@ public class StoryFragment extends Fragment {
             public boolean onTouch(View v, MotionEvent event) {
 
                 if (event.getAction() == MotionEvent.ACTION_UP) {
-                    System.out.println("======ACTION_UP======");
+                    Log.print("======ACTION_UP======");
                 }
 
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    System.out.println("======ACTION_DOWN======");
+                    Log.print("======ACTION_DOWN======");
                 }
                 return false;
             }
@@ -168,7 +206,7 @@ public class StoryFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
 
-        System.out.println("=====onDetach======" + storyBean.userid);
+        Log.print("=====onDetach======" + storyBean.userid);
 
         if (handler != null) {
             handler.removeCallbacks(runnable);
@@ -180,7 +218,7 @@ public class StoryFragment extends Fragment {
     public void onAttachFragment(Fragment childFragment) {
         super.onAttachFragment(childFragment);
 
-        System.out.println("=====onAttachFragment======" + storyBean.userid);
+        Log.print("=====onAttachFragment======" + storyBean.userid);
     }
 
     public void setPush() {
@@ -197,16 +235,16 @@ public class StoryFragment extends Fragment {
     public void setPlay() {
 
         isPlay = true;
-        System.out.println("==========setPlay==========");
+        Log.print("==========setPlay==========");
 //        if (handler != null) {
 //            handler.removeCallbacks(runnable);
 //            handler = null;
 //        }
 
-        System.out.println("========statusBeanArrayList========" + storyBeanArrayList);
+        Log.print("========statusBeanArrayList========" + storyBeanArrayList);
         if (storyBeanArrayList != null && llstoryProgress != null) {
 
-            System.out.println("====statusBeanArrayList======" + storyBeanArrayList.size() + "====" + storyBean.userid);
+            Log.print("====statusBeanArrayList======" + storyBeanArrayList.size() + "====" + storyBean.userid);
             for (int i = 0; i < storyBeanArrayList.size(); i++) {
                 ProgressBar progressBar = (ProgressBar) LayoutInflater.from(getContext()).inflate(R.layout.row_progress, null);
                 progressBar.setProgress(0);
@@ -236,20 +274,21 @@ public class StoryFragment extends Fragment {
                                     progressBar.setProgress(0);
 
                                     try {
+                                        story_id = storyBeanArrayList.get(pos).id;
                                         txtTime.setText(storyBeanArrayList.get(pos).create_time);
                                         txtCaption.setText(storyBeanArrayList.get(pos).caption);
-                                        System.out.println("============statusBeanArrayList.get(pos).statusPic=========" + storyBeanArrayList.get(pos).story_image);
+                                        Log.print("============statusBeanArrayList.get(pos).statusPic=========" + storyBeanArrayList.get(pos).story_image);
                                         if (new File(Utils.getStoryDir(getContext()) + "/" + storyBeanArrayList.get(pos).story_image).exists()) {
 
                                             imgStoryPic.setImageBitmap(BitmapFactory.decodeFile(Utils.getStoryDir(getContext()) + "/" + storyBeanArrayList.get(pos).story_image));
                                             if (handler != null) {
                                                 handler.postDelayed(runnable, 40);
                                             } else {
-                                                System.out.println("========handler != null======");
+                                                Log.print("========handler != null======");
                                             }
 
                                         } else {
-
+                                            progress.setVisibility(View.VISIBLE);
                                             BasicImageDownloader basicImageDownloader = new BasicImageDownloader(new BasicImageDownloader.OnImageLoaderListener() {
                                                 @Override
                                                 public void onError(BasicImageDownloader.ImageError error) {
@@ -258,8 +297,8 @@ public class StoryFragment extends Fragment {
 
                                                 @Override
                                                 public void onProgressChange(int percent) {
-                                                    progress.setVisibility(View.VISIBLE);
-                                                    progress.setProgress(percent);
+
+                                                    Log.print("=======onProgressChange========" + percent);
                                                 }
 
                                                 @Override
@@ -282,7 +321,7 @@ public class StoryFragment extends Fragment {
                                                     if (handler != null) {
                                                         handler.postDelayed(runnable, 40);
                                                     } else {
-                                                        System.out.println("========handler != null======");
+                                                        Log.print("========handler != null======");
                                                     }
 
                                                 }
@@ -312,21 +351,22 @@ public class StoryFragment extends Fragment {
             progressBar = (ProgressBar) llstoryProgress.getChildAt(pos);
             progressBar.setProgress(0);
             try {
+                story_id = storyBeanArrayList.get(pos).id;
                 txtTime.setText(storyBeanArrayList.get(pos).create_time);
                 txtCaption.setText(storyBeanArrayList.get(pos).caption);
-                System.out.println("============statusBeanArrayList.get(pos).statusPic=========" + storyBeanArrayList.get(pos).story_image);
+                Log.print("============statusBeanArrayList.get(pos).statusPic=========" + storyBeanArrayList.get(pos).story_image);
                 if (new File(Utils.getStoryDir(getContext()) + "/" + storyBeanArrayList.get(pos).story_image).exists()) {
 
                     imgStoryPic.setImageBitmap(BitmapFactory.decodeFile(Utils.getStoryDir(getContext()) + "/" + storyBeanArrayList.get(pos).story_image));
                     if (handler != null) {
                         handler.postDelayed(runnable, 40);
                     } else {
-                        System.out.println("========handler != null======");
+                        Log.print("========handler != null======");
                     }
 
 
                 } else {
-
+                    progress.setVisibility(View.VISIBLE);
                     BasicImageDownloader basicImageDownloader = new BasicImageDownloader(new BasicImageDownloader.OnImageLoaderListener() {
                         @Override
                         public void onError(BasicImageDownloader.ImageError error) {
@@ -335,8 +375,8 @@ public class StoryFragment extends Fragment {
 
                         @Override
                         public void onProgressChange(int percent) {
-                            progress.setVisibility(View.VISIBLE);
-                            progress.setProgress(percent);
+                            Log.print("=======onProgressChange========" + percent);
+
                         }
 
                         @Override
@@ -359,7 +399,7 @@ public class StoryFragment extends Fragment {
                             if (handler != null) {
                                 handler.postDelayed(runnable, 40);
                             } else {
-                                System.out.println("========handler != null======");
+                                Log.print("========handler != null======");
                             }
 
                         }
@@ -369,8 +409,6 @@ public class StoryFragment extends Fragment {
 
             } catch (Exception e) {
             }
-
-
         }
     }
 

@@ -75,6 +75,7 @@ public class CropUtil {
             Log.e("Error getting Exif data", e);
             return 0;
         }
+
     }
 
     public static boolean copyExifRotation(File sourceFile, File destFile) {

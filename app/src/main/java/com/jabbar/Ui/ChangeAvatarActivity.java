@@ -259,7 +259,7 @@ public class ChangeAvatarActivity extends BaseActivity implements View.OnClickLi
     protected void onActivityResult(final int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        System.out.println("============onActivityResult=============requestCode===" + requestCode + "===resultCode==" + resultCode);
+        Log.print("============onActivityResult=============requestCode===" + requestCode + "===resultCode==" + resultCode);
 
         if (resultCode == RESULT_OK) {
 
@@ -268,7 +268,7 @@ public class ChangeAvatarActivity extends BaseActivity implements View.OnClickLi
                 txtStatus.setText(Pref.getValue(this, Config.PREF_STATUS, ""));
             } else if (requestCode == OPEN_GALLERY_IMAGE_CODE) {
 
-                System.out.println("===real path===" + FileUtils.getPath(this, data.getData()));
+                Log.print("===real path===" + FileUtils.getPath(this, data.getData()));
                 if (Utils.isGotoCrop(this, data.getData(), 300, 300)) {
                     Crop.of(data.getData(), destination).withAspect(1, 2, 2, 300, 300).start(this);
                 } else {
@@ -277,7 +277,7 @@ public class ChangeAvatarActivity extends BaseActivity implements View.OnClickLi
 
             } else if (requestCode == OPEN_CAMARA_IMAGE_CODE) {
                 if (destination_camara != null) {
-                    System.out.println("===real path===" + FileUtils.getPath(this, destination_camara));
+                    Log.print("===real path===" + FileUtils.getPath(this, destination_camara));
                     if (Utils.isGotoCrop(this, destination_camara, 300, 300)) {
                         Crop.of(destination_camara, destination).withAspect(1, 2, 2, 300, 300).start(this);
                     } else {

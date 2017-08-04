@@ -6,7 +6,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.media.RingtoneManager;
 import android.net.Uri;
 
 import com.jabbar.Bean.MessageBean;
@@ -155,8 +154,9 @@ public class MessageBll {
                     .setSmallIcon(R.drawable.app_icon);
 
             if (!isSilent) {
-                Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                notif.setSound(notification);
+                Uri uri = Uri.parse("android.resource://" + context.getPackageName() + "/raw/alert_tone");
+//                Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                notif.setSound(uri);
             }
 
 

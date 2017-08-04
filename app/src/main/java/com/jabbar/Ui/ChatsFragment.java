@@ -62,6 +62,12 @@ public class ChatsFragment extends Fragment implements ResponseListener {
         }
     }
 
+    public void StoryUpdate() {
+        storyBeanArrayList = new StoryBll(getContext()).getStoryListWithGroup();
+        storyAdapter = new StoryAdapter(getContext(), storyBeanArrayList);
+        rcvStory.setAdapter(storyAdapter);
+    }
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -79,7 +85,8 @@ public class ChatsFragment extends Fragment implements ResponseListener {
         mLayoutManagerStory = new LinearLayoutManager(getContext());
         mLayoutManagerStory.setOrientation(LinearLayoutManager.HORIZONTAL);
         rcvStory.setLayoutManager(mLayoutManagerStory);
-        storyBeanArrayList = new ArrayList<>();
+
+        storyBeanArrayList = new StoryBll(getContext()).getStoryListWithGroup();
         storyAdapter = new StoryAdapter(getContext(), storyBeanArrayList);
         rcvStory.setAdapter(storyAdapter);
 
@@ -92,16 +99,6 @@ public class ChatsFragment extends Fragment implements ResponseListener {
         if (Utils.isOnline(getContext())) {
             new GetStoryAPI(getContext(), ChatsFragment.this);
         }
-
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        storyBeanArrayList.clear();
-        storyBeanArrayList.addAll(new StoryBll(getContext()).getStoryListWithGroup());
-        storyAdapter.notifyDataSetChanged();
 
     }
 

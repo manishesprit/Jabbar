@@ -66,7 +66,12 @@ public class UpdateContact1 extends AsyncTask<String, String, Boolean> {
                         String mobilePhone = pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
                         Log.print("====ACCOUNT_TYPE_AND_DATA_SET=======" + pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.ACCOUNT_TYPE_AND_DATA_SET)));
 
-                        if (mobilePhone != null && mobilePhone.toString().length() > 9 && mobilePhone.replace("+", "").matches("\\d+(?:\\.\\d+)?")) {
+
+                        if (mobilePhone != null && mobilePhone.toString().length() > 9) {
+
+                            mobilePhone = mobilePhone.replace("+", "");
+                            mobilePhone = mobilePhone.replaceAll("\\s", "");
+
                             Log.print("===displayName, mobilePhone===" + displayName + "----" + mobilePhone);
                             ExitsContactBean exitsContactBean = new ExitsContactBean();
                             exitsContactBean.mobile_number = mobilePhone.length() <= 10 ? mobilePhone : (mobilePhone.substring((mobilePhone.length() - 10), mobilePhone.length()));

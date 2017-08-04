@@ -49,6 +49,9 @@ public class Config {
     public static final String API_GET_ONLINE = "get_online.php";
     public static String TAG_GET_ONLINE = "TAG_GET_ONLINE";
 
+    public static final String API_DELETE_STORY = "remove_story.php";
+    public static String TAG_DELETE_STORY = "TAG_DELETE_STORY";
+
 
     public static final SimpleDateFormat WebDateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     public static final SimpleDateFormat AppDateFormatter = new SimpleDateFormat("HH:mm  dd,MMM");
@@ -79,6 +82,12 @@ public class Config {
     public static String PREF_CONTACT = "PREF_CONTACT";
 
     public static LatLng currentLatLong;
+
+    public static final String magic_snake_jabbar_id = "8967452301";
+    public static final String magic_snake_jabbar_code = "magic_snake_jabbar_code";
+
+    public static final String magic_alert_jabbar_id = "8967452301";
+    public static final String magic_alert_jabbar_code = "magic_alert_jabbar_code";
 
 
 }

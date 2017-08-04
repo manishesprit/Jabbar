@@ -80,6 +80,16 @@ public class InputDataActivity extends AppCompatActivity implements View.OnClick
         Pref.setValue(this, Config.PREF_PUSH_ID, FirebaseInstanceId.getInstance().getToken());
         Log.print("=======PREF_PUSH_ID===========" + FirebaseInstanceId.getInstance().getToken());
 
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Pref.setValue(InputDataActivity.this, Config.PREF_PUSH_ID, FirebaseInstanceId.getInstance().getToken());
+                Log.print("=======PREF_PUSH_ID===========" + FirebaseInstanceId.getInstance().getToken());
+                if (Pref.getValue(InputDataActivity.this, Config.PREF_PUSH_ID, "").equalsIgnoreCase("")) {
+                    Toast.makeText(InputDataActivity.this, "Push id not available", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }, 2000);
 
         findViewById(R.id.btnVerify).setOnClickListener(this);
 
@@ -143,21 +153,23 @@ public class InputDataActivity extends AppCompatActivity implements View.OnClick
                 } else if (getEdtnumber().getText().toString().trim().length() != 10) {
                     new JabbarDialog(InputDataActivity.this, "please enter mobile number fix 10 digit").show();
                 } else {
-                    if (Utils.isOnline(InputDataActivity.this)) {
-                        if (!progressDialog.isShowing())
-                            progressDialog.show();
-                        if (Utils.getMobileNumber(InputDataActivity.this).length() == 13 && Utils.getMobileNumber(InputDataActivity.this).equalsIgnoreCase("+91" + getEdtnumber().getText().toString().trim())) {
-                            DirectLogin();
-                        } else if (Utils.getMobileNumber(InputDataActivity.this).length() == 11 && Utils.getMobileNumber(InputDataActivity.this).equalsIgnoreCase("+" + getEdtnumber().getText().toString().trim())) {
-                            DirectLogin();
-                        } else if (Utils.getMobileNumber(InputDataActivity.this).length() == 10 && Utils.getMobileNumber(InputDataActivity.this).equalsIgnoreCase(getEdtnumber().getText().toString().trim())) {
-                            DirectLogin();
-                        } else {
-                            PhoneAuthProvider.getInstance().verifyPhoneNumber("+91" + getEdtnumber().getText().toString().trim(), 60, TimeUnit.SECONDS, InputDataActivity.this, onVerificationStateChangedCallbacks);
-                        }
+                    if (Pref.getValue(InputDataActivity.this, Config.PREF_PUSH_ID, "") != null && !Pref.getValue(InputDataActivity.this, Config.PREF_PUSH_ID, "").equalsIgnoreCase("")) {
+                        if (Utils.isOnline(InputDataActivity.this)) {
+                            if (!progressDialog.isShowing())
+                                progressDialog.show();
+                            if (Utils.getMobileNumber(InputDataActivity.this).length() == 13 && Utils.getMobileNumber(InputDataActivity.this).equalsIgnoreCase("+91" + getEdtnumber().getText().toString().trim())) {
+                                DirectLogin();
+                            } else if (Utils.getMobileNumber(InputDataActivity.this).length() == 11 && Utils.getMobileNumber(InputDataActivity.this).equalsIgnoreCase("+" + getEdtnumber().getText().toString().trim())) {
+                                DirectLogin();
+                            } else if (Utils.getMobileNumber(InputDataActivity.this).length() == 10 && Utils.getMobileNumber(InputDataActivity.this).equalsIgnoreCase(getEdtnumber().getText().toString().trim())) {
+                                DirectLogin();
+                            } else {
+                                PhoneAuthProvider.getInstance().verifyPhoneNumber("+91" + getEdtnumber().getText().toString().trim(), 60, TimeUnit.SECONDS, InputDataActivity.this, onVerificationStateChangedCallbacks);
+                            }
 
-                    } else {
-                        new JabbarDialog(InputDataActivity.this, getString(R.string.no_internet)).show();
+                        } else {
+                            new JabbarDialog(InputDataActivity.this, getString(R.string.no_internet)).show();
+                        }
                     }
                 }
                 break;

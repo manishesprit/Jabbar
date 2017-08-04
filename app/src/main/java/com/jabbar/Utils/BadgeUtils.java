@@ -15,7 +15,7 @@ public class BadgeUtils {
 
     public static void setBadge(Context context, int count) {
         setBadgeSamsung(context, count);
-        System.out.println("inside bage");
+        Log.print("inside bage");
         setBadgeSony(context, count);
     }
 

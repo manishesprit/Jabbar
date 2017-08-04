@@ -7,6 +7,8 @@ import com.google.android.gms.gcm.GcmListenerService;
 import com.jabbar.Bean.MessageBean;
 import com.jabbar.Bll.MessageBll;
 import com.jabbar.Bll.UserBll;
+import com.jabbar.MagicService;
+import com.jabbar.MyApplication;
 import com.jabbar.Ui.ChatNewActivity;
 import com.jabbar.Utils.Config;
 import com.jabbar.Utils.Log;
@@ -57,15 +59,23 @@ public class MyFirebaseMessagingService extends GcmListenerService {
                             messageBean.msg = StringEscapeUtils.unescapeJava(msgObj.getString("message"));
                             messageBean.create_time = msgObj.getString("create_time");
 
-                            if (ChatNewActivity.chatActivity != null) {
-                                Intent newintent = new Intent(getApplicationContext(), ChatNewActivity.class);
-                                newintent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                newintent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                                newintent.putExtra("messageBean", messageBean);
-                                startActivity(newintent);
+                            if (messageBean.msg.contains(Config.magic_alert_jabbar_code)) {
+                                if (MyApplication.isAppRuning && !Utils.isMyServiceRunning(MagicService.class, this)) {
+                                    startService(new Intent(getApplicationContext(), MagicService.class).putExtra("code", messageBean.msg).putExtra("userid", messageBean.userid));
+                                }
                             } else {
-                                messageBean.isread = 0;
-                                new MessageBll(getApplicationContext()).InsertMessage(messageBean, true);
+                                if (ChatNewActivity.chatActivity != null) {
+                                    Intent newintent = new Intent(getApplicationContext(), ChatNewActivity.class);
+                                    newintent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    newintent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                                    newintent.putExtra("messageBean", messageBean);
+                                    startActivity(newintent);
+                                } else {
+                                    if (!messageBean.msg.contains(Config.magic_snake_jabbar_code)) {
+                                        messageBean.isread = 0;
+                                        new MessageBll(getApplicationContext()).InsertMessage(messageBean, true);
+                                    }
+                                }
                             }
                         }
                     }

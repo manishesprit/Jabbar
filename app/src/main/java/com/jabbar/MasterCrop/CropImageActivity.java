@@ -143,7 +143,7 @@ public class CropImageActivity extends MonitoredActivity {
 
         if (sourceUri != null) {
             exifRotation = CropUtil.getExifRotation(CropUtil.getFromMediaUri(this, getContentResolver(), sourceUri));
-            System.out.println("====exifRotation===" + exifRotation);
+           Log.e("====exifRotation===" + exifRotation);
             InputStream is = null;
             try {
                 sampleSize = calculateBitmapSampleSize(sourceUri);
@@ -152,10 +152,10 @@ public class CropImageActivity extends MonitoredActivity {
                 option.inSampleSize = sampleSize;
                 rotateBitmap = new RotateBitmap(BitmapFactory.decodeStream(is, null, option), exifRotation);
             } catch (IOException e) {
-                System.out.println("Error reading image: " + e.getMessage() + "====" + e);
+               Log.e("Error reading image: " + e.getMessage() + "====" + e);
                 setResultException(e);
             } catch (OutOfMemoryError e) {
-                System.out.println("OOM reading image: " + e.getMessage() + "====" + e);
+               Log.e("OOM reading image: " + e.getMessage() + "====" + e);
                 setResultException(e);
             } finally {
                 CropUtil.closeSilently(is);
@@ -396,10 +396,10 @@ public class CropImageActivity extends MonitoredActivity {
             }
 
         } catch (IOException e) {
-            System.out.println("Error cropping image: " + e.getMessage() + "====" + e);
+           Log.e("Error cropping image: " + e.getMessage() + "====" + e);
             setResultException(e);
         } catch (OutOfMemoryError e) {
-            System.out.println("OOM cropping image: " + e.getMessage() + "====" + e);
+           Log.e("OOM cropping image: " + e.getMessage() + "====" + e);
             setResultException(e);
         } finally {
             CropUtil.closeSilently(is);
@@ -425,7 +425,7 @@ public class CropImageActivity extends MonitoredActivity {
                 }
             } catch (IOException e) {
                 setResultException(e);
-                System.out.println("Cannot open file: " + saveUri + "===" + e);
+               Log.e("Cannot open file: " + saveUri + "===" + e);
             } finally {
                 CropUtil.closeSilently(outputStream);
             }

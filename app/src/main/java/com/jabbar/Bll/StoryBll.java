@@ -35,7 +35,7 @@ public class StoryBll {
         Cursor cursor;
         try {
             sql = "SELECT id FROM story where id=" + storyBean.id;
-            System.out.println("=====sql====" + sql);
+            Log.print("=====sql====" + sql);
             dbHelper = new Mydb(context);
             cursor = dbHelper.query(sql);
 
@@ -123,7 +123,7 @@ public class StoryBll {
 
         try {
             sql = "SELECT story.userid,user_tb.name,user_tb.avatar FROM story join user_tb on story.userid=user_tb.userid order by time desc";
-            System.out.println("=====sql====" + sql);
+            Log.print("=====sql====" + sql);
             dbHelper = new Mydb(context);
             cursor = dbHelper.query(sql);
 
@@ -237,6 +237,40 @@ public class StoryBll {
 
         }
         return datediff;
+    }
+
+    public void DeleteStory(int id) {
+        Mydb dbHelper = null;
+        Cursor cursor = null;
+        String sql;
+
+        try {
+            sql = "SELECT * FROM story where id =" + id;
+            dbHelper = new Mydb(context);
+            cursor = dbHelper.query(sql);
+
+            if (cursor != null && cursor.getCount() > 0) {
+                cursor.moveToFirst();
+
+                File file = new File(Utils.getStoryDir(context) + "/" + cursor.getString(2));
+                if (file.exists()) {
+                    file.delete();
+                }
+                sql = "delete from story where id=" + cursor.getInt(0);
+                dbHelper = new Mydb(this.context);
+                dbHelper.execute(sql);
+            }
+
+        } catch (Exception e) {
+            Log.print(this.getClass() + " :: getStatus()" + e);
+        } finally {
+            if (cursor != null && !cursor.isClosed())
+                cursor.close();
+
+            if (dbHelper != null)
+                dbHelper.close();
+
+        }
     }
 
     public void DeleteStoryList() {

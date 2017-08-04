@@ -24,6 +24,7 @@ import com.jabbar.Utils.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.jabbar.Adapter.StoryAdapter.STORY_CODE;
 
 
 public class HomeActivity extends BaseActivity {
@@ -62,8 +63,8 @@ public class HomeActivity extends BaseActivity {
         Pref.setValue(this, Config.PREF_PUSH_ID, FirebaseInstanceId.getInstance().getToken());
         Log.print("=======PREF_PUSH_ID===========" + FirebaseInstanceId.getInstance().getToken());
 
-        if (favoriteFragment == null) {
-            favoriteFragment = (FavoriteFragment) adapter.getItem(0);
+        if (chatsFragment == null) {
+            chatsFragment = (ChatsFragment) adapter.getItem(0);
         }
 
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -75,20 +76,20 @@ public class HomeActivity extends BaseActivity {
             @Override
             public void onPageSelected(int position) {
 
-                if (position == 0 && adapter != null) {
+                if (position == 1 && adapter != null) {
                     fabButton.setImageResource(R.drawable.ic_story);
                     menu.findItem(R.id.menu_refresh).setVisible(true);
                     if (favoriteFragment == null) {
-                        favoriteFragment = (FavoriteFragment) adapter.getItem(0);
+                        favoriteFragment = (FavoriteFragment) adapter.getItem(1);
                     }
                 }
-                if (position == 1 && adapter != null) {
+                if (position == 0 && adapter != null) {
                     fabButton.setImageResource(R.drawable.ic_chat_white);
                     if (menu != null) {
                         menu.findItem(R.id.menu_refresh).setVisible(false);
                     }
                     if (chatsFragment == null) {
-                        chatsFragment = (ChatsFragment) adapter.getItem(1);
+                        chatsFragment = (ChatsFragment) adapter.getItem(0);
                     }
                 }
 
@@ -103,16 +104,16 @@ public class HomeActivity extends BaseActivity {
         fabButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (viewPager.getCurrentItem() == 1) {
+                if (viewPager.getCurrentItem() == 0) {
                     startActivity(new Intent(HomeActivity.this, BuddiesActivity.class));
-                } else if (viewPager.getCurrentItem() == 0) {
-                    startActivity(new Intent(HomeActivity.this, AddStoryActivity.class));
+                } else if (viewPager.getCurrentItem() == 1) {
+                    startActivityForResult(new Intent(HomeActivity.this, AddStoryActivity.class), STORY_CODE);
                 }
             }
         });
 
         if (getIntent() != null && getIntent().getIntExtra("type", 0) == 2) {
-            viewPager.setCurrentItem(1);
+            viewPager.setCurrentItem(0);
         }
 
         handler = new Handler();
@@ -121,7 +122,7 @@ public class HomeActivity extends BaseActivity {
             public void run() {
                 handler.postDelayed(runnable, 1000);
 
-                if (viewPager.getCurrentItem() == 1) {
+                if (viewPager.getCurrentItem() == 0) {
                     if (chatsFragment != null) {
                         chatsFragment.ListUpdate();
                     }
@@ -159,8 +160,8 @@ public class HomeActivity extends BaseActivity {
 
     private void setupViewPager(ViewPager viewPager) {
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new FavoriteFragment(), "FAVORITE");
         adapter.addFragment(new ChatsFragment(), "CHATS");
+        adapter.addFragment(new FavoriteFragment(), "FAVORITE");
         viewPager.setAdapter(adapter);
     }
 
@@ -200,6 +201,7 @@ public class HomeActivity extends BaseActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         this.menu = menu;
         getMenuInflater().inflate(R.menu.menu, menu);
+        menu.findItem(R.id.menu_refresh).setVisible(false);
         return true;
     }
 
@@ -212,7 +214,7 @@ public class HomeActivity extends BaseActivity {
                 break;
 
             case R.id.menu_refresh:
-                if (viewPager.getCurrentItem() == 0) {
+                if (viewPager.getCurrentItem() == 1) {
                     FavoriteFragment.isFirst = true;
                     favoriteFragment.UpdateFavorite();
                 }
@@ -234,6 +236,10 @@ public class HomeActivity extends BaseActivity {
             if (chatsFragment != null) {
                 chatsFragment.ListUpdate();
             }
+        } else if (requestCode == STORY_CODE && resultCode == RESULT_OK) {
+            if (chatsFragment != null) {
+                chatsFragment.StoryUpdate();
+            }
         }
     }
 
@@ -244,7 +250,7 @@ public class HomeActivity extends BaseActivity {
         Log.print("====onNewIntent HOME ====");
 
         if (intent != null && intent.getIntExtra("type", 0) == 2) {
-            viewPager.setCurrentItem(1);
+            viewPager.setCurrentItem(0);
             if (chatsFragment != null) {
                 chatsFragment.ListUpdate();
             }

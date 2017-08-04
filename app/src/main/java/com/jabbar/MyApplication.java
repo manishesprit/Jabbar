@@ -19,6 +19,8 @@ public class MyApplication extends Application implements Foreground.Listener {
     public Handler handler;
     public Runnable runnable;
 
+    public static boolean isAppRuning = false;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -52,7 +54,7 @@ public class MyApplication extends Application implements Foreground.Listener {
     @Override
     public void onBecameForeground() {
         Log.print("====onBecameForeground====");
-
+        isAppRuning = true;
         CallHandler(2000);
 
     }
@@ -60,7 +62,7 @@ public class MyApplication extends Application implements Foreground.Listener {
     @Override
     public void onBecameBackground() {
         Log.print("====onBecameBackground====");
-
+        isAppRuning = false;
         if (handler != null) {
             handler.removeCallbacks(runnable);
         }

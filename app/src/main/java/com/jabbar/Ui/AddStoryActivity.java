@@ -81,8 +81,6 @@ public class AddStoryActivity extends BaseActivity {
         setContentView(R.layout.activity_add_story);
         Utils.addActivities(this);
 
-//        fFmpeg = FFmpeg.getInstance(AddStoryActivity.this);
-
         camera_switcher = (CameraSwitchView) findViewById(R.id.camera_switcher);
         record_button = (RecordButton) findViewById(R.id.record_button);
         flash_switch_view = (FlashSwitchView) findViewById(R.id.flash_switch_view);
@@ -407,7 +405,7 @@ public class AddStoryActivity extends BaseActivity {
                 return o2.DATE_TAKEN.compareTo(o1.DATE_TAKEN);
             }
         });
-        System.out.println("=========imageBeanArrayList=====" + imageArrayList.size());
+        Log.print("=========imageBeanArrayList=====" + imageArrayList.size());
         ImageAdapter imageAdapter = new ImageAdapter(this);
         rv_image_panel.setAdapter(imageAdapter);
 
