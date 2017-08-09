@@ -22,6 +22,7 @@ import android.telephony.SmsManager;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -58,6 +59,8 @@ public class InputDataActivity extends AppCompatActivity implements View.OnClick
     public boolean isLast = true;
     public SmsManager smsManager;
     public BroadcastReceiver sendMessageReceiver;
+    public Button btnVerify;
+    public int isGetPushAttempt = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +94,8 @@ public class InputDataActivity extends AppCompatActivity implements View.OnClick
             }
         }, 2000);
 
-        findViewById(R.id.btnVerify).setOnClickListener(this);
+        btnVerify = (Button) findViewById(R.id.btnVerify);
+        btnVerify.setOnClickListener(this);
 
 
         getLocation = new GetLocation(this, this);
@@ -148,15 +152,17 @@ public class InputDataActivity extends AppCompatActivity implements View.OnClick
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btnVerify:
-                if (getEdtnumber().getText().toString().trim().equals("")) {
-                    new JabbarDialog(InputDataActivity.this, "please enter mobile number").show();
-                } else if (getEdtnumber().getText().toString().trim().length() != 10) {
-                    new JabbarDialog(InputDataActivity.this, "please enter mobile number fix 10 digit").show();
-                } else {
-                    if (Pref.getValue(InputDataActivity.this, Config.PREF_PUSH_ID, "") != null && !Pref.getValue(InputDataActivity.this, Config.PREF_PUSH_ID, "").equalsIgnoreCase("")) {
-                        if (Utils.isOnline(InputDataActivity.this)) {
-                            if (!progressDialog.isShowing())
-                                progressDialog.show();
+                if (Utils.isOnline(InputDataActivity.this)) {
+                    if (getEdtnumber().getText().toString().trim().equals("")) {
+                        new JabbarDialog(InputDataActivity.this, "please enter mobile number").show();
+                    } else if (getEdtnumber().getText().toString().trim().length() != 10) {
+                        new JabbarDialog(InputDataActivity.this, "please enter mobile number fix 10 digit").show();
+                    } else {
+                        if (!progressDialog.isShowing())
+                            progressDialog.show();
+
+                        if (Pref.getValue(InputDataActivity.this, Config.PREF_PUSH_ID, "") != null && !Pref.getValue(InputDataActivity.this, Config.PREF_PUSH_ID, "").equalsIgnoreCase("")) {
+
                             if (Utils.getMobileNumber(InputDataActivity.this).length() == 13 && Utils.getMobileNumber(InputDataActivity.this).equalsIgnoreCase("+91" + getEdtnumber().getText().toString().trim())) {
                                 DirectLogin();
                             } else if (Utils.getMobileNumber(InputDataActivity.this).length() == 11 && Utils.getMobileNumber(InputDataActivity.this).equalsIgnoreCase("+" + getEdtnumber().getText().toString().trim())) {
@@ -168,9 +174,27 @@ public class InputDataActivity extends AppCompatActivity implements View.OnClick
                             }
 
                         } else {
-                            new JabbarDialog(InputDataActivity.this, getString(R.string.no_internet)).show();
+                            Log.print("===PREF_PUSH_ID====Not Found Try Again===");
+                            if (isGetPushAttempt < 2) {
+                                Pref.setValue(this, Config.PREF_PUSH_ID, FirebaseInstanceId.getInstance().getToken());
+                                Log.print("=======PREF_PUSH_ID===========" + FirebaseInstanceId.getInstance().getToken());
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        isGetPushAttempt++;
+                                        btnVerify.performClick();
+                                    }
+                                }, 2000);
+                            } else {
+                                if (progressDialog.isShowing())
+                                    progressDialog.dismiss();
+                                Toast.makeText(InputDataActivity.this, "Please try after 2 minutes", Toast.LENGTH_SHORT).show();
+                                finish();
+                            }
                         }
                     }
+                } else {
+                    new JabbarDialog(InputDataActivity.this, getString(R.string.no_internet)).show();
                 }
                 break;
         }

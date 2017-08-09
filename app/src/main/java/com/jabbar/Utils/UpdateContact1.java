@@ -77,7 +77,7 @@ public class UpdateContact1 extends AsyncTask<String, String, Boolean> {
                             exitsContactBean.mobile_number = mobilePhone.length() <= 10 ? mobilePhone : (mobilePhone.substring((mobilePhone.length() - 10), mobilePhone.length()));
                             exitsContactBean.name = displayName;
 
-                            if (!exitsContactBean.mobile_number.equalsIgnoreCase(Pref.getValue(context, Config.PREF_MOBILE_NUMBER, ""))) {
+                            if (!exitsContactBean.mobile_number.equalsIgnoreCase(Pref.getValue(context, Config.PREF_MOBILE_NUMBER, "")) && isInteger(exitsContactBean.mobile_number)) {
 
                                 if (numberList.contains(exitsContactBean.mobile_number)) {
                                     Log.print("=========Exist=====" + numberList.indexOf(exitsContactBean.mobile_number));
@@ -109,6 +109,20 @@ public class UpdateContact1 extends AsyncTask<String, String, Boolean> {
         }
         cur.close();
         return result;
+    }
+
+    public boolean isInteger(String s) {
+
+        for (int i = 0; i < s.length(); i++) {
+            try {
+                Integer.parseInt(s.substring(i, i + 1));
+            } catch (Exception e) {
+                Log.print("===Exception isInteger========" + s);
+                return false;
+            }
+        }
+        return true;
+
     }
 
     @Override

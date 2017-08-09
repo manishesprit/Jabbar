@@ -63,7 +63,6 @@ public class GetOnlineAPI {
                 Log.print(t.getMessage());
             }
         });
-
     }
 
     public interface GetOnlineRoutAPI {

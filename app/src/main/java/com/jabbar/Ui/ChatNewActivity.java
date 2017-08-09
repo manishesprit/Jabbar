@@ -48,7 +48,7 @@ import java.util.Date;
 import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
 import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
 
-import static com.jabbar.Utils.Config.magic_alert_jabbar_id;
+import static com.jabbar.Utils.Config.magic_jabbar_id;
 
 
 public class ChatNewActivity extends BaseActivity implements View.OnClickListener {
@@ -70,7 +70,6 @@ public class ChatNewActivity extends BaseActivity implements View.OnClickListene
     private ConversionAdpater conversionAdpater;
     private ArrayList<MessageBean> messageBeanArrayList;
     private MessageBll messageBll;
-    private SendMessageNewAPI sendMessageNewAPI;
     private ContactsBean contactsBean;
     public static Activity chatActivity = null;
     private TextView txtNoOfUnreadMsg;
@@ -80,7 +79,13 @@ public class ChatNewActivity extends BaseActivity implements View.OnClickListene
     public Handler handler;
     public Runnable runnable;
     public ImageView img_magic;
+    public LinearLayout magicBox;
+    public ImageView img_magic_alert;
+    public ImageView img_magic_rain;
+    public ImageView img_magic_heart;
 
+    public int doubleTouch = 0;
+    public boolean isContactAvailable = true;
 
     @Override
     protected void onStart() {
@@ -111,7 +116,13 @@ public class ChatNewActivity extends BaseActivity implements View.OnClickListene
         rootView = (LinearLayout) findViewById(R.id.root_view);
         edit_msg = (EmojiconEditText) findViewById(R.id.edit_msg);
         img_emoji = (ImageView) findViewById(R.id.img_emoji);
+
         img_magic = (ImageView) findViewById(R.id.img_magic);
+        magicBox = (LinearLayout) findViewById(R.id.magicBox);
+        img_magic_alert = (ImageView) findViewById(R.id.img_magic_alert);
+        img_magic_rain = (ImageView) findViewById(R.id.img_magic_rain);
+        img_magic_heart = (ImageView) findViewById(R.id.img_magic_heart);
+
         imgfavorite = (ImageView) findViewById(R.id.imgfavorite);
         rel_send = (RelativeLayout) findViewById(R.id.rel_send);
         imgSend = (ImageView) findViewById(R.id.img_send);
@@ -119,6 +130,7 @@ public class ChatNewActivity extends BaseActivity implements View.OnClickListene
         recyclerview_chat = (RecyclerView) findViewById(R.id.recyclerview_chat);
         linearLayoutManager = new LinearLayoutManager(this);
         recyclerview_chat.setLayoutManager(linearLayoutManager);
+
 
         messageBll = new MessageBll(this);
         userBll = new UserBll(this);
@@ -141,7 +153,16 @@ public class ChatNewActivity extends BaseActivity implements View.OnClickListene
                 Utils.setGlideImage(this, contactsBean.avatar, conversation_contact_photo);
 
             messageBeanArrayList = messageBll.geNewMessageList(contactsBean.userid);
-            conversionAdpater = new ConversionAdpater(this, messageBeanArrayList);
+            if (contactsBean.mobile_number.equalsIgnoreCase(contactsBean.name)) {
+                isContactAvailable = false;
+                MessageBean messageBean = new MessageBean();
+                messageBeanArrayList.add(0, messageBean);
+                conversionAdpater = new ConversionAdpater(this, messageBeanArrayList, contactsBean);
+            } else {
+                isContactAvailable = true;
+                conversionAdpater = new ConversionAdpater(this, messageBeanArrayList, null);
+            }
+
             recyclerview_chat.setAdapter(conversionAdpater);
             recyclerview_chat.smoothScrollToPosition(messageBeanArrayList.size());
 
@@ -162,7 +183,6 @@ public class ChatNewActivity extends BaseActivity implements View.OnClickListene
                     } else {
                         imgfavorite.setImageResource(R.drawable.ic_star_unfill);
                     }
-
                     imgfavorite.setOnClickListener(ChatNewActivity.this);
                 }
             };
@@ -191,6 +211,9 @@ public class ChatNewActivity extends BaseActivity implements View.OnClickListene
             @Override
             public void onKeyboardOpen() {
                 Log.print("NO " + "Keyboard opened!");
+                magicBox.setVisibility(View.GONE);
+                recyclerview_chat.smoothScrollToPosition(messageBeanArrayList.size());
+
             }
 
             @Override
@@ -218,6 +241,7 @@ public class ChatNewActivity extends BaseActivity implements View.OnClickListene
                 if (edit_msg.getText().toString().trim().length() > 0) {
                     imgSend.setImageResource(R.drawable.ic_send_black_24dp);
                     img_magic.setVisibility(View.GONE);
+                    magicBox.setVisibility(View.GONE);
                 } else {
                     imgSend.setImageResource(R.drawable.ic_mic_black_24dp);
                     img_magic.setVisibility(View.VISIBLE);
@@ -226,6 +250,9 @@ public class ChatNewActivity extends BaseActivity implements View.OnClickListene
         });
 
         img_magic.setOnClickListener(this);
+        img_magic_alert.setOnClickListener(this);
+        img_magic_rain.setOnClickListener(this);
+        img_magic_heart.setOnClickListener(this);
 
         recyclerview_chat.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -287,6 +314,15 @@ public class ChatNewActivity extends BaseActivity implements View.OnClickListene
     }
 
     @Override
+    public void onBackPressed() {
+        if (magicBox.getVisibility() == View.VISIBLE) {
+            magicBox.setVisibility(View.GONE);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             finish();
@@ -316,17 +352,55 @@ public class ChatNewActivity extends BaseActivity implements View.OnClickListene
 
             case R.id.img_magic:
 
-                if (Utils.isOnline(ChatNewActivity.this)) {
-                    String data = "{\"users\":[{\"friendid\":" + contactsBean.userid + ",\"messages\":[{\"id\":\"" + magic_alert_jabbar_id + "\",\"msg\":\"" + Config.magic_alert_jabbar_code + "\"}]}]}";
-                    sendMessageNewAPI = new SendMessageNewAPI(this, null, data);
-                    Toast.makeText(this, "Sent Alert", Toast.LENGTH_SHORT).show();
+                if (magicBox.getVisibility() == View.VISIBLE) {
+                    magicBox.setVisibility(View.GONE);
+                } else {
+                    magicBox.setVisibility(View.VISIBLE);
                 }
+
+                break;
+
+            case R.id.img_magic_alert:
+
+                if (Utils.isOnline(ChatNewActivity.this)) {
+                    String data = "{\"users\":[{\"friendid\":" + contactsBean.userid + ",\"messages\":[{\"id\":\"" + magic_jabbar_id + "\",\"msg\":\"" + Config.magic_alert_jabbar_code + "\"}]}]}";
+                    new SendMessageNewAPI(ChatNewActivity.this, null, data);
+                    Toast.makeText(ChatNewActivity.this, "Sent Alert", Toast.LENGTH_SHORT).show();
+                }
+                magicBox.setVisibility(View.GONE);
+                break;
+
+            case R.id.img_magic_rain:
+
+                if (Utils.isOnline(ChatNewActivity.this)) {
+                    String data = "{\"users\":[{\"friendid\":" + contactsBean.userid + ",\"messages\":[{\"id\":\"" + magic_jabbar_id + "\",\"msg\":\"" + Config.magic_rain_jabbar_code + "\"}]}]}";
+                    new SendMessageNewAPI(ChatNewActivity.this, null, data);
+                    Toast.makeText(ChatNewActivity.this, "Sent Rain", Toast.LENGTH_SHORT).show();
+                }
+
+//                if (!Utils.isMyServiceRunning(MagicService.class, this)) {
+//                    startService(new Intent(ChatNewActivity.this, MagicService.class).putExtra("code", Config.magic_rain_jabbar_code));
+//                }
+                magicBox.setVisibility(View.GONE);
+                break;
+
+            case R.id.img_magic_heart:
+
+                if (Utils.isOnline(ChatNewActivity.this)) {
+                    String data = "{\"users\":[{\"friendid\":" + contactsBean.userid + ",\"messages\":[{\"id\":\"" + magic_jabbar_id + "\",\"msg\":\"" + Config.magic_heart_jabbar_code + "\"}]}]}";
+                    new SendMessageNewAPI(ChatNewActivity.this, null, data);
+                    Toast.makeText(ChatNewActivity.this, "Sent Rain", Toast.LENGTH_SHORT).show();
+                }
+
+//                if (!Utils.isMyServiceRunning(MagicService.class, this)) {
+//                    startService(new Intent(ChatNewActivity.this, MagicService.class).putExtra("code", Config.magic_heart_jabbar_code));
+//                }
+                magicBox.setVisibility(View.GONE);
 
                 break;
 
             case R.id.rel_send:
                 if (!edit_msg.getText().toString().trim().equalsIgnoreCase("")) {
-
                     MessageBean messageBean = new MessageBean();
                     messageBean.userid = Pref.getValue(ChatNewActivity.this, Config.PREF_USERID, 0);
                     messageBean.friendid = contactsBean.userid;
@@ -347,7 +421,7 @@ public class ChatNewActivity extends BaseActivity implements View.OnClickListene
                     if (Utils.isOnline(this)) {
                         String data = messageBll.geUnsendMessageList();
                         if (data != null && !SendMessageNewAPI.isCallAPI)
-                            sendMessageNewAPI = new SendMessageNewAPI(this, responseListener, data);
+                            new SendMessageNewAPI(this, responseListener, data);
                     }
                 }
                 break;
@@ -364,6 +438,10 @@ public class ChatNewActivity extends BaseActivity implements View.OnClickListene
 
             if (tag.equalsIgnoreCase(Config.TAG_SEND_MESSAGE) && result == 0) {
                 messageBeanArrayList.clear();
+                if (!isContactAvailable) {
+                    MessageBean messageBean = new MessageBean();
+                    messageBeanArrayList.add(0, messageBean);
+                }
                 messageBeanArrayList.addAll(messageBll.geNewMessageList(contactsBean.userid));
                 conversionAdpater.notifyDataSetChanged();
             }
@@ -376,7 +454,7 @@ public class ChatNewActivity extends BaseActivity implements View.OnClickListene
 
         MessageBean messageBean = (MessageBean) intent.getSerializableExtra("messageBean");
         if (messageBean.userid == contactsBean.userid) {
-            if (!messageBean.msg.contains(Config.magic_snake_jabbar_code)) {
+            if (!messageBean.msg.equalsIgnoreCase(Config.magic_rain_jabbar_code) && !messageBean.msg.equalsIgnoreCase(Config.magic_heart_jabbar_code)) {
                 messageBean.isread = 1;
                 messageBll.InsertMessage(messageBean, false);
 
@@ -394,7 +472,7 @@ public class ChatNewActivity extends BaseActivity implements View.OnClickListene
             }
 
         } else {
-            if (!messageBean.msg.contains(Config.magic_snake_jabbar_code)) {
+            if (!messageBean.msg.equalsIgnoreCase(Config.magic_rain_jabbar_code) && !messageBean.msg.equalsIgnoreCase(Config.magic_heart_jabbar_code)) {
                 messageBean.isread = 0;
                 messageBll.InsertMessage(messageBean, true);
             }

@@ -409,8 +409,7 @@ public class Camera1Manager extends BaseCameraManager<Integer, SurfaceHolder.Cal
 
             this.camera.setDisplayOrientation(displayRotation);
 
-            if (Build.VERSION.SDK_INT > 13
-                    && (configurationProvider.getMediaAction() == Configuration.MEDIA_ACTION_VIDEO
+            if (Build.VERSION.SDK_INT > 13 && (configurationProvider.getMediaAction() == Configuration.MEDIA_ACTION_VIDEO
                     || configurationProvider.getMediaAction() == Configuration.MEDIA_ACTION_UNSPECIFIED)) {
 //                parameters.setRecordingHint(true);
             }

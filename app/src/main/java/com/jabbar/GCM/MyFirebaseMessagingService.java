@@ -59,8 +59,10 @@ public class MyFirebaseMessagingService extends GcmListenerService {
                             messageBean.msg = StringEscapeUtils.unescapeJava(msgObj.getString("message"));
                             messageBean.create_time = msgObj.getString("create_time");
 
-                            if (messageBean.msg.contains(Config.magic_alert_jabbar_code)) {
-                                if (MyApplication.isAppRuning && !Utils.isMyServiceRunning(MagicService.class, this)) {
+                            if (messageBean.msg.equalsIgnoreCase(Config.magic_alert_jabbar_code)) {
+                                if (userBll.getAlertStatus(message.getInt("userid")) == 0) {
+                                    startService(new Intent(getApplicationContext(), MagicService.class).putExtra("code", messageBean.msg).putExtra("userid", messageBean.userid));
+                                } else if (userBll.getAlertStatus(message.getInt("userid")) == 1 && MyApplication.isAppRuning && !Utils.isMyServiceRunning(MagicService.class, this)) {
                                     startService(new Intent(getApplicationContext(), MagicService.class).putExtra("code", messageBean.msg).putExtra("userid", messageBean.userid));
                                 }
                             } else {
@@ -70,16 +72,16 @@ public class MyFirebaseMessagingService extends GcmListenerService {
                                     newintent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                                     newintent.putExtra("messageBean", messageBean);
                                     startActivity(newintent);
-                                } else {
-                                    if (!messageBean.msg.contains(Config.magic_snake_jabbar_code)) {
-                                        messageBean.isread = 0;
-                                        new MessageBll(getApplicationContext()).InsertMessage(messageBean, true);
-                                    }
+                                } else if (!messageBean.msg.equalsIgnoreCase(Config.magic_rain_jabbar_code) && !messageBean.msg.equalsIgnoreCase(Config.magic_heart_jabbar_code)) {
+                                    messageBean.isread = 0;
+                                    new MessageBll(getApplicationContext()).InsertMessage(messageBean, true);
                                 }
+
                             }
                         }
                     }
                 }
+            } else if (jsonObject.has("type") && jsonObject.getInt("type") == 3) {
             }
         } catch (Exception e) {
             Log.print("========Exception:======= " + e.toString());

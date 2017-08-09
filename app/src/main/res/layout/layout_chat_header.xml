@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:weightSum="20">
+
+    <com.jabbar.Uc.JabbarTextView
+        android:id="@+id/txtAddContact"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="9.9"
+        android:background="#CC2c2d2d"
+        android:gravity="center"
+        android:padding="@dimen/MarginTen"
+        android:tag="100"
+        android:text="ADD"
+        android:textColor="@color/colorAccent"
+        android:textSize="@dimen/textLarge" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_weight="0.2"
+        android:background="@android:color/transparent"></View>
+
+    <com.jabbar.Uc.JabbarTextView
+        android:id="@+id/txtBlock"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="9.9"
+        android:background="#CC2c2d2d"
+        android:gravity="center"
+        android:padding="@dimen/MarginTen"
+        android:tag="100"
+        android:text="BLOCK"
+        android:textColor="@color/colorAccent"
+        android:textSize="@dimen/textLarge" />
+</LinearLayout>

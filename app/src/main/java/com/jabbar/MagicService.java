@@ -13,6 +13,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -30,6 +32,9 @@ public class MagicService extends Service {
     private WindowManager windowManager;
     private View view;
     ImageView imgMagic;
+    private MediaPlayer mediaPlayer;
+    private Animation anim_heart;
+    int curAnim = 0;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -67,12 +72,12 @@ public class MagicService extends Service {
                         .setDuration(2500)
                         .start();
 
-                MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.alert_tone);
+                mediaPlayer = MediaPlayer.create(this, R.raw.alert_tone);
                 mediaPlayer.start();
             }
 
 
-        } else {
+        } else if (intent.getStringExtra("code").equalsIgnoreCase(Config.magic_rain_jabbar_code)) {
             view = LayoutInflater.from(this).inflate(R.layout.layout_magic, null);
             windowManager.addView(view, params);
             imgMagic = (ImageView) view.findViewById(R.id.imgSnake);
@@ -83,20 +88,32 @@ public class MagicService extends Service {
                     imgMagic.getViewTreeObserver().removeOnPreDrawListener(this);
                     int toY = -(imgMagic.getMeasuredHeight());
 
-
                     System.out.println("==toY==" + toY);
                     Display display = windowManager.getDefaultDisplay();
-                    TranslateAnimation animation = new TranslateAnimation(0, 0, toY, display.getHeight());
-                    animation.setDuration(5000);
+                    TranslateAnimation animation = new TranslateAnimation(0, 0, toY, 0);
+                    animation.setDuration(2500);
 
                     imgMagic.clearAnimation();
                     imgMagic.setAnimation(animation);
                     imgMagic.startAnimation(animation);
 
+                    mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.alert_tone);
+                    mediaPlayer.start();
 
                     return true;
                 }
             });
+        } else if (intent.getStringExtra("code").equalsIgnoreCase(Config.magic_heart_jabbar_code)) {
+            view = LayoutInflater.from(this).inflate(R.layout.layout_magic_heart, null);
+            windowManager.addView(view, params);
+            imgMagic = (ImageView) view.findViewById(R.id.imgMagic);
+
+            // load the zoom animation
+            anim_heart = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.heart);
+            imgMagic.startAnimation(anim_heart);
+
+            mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.alert_tone);
+            mediaPlayer.start();
         }
 
         new Handler().postDelayed(new Runnable() {
@@ -104,7 +121,7 @@ public class MagicService extends Service {
             public void run() {
                 stopSelf();
             }
-        }, 4000);
+        }, 3000);
 
     }
 
@@ -112,6 +129,13 @@ public class MagicService extends Service {
     public void onDestroy() {
         super.onDestroy();
 
+        if (mediaPlayer != null) {
+            if (mediaPlayer.isPlaying())
+                mediaPlayer.stop();
+
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
         if (windowManager != null) {
             windowManager.removeViewImmediate(view);
         }

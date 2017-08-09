@@ -57,12 +57,12 @@
             android:orientation="vertical">
 
             <com.jabbar.Uc.JabbarTextView
-                android:tag="100"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/MarginThirty"
                 android:background="@color/colorAccent"
                 android:padding="@dimen/MarginTen"
+                android:tag="100"
                 android:text="Status and mobile number"
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/textMediumExtra" />
@@ -86,14 +86,81 @@
                 android:background="@color/color_dark_white"></View>
 
             <com.jabbar.Uc.JabbarTextView
-                android:tag="100"
                 android:id="@+id/txtnumber"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/colorAccent"
                 android:padding="@dimen/MarginTen"
+                android:tag="100"
                 android:text="9904841033"
                 android:textSize="@dimen/textMedium1" />
+
+            <com.jabbar.Uc.JabbarTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/MarginThirty"
+                android:background="@color/colorAccent"
+                android:padding="@dimen/MarginTen"
+                android:tag="100"
+                android:text="Privacy for alert"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/textMediumExtra" />
+
+
+            <hani.momanii.supernova_emoji_library.Helper.EmojiconTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorAccent"
+                android:gravity="center_vertical"
+                android:padding="@dimen/MarginTen"
+                android:text="When alert show?"
+                android:textColor="@color/color_title"
+                android:textSize="@dimen/textMediumExtra"
+                emojicon:emojiconSize="@dimen/textLarge" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorAccent">
+
+                <RadioGroup
+                    android:id="@+id/rgalert"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <RadioButton
+                        android:id="@+id/rbt_allTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:padding="@dimen/MarginTen"
+                        android:text="Always"
+                        android:textColor="@color/color_title"
+                        android:textSize="@dimen/textMediumExtra" />
+
+                    <RadioButton
+                        android:id="@+id/rbt_in_apps"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:padding="@dimen/MarginTen"
+                        android:text="In application"
+                        android:textColor="@color/color_title"
+                        android:textSize="@dimen/textMediumExtra" />
+
+                    <RadioButton
+                        android:id="@+id/rbt_never"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:padding="@dimen/MarginTen"
+                        android:text="Never"
+                        android:textColor="@color/color_title"
+                        android:textSize="@dimen/textMediumExtra" />
+                </RadioGroup>
+
+            </LinearLayout>
 
 
         </LinearLayout>

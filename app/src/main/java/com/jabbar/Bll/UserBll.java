@@ -459,6 +459,65 @@ public class UserBll {
         return contactBeanArrayList;
     }
 
+    public void update_alert_privacy(int userid, int alert_status) {
+        Mydb dbHelper = null;
+        String sql = null;
+        try {
+
+            dbHelper = new Mydb(this.context);
+            sql = "UPDATE user_tb SET  alert_status = " + alert_status + " WHERE  userid= '" + userid + "'";
+            dbHelper.execute(sql);
+
+        } catch (Exception e) {
+            Log.print(this.getClass() + " :: update_alert_privacy()" + "===" + e);
+        } finally {
+            if (dbHelper != null)
+                dbHelper.close();
+            // release
+            dbHelper = null;
+            sql = null;
+            System.gc();
+        }
+    }
+
+    public int getAlertStatus(int userid) {
+        Mydb mydb = null;
+        String sql = null;
+        Cursor cursor = null;
+        ContactsBean contactsBean = null;
+
+        try {
+
+            sql = "SELECT alert_status from user_tb where userid=" + userid;
+
+            mydb = new Mydb(this.context);
+            cursor = mydb.query(sql);
+
+            if (cursor != null && cursor.getCount() > 0) {
+                cursor.moveToFirst();
+                return cursor.getInt(0);
+
+            } else {
+                return 1;
+            }
+        } catch (Exception e) {
+            Log.print(this.getClass() + " ::Exception ()" + " " + e);
+            Log.sendError(e);
+        } finally {
+            if (cursor != null && !cursor.isClosed())
+                cursor.close();
+            if (mydb != null)
+                mydb.close();
+            // release
+            mydb = null;
+            sql = null;
+            cursor = null;
+            System.gc();
+        }
+        return 1;
+    }
+
+
     public String getUsername(int userid) {
         Mydb mydb = null;
         String sql = null;

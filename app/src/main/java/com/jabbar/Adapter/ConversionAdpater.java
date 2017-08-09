@@ -2,6 +2,8 @@ package com.jabbar.Adapter;
 
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
+import android.provider.ContactsContract;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.jabbar.Bean.ContactsBean;
 import com.jabbar.Bean.MessageBean;
 import com.jabbar.R;
 import com.jabbar.Utils.Config;
@@ -26,70 +29,92 @@ import static android.content.Context.CLIPBOARD_SERVICE;
  */
 
 
-public class ConversionAdpater extends RecyclerView.Adapter<ConversionAdpater.ViewHolder> {
+public class ConversionAdpater extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ArrayList<MessageBean> chatBeanArrayList;
     private Context context;
+    private static final int TYPE_HEADER = 0;
+    private static final int TYPE_ITEM = 1;
+    private ContactsBean contactsBean;
 
 
-    public ConversionAdpater(Context context, ArrayList<MessageBean> chatBeanArrayList) {
+    public ConversionAdpater(Context context, ArrayList<MessageBean> chatBeanArrayList, ContactsBean contactsBean) {
 
         this.context = context;
+        this.contactsBean = contactsBean;
         this.chatBeanArrayList = chatBeanArrayList;
     }
 
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_conv, parent, false);
-        ViewHolder vh = new ViewHolder(view);
-        return vh;
+        if (viewType == TYPE_HEADER) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_chat_header, parent, false);
+            return new HeaderViewHolder(view);
+        } else {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_conv, parent, false);
+            return new ViewHolder(view);
+        }
     }
 
-    @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder viewholder, int position) {
 
-        if (chatBeanArrayList.get(position).userid != Pref.getValue(context, Config.PREF_USERID, 0)) {
-            holder.lin_left.setVisibility(View.VISIBLE);
-            holder.lin_right.setVisibility(View.GONE);
-            holder.txt_message_left.setText(chatBeanArrayList.get(position).msg);
-            holder.txt_time_left.setText(chatBeanArrayList.get(position).create_time);
-            holder.txt_message_left.setUseSystemDefault(false);
+        if (viewholder instanceof HeaderViewHolder) {
+            HeaderViewHolder headerViewHolder = (HeaderViewHolder) viewholder;
+
+            headerViewHolder.txtAddContact.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(Intent.ACTION_INSERT);
+                    intent.setType(ContactsContract.Contacts.CONTENT_TYPE);
+                    intent.putExtra(ContactsContract.Intents.Insert.PHONE, contactsBean.mobile_number);
+                    context.startActivity(intent);
+                }
+            });
 
         } else {
-            holder.lin_left.setVisibility(View.GONE);
-            holder.lin_right.setVisibility(View.VISIBLE);
-            holder.txt_message_right.setText(chatBeanArrayList.get(position).msg);
-            holder.txt_time_right.setText(chatBeanArrayList.get(position).create_time);
-            holder.txt_message_right.setUseSystemDefault(false);
+            final ViewHolder holder = (ViewHolder) viewholder;
+            if (chatBeanArrayList.get(position).userid != Pref.getValue(context, Config.PREF_USERID, 0)) {
+                holder.lin_left.setVisibility(View.VISIBLE);
+                holder.lin_right.setVisibility(View.GONE);
+                holder.txt_message_left.setText(chatBeanArrayList.get(position).msg);
+                holder.txt_time_left.setText(chatBeanArrayList.get(position).create_time);
+                holder.txt_message_left.setUseSystemDefault(false);
 
-            if (chatBeanArrayList.get(position).isread == 0) {
-                holder.txt_time_right.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_error_outline, 0);
             } else {
-                holder.txt_time_right.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                holder.lin_left.setVisibility(View.GONE);
+                holder.lin_right.setVisibility(View.VISIBLE);
+                holder.txt_message_right.setText(chatBeanArrayList.get(position).msg);
+                holder.txt_time_right.setText(chatBeanArrayList.get(position).create_time);
+                holder.txt_message_right.setUseSystemDefault(false);
+
+                if (chatBeanArrayList.get(position).isread == 0) {
+                    holder.txt_time_right.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_error_outline, 0);
+                } else {
+                    holder.txt_time_right.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                }
+
             }
 
+
+            holder.lin_right.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    ClipboardManager clipboard = (ClipboardManager) context.getSystemService(CLIPBOARD_SERVICE);
+                    clipboard.setText(holder.txt_message_right.getText().toString());
+                    Toast.makeText(context, "Copy message", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+            });
+
+            holder.lin_left.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    ClipboardManager clipboard = (ClipboardManager) context.getSystemService(CLIPBOARD_SERVICE);
+                    clipboard.setText(holder.txt_message_left.getText().toString());
+                    Toast.makeText(context, "Copy message", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+            });
         }
-
-
-        holder.lin_right.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                ClipboardManager clipboard = (ClipboardManager) context.getSystemService(CLIPBOARD_SERVICE);
-                clipboard.setText(holder.txt_message_right.getText().toString());
-                Toast.makeText(context, "Copy message", Toast.LENGTH_SHORT).show();
-                return false;
-            }
-        });
-
-        holder.lin_left.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                ClipboardManager clipboard = (ClipboardManager) context.getSystemService(CLIPBOARD_SERVICE);
-                clipboard.setText(holder.txt_message_left.getText().toString());
-                Toast.makeText(context, "Copy message", Toast.LENGTH_SHORT).show();
-                return false;
-            }
-        });
 
     }
 
@@ -115,5 +140,28 @@ public class ConversionAdpater extends RecyclerView.Adapter<ConversionAdpater.Vi
         }
     }
 
+
+    public class HeaderViewHolder extends RecyclerView.ViewHolder {
+
+        public TextView txtAddContact;
+        public TextView txtBlock;
+
+        public HeaderViewHolder(View itemView) {
+            super(itemView);
+            txtAddContact = (TextView) itemView.findViewById(R.id.txtAddContact);
+            txtBlock = (TextView) itemView.findViewById(R.id.txtBlock);
+        }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (position == 0) {
+            if (contactsBean != null && contactsBean.mobile_number.equalsIgnoreCase(contactsBean.name))
+                return TYPE_HEADER;
+            else
+                return TYPE_ITEM;
+        } else
+            return TYPE_ITEM;
+    }
 
 }

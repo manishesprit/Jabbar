@@ -80,14 +80,15 @@ public class Config {
     public static String PREF_PUSH_ID = "PREF_PUSH_ID";
     public static String PREF_LOCATION = "PREF_LOCATION";
     public static String PREF_CONTACT = "PREF_CONTACT";
+    public static String PREF_WHEN_ALERT = "PREF_WHEN_ALERT";
 
     public static LatLng currentLatLong;
 
-    public static final String magic_snake_jabbar_id = "8967452301";
-    public static final String magic_snake_jabbar_code = "magic_snake_jabbar_code";
+    public static final String magic_jabbar_id = "8967452301";
 
-    public static final String magic_alert_jabbar_id = "8967452301";
+    public static final String magic_rain_jabbar_code = "magic_rain_jabbar_code";
     public static final String magic_alert_jabbar_code = "magic_alert_jabbar_code";
+    public static final String magic_heart_jabbar_code = "magic_heart_jabbar_code";
 
 
 }
