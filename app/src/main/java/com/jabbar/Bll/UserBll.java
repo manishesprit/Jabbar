@@ -465,7 +465,7 @@ public class UserBll {
         try {
 
             dbHelper = new Mydb(this.context);
-            sql = "UPDATE user_tb SET  alert_status = " + alert_status + " WHERE  userid= '" + userid + "'";
+            sql = "UPDATE user_tb SET alert_status = " + alert_status + " WHERE  userid= '" + userid + "'";
             dbHelper.execute(sql);
 
         } catch (Exception e) {
