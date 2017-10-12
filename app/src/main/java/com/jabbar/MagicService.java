@@ -23,10 +23,6 @@ import android.widget.TextView;
 import com.jabbar.Bll.UserBll;
 import com.jabbar.Utils.Config;
 
-/**
- * Created by hardikjani on 8/4/17.
- */
-
 public class MagicService extends Service {
 
     private WindowManager windowManager;
@@ -34,7 +30,6 @@ public class MagicService extends Service {
     ImageView imgMagic;
     private MediaPlayer mediaPlayer;
     private Animation anim_heart;
-    int curAnim = 0;
 
     @Override
     public IBinder onBind(Intent intent) {

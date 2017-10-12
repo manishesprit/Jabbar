@@ -4,6 +4,9 @@
     <!--FOR JABBAR KEYSTOR-->
     <!--    13:3B:2C:6F:0A:66:01:5A:0F:B5:39:58:36:AF:EC:23:1C:A9:B9:0B-->
 
+    <!--<string name="addmob_app_id">ca-app-pub-1033845881546705~2812573870</string>-->
+    <!--<string name="banner_ad_unit_id">ca-app-pub-1033845881546705/8519328249</string>-->
+
 
     <string name="google_android_key">AIzaSyDnEoujknBYaA_IiUPumbFJPivOBUHEs6s</string>
     <string name="no_internet">No internet. Try again</string>

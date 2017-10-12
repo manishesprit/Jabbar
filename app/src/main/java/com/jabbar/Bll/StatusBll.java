@@ -3,11 +3,8 @@ package com.jabbar.Bll;
 import android.content.Context;
 import android.database.Cursor;
 
-import com.jabbar.Bean.MessageBean;
-import com.jabbar.Utils.Config;
 import com.jabbar.Utils.Log;
 import com.jabbar.Utils.Mydb;
-import com.jabbar.Utils.Pref;
 
 import java.util.ArrayList;
 

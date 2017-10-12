@@ -1,18 +1,4 @@
-/*
- * Copyright (C) 2007 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+
 
 package com.jabbar.MasterCrop;
 
@@ -33,15 +19,6 @@ import android.view.View;
 
 import com.jabbar.R;
 
-
-/*
- * Modified from version in AOSP.
- *
- * This class is used to display a highlighted cropping rectangle
- * overlayed on the image. There are two coordinate spaces in use. One is
- * image, another is screen. computeLayout() uses matrix to map from image
- * space to screen space.
- */
 class HighlightView {
 
     public static final int GROW_NONE = (1 << 0);

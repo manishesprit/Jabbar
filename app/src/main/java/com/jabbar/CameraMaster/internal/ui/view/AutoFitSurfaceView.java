@@ -11,8 +11,6 @@ import android.view.SurfaceView;
 @SuppressLint("ViewConstructor")
 public class AutoFitSurfaceView extends SurfaceView {
 
-    private final static String TAG = "AutoFitSurfaceView";
-
     private final SurfaceHolder surfaceHolder;
 
     private int ratioWidth;

@@ -33,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:paddingLeft="@dimen/MarginFive"
-                android:src="@drawable/ic_arrow_back" />
+                app:srcCompat="@drawable/ic_arrow_back" />
 
             <ImageView
                 android:id="@+id/conversation_contact_photo"
@@ -55,7 +55,7 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/MarginTwety"
             android:padding="@dimen/MarginFive"
-            android:src="@drawable/ic_crop_white" />
+            app:srcCompat="@drawable/ic_crop_white" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -112,7 +112,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/small_round"
                 android:padding="10dp"
-                android:src="@drawable/ic_send_black_24dp"
+                app:srcCompat="@drawable/ic_send_black_24dp"
                 android:text="SEND" />
 
 

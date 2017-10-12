@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:emojicon="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rlRow"
     android:layout_width="match_parent"
@@ -71,8 +72,8 @@
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="@dimen/MarginFive"
-                    android:src="@drawable/ic_error_outline"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    app:srcCompat="@drawable/ic_error_outline" />
 
                 <hani.momanii.supernova_emoji_library.Helper.EmojiconTextView
                     android:id="@+id/txtstatus"

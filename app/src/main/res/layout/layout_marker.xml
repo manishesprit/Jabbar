@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@android:color/transparent"
     android:orientation="vertical">
 
-    <com.jabbar.Uc.JabbarTextView
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/avatar"
-        android:background="@drawable/marker_arrow"
         android:rotation="270"
-        android:tag="100" />
+        android:tag="100"
+        app:srcCompat="@drawable/marker_arrow" />
 
     <ImageView
         android:id="@+id/imgBuddies"

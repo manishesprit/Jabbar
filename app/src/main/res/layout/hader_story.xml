@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal">
 
     <LinearLayout
@@ -18,7 +19,7 @@
             android:background="@drawable/circle"
             android:padding="7dp"
             android:scaleType="fitXY"
-            android:src="@drawable/ic_camera_black" />
+            app:srcCompat="@drawable/ic_camera_black" />
 
         <com.jabbar.Uc.JabbarTextView
             android:layout_width="match_parent"

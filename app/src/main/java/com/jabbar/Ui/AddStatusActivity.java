@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -17,6 +16,7 @@ import com.jabbar.Listener.ResponseListener;
 import com.jabbar.R;
 import com.jabbar.Uc.JabbarDialog;
 import com.jabbar.Utils.Config;
+import com.jabbar.Utils.Log;
 import com.jabbar.Utils.Mydb;
 import com.jabbar.Utils.Pref;
 import com.jabbar.Utils.Utils;
@@ -38,6 +38,7 @@ public class AddStatusActivity extends BaseActivity implements View.OnClickListe
     private EmojIconActions emojIcon;
     private ProgressDialog progressDialog;
     private TextView txtCounter;
+//    private AdView adViewTop;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,12 +53,52 @@ public class AddStatusActivity extends BaseActivity implements View.OnClickListe
         txtCanel = (TextView) findViewById(R.id.txtCanel);
         txtOk = (TextView) findViewById(R.id.txtOk);
         txtCounter = (TextView) findViewById(R.id.txtCounter);
-
+//        adViewTop = (AdView) findViewById(R.id.adViewTop);
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Loading...");
         progressDialog.setCancelable(false);
 
         setToolbar(toolbar, true);
+
+//        // Load Add
+//        MobileAds.initialize(this, getString(R.string.addmob_app_id));
+//        AdRequest adRequest = new AdRequest.Builder().build();
+//        adViewTop.loadAd(adRequest);
+//
+//        adViewTop.setAdListener(new AdListener() {
+//            @Override
+//            public void onAdLoaded() {
+//                // Code to be executed when an ad finishes loading.
+//                Log.print("======onAdLoaded");
+//            }
+//
+//            @Override
+//            public void onAdFailedToLoad(int errorCode) {
+//                // Code to be executed when an ad request fails.
+//                Log.print("========onAdFailedToLoad" + errorCode);
+//            }
+//
+//            @Override
+//            public void onAdOpened() {
+//                // Code to be executed when an ad opens an overlay that
+//                // covers the screen.
+//                Log.print("========onAdOpened");
+//            }
+//
+//            @Override
+//            public void onAdLeftApplication() {
+//                // Code to be executed when the user has left the app.
+//                Log.print("=======onAdLeftApplication");
+//            }
+//
+//            @Override
+//            public void onAdClosed() {
+//                // Code to be executed when when the user is about to return
+//                // to the app after tapping on an ad.
+//                Log.print("======onAdClosed");
+//            }
+//        });
+
 
         emojIcon = new EmojIconActions(this, rootView, edit_msg, img_emoji);
         emojIcon.ShowEmojIcon();
@@ -65,12 +106,12 @@ public class AddStatusActivity extends BaseActivity implements View.OnClickListe
         emojIcon.setKeyboardListener(new EmojIconActions.KeyboardListener() {
             @Override
             public void onKeyboardOpen() {
-                Log.e("NO", "Keyboard opened!");
+                Log.print("Keyboard opened!");
             }
 
             @Override
             public void onKeyboardClose() {
-                Log.e("NO", "Keyboard closed");
+                Log.print("Keyboard closed");
             }
         });
 

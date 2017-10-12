@@ -29,7 +29,7 @@ import com.jabbar.Utils.Utils;
 import java.util.ArrayList;
 
 
-public class BuddiesActivity extends BaseActivity implements View.OnClickListener, GetLocation.MyLocationListener, ResponseListener {
+public class BuddiesActivity extends BaseActivity implements GetLocation.MyLocationListener, ResponseListener {
 
     private Toolbar toolbar;
     public ArrayList<ContactsBean> contactsBeanArrayList;
@@ -97,13 +97,6 @@ public class BuddiesActivity extends BaseActivity implements View.OnClickListene
         return true;
     }
 
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-
-        }
-    }
 
     public MyClickListener myClickListener = new MyClickListener() {
         @Override

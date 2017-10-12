@@ -1,6 +1,11 @@
 package com.jabbar.GCM;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import com.google.android.gms.gcm.GcmListenerService;
@@ -9,7 +14,9 @@ import com.jabbar.Bll.MessageBll;
 import com.jabbar.Bll.UserBll;
 import com.jabbar.MagicService;
 import com.jabbar.MyApplication;
+import com.jabbar.R;
 import com.jabbar.Ui.ChatNewActivity;
+import com.jabbar.Ui.HomeActivity;
 import com.jabbar.Utils.Config;
 import com.jabbar.Utils.Log;
 import com.jabbar.Utils.Pref;
@@ -30,7 +37,6 @@ public class MyFirebaseMessagingService extends GcmListenerService {
     private String msg = "";
     private UserBll userBll;
 
-    //egkzOgwkdq8:APA91bEHJ062jtOBbEmr_seKBhAPyWCMUFdVQFjwl1g3q1hSnZ7z3ttz2dXFD-GwEZrp4v7Oi9uLC_huTWN0KCZc_uZz0sstz8Kb2jBy0g3C2kdyku_tHZB5tzgW48LBzY1po61c6OMI
 
     @Override
     public void onMessageReceived(String from, Bundle data) {
@@ -82,8 +88,30 @@ public class MyFirebaseMessagingService extends GcmListenerService {
                     }
                 }
             } else if (jsonObject.has("type") && jsonObject.getInt("type") == 3) {
+                String username = new UserBll(getApplicationContext()).getUsername(jsonObject.getInt("userid"));
+                if (username != null) {
+                    NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                    Notification.Builder notif = new Notification.Builder(this).setContentTitle(getResources().getString(R.string.app_name) + " Story")
+                            .setSmallIcon(R.drawable.app_icon);
+
+
+                    notif.setContentText(username + " added new story");
+                    Uri uri = Uri.parse("android.resource://" + getPackageName() + "/raw/alert_tone");
+                    notif.setSound(uri);
+
+                    Intent intent = new Intent(this, HomeActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    intent.putExtra("type", 2);
+                    notif.setContentIntent(PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT));
+                    mNotificationManager.notify(1, notif.build());
+
+                }
             }
-        } catch (Exception e) {
+        } catch (
+                Exception e)
+
+        {
             Log.print("========Exception:======= " + e.toString());
         }
 

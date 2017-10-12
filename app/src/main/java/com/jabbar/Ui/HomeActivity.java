@@ -1,5 +1,7 @@
 package com.jabbar.Ui;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -54,6 +56,9 @@ public class HomeActivity extends BaseActivity {
         setToolbar(toolbar, false);
         setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
+
+        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.cancel(1);
 
         Log.print("====onCreate HOME ====");
 

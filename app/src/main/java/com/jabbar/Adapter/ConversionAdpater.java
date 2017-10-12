@@ -47,15 +47,17 @@ public class ConversionAdpater extends RecyclerView.Adapter<RecyclerView.ViewHol
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         if (viewType == TYPE_HEADER) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_chat_header, parent, false);
+            View view = LayoutInflater.from(context).inflate(R.layout.layout_chat_header, null);
             return new HeaderViewHolder(view);
         } else {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_conv, parent, false);
+            View view = LayoutInflater.from(context).inflate(R.layout.row_conv,  null);
             return new ViewHolder(view);
         }
     }
 
     public void onBindViewHolder(final RecyclerView.ViewHolder viewholder, int position) {
+
+
 
         if (viewholder instanceof HeaderViewHolder) {
             HeaderViewHolder headerViewHolder = (HeaderViewHolder) viewholder;

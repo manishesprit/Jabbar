@@ -21,14 +21,6 @@ public class AutoFitTextureView extends TextureView {
         setSurfaceTextureListener(surfaceTextureListener);
     }
 
-    /*
-     * Sets the aspect ratio for this view. The size of the view will be measured based on the ratio
-     * calculated fromList the parameters. Note that the actual sizes of parameters don't matter, that
-     * is, calling setAspectRatio(2, 3) and setAspectRatio(4, 6) make the same result.
-     *
-     * @param width  Relative horizontal size
-     * @param height Relative vertical size
-     */
     public void setAspectRatio(int width, int height) {
         if (width < 0 || height < 0) {
             throw new IllegalArgumentException("Size cannot be negative.");

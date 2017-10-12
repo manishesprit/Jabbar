@@ -31,7 +31,7 @@
                 android:id="@+id/imgAvatar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/default_user" />
+                app:srcCompat="@drawable/default_user" />
 
             <ImageView
                 android:id="@+id/imgSelectImage"
@@ -42,7 +42,7 @@
                 android:layout_margin="@dimen/MarginFive"
                 android:background="@drawable/drawable_circle"
                 android:padding="@dimen/MarginFive"
-                android:src="@drawable/ic_settings" />
+                app:srcCompat="@drawable/ic_settings" />
         </RelativeLayout>
 
 

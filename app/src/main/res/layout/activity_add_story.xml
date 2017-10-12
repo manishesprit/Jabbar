@@ -29,7 +29,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:paddingLeft="@dimen/MarginFive"
-                android:src="@drawable/ic_arrow_back" />
+                app:srcCompat="@drawable/ic_arrow_back" />
 
             <ImageView
                 android:id="@+id/conversation_contact_photo"

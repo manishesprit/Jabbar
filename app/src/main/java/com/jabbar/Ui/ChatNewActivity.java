@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -107,6 +108,9 @@ public class ChatNewActivity extends BaseActivity implements View.OnClickListene
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_chat);
+
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+
         try {
             Drawable d = Drawable.createFromStream(getAssets().open(Pref.getValue(this, Config.PREF_WALLPAPER, "wallpaper1.jpg")), null);
             getWindow().setBackgroundDrawable(d);
@@ -138,7 +142,7 @@ public class ChatNewActivity extends BaseActivity implements View.OnClickListene
         if (contactsBean != null) {
 
             NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            mNotificationManager.cancelAll();
+            mNotificationManager.cancel(0);
             BadgeUtils.clearBadge(this);
 
             messageBll.RemoveReadMessage(contactsBean.userid);
@@ -173,17 +177,20 @@ public class ChatNewActivity extends BaseActivity implements View.OnClickListene
             runnable = new Runnable() {
                 @Override
                 public void run() {
-                    contactsBean = userBll.getUserDetail(contactsBean.userid);
-                    txtLastSeen.setText(contactsBean.last_seen);
-                    txtLastSeen.setVisibility(View.VISIBLE);
-                    handler.postDelayed(runnable, 5000);
 
-                    if (contactsBean.isFavorite == 1) {
-                        imgfavorite.setImageResource(R.drawable.ic_star_fill);
-                    } else {
-                        imgfavorite.setImageResource(R.drawable.ic_star_unfill);
+                    if (Utils.isOnline(ChatNewActivity.this)) {
+                        contactsBean = userBll.getUserDetail(contactsBean.userid);
+                        txtLastSeen.setText(contactsBean.last_seen);
+                        txtLastSeen.setVisibility(View.VISIBLE);
+                        handler.postDelayed(runnable, 5000);
+
+                        if (contactsBean.isFavorite == 1) {
+                            imgfavorite.setImageResource(R.drawable.ic_star_fill);
+                        } else {
+                            imgfavorite.setImageResource(R.drawable.ic_star_unfill);
+                        }
+                        imgfavorite.setOnClickListener(ChatNewActivity.this);
                     }
-                    imgfavorite.setOnClickListener(ChatNewActivity.this);
                 }
             };
 
