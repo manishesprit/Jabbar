@@ -3,7 +3,7 @@ package com.jabbar.Utils;
 public class Log {
 
     /* Logging and Console */
-    public static boolean DO_SOP = true;
+    public static boolean DO_SOP = false;
 
     public static void print(String mesg) {
         if (Log.DO_SOP) {

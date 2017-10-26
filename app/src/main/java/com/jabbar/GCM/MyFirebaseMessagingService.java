@@ -92,7 +92,7 @@ public class MyFirebaseMessagingService extends GcmListenerService {
                 if (username != null) {
                     NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                     Notification.Builder notif = new Notification.Builder(this).setContentTitle(getResources().getString(R.string.app_name) + " Story")
-                            .setSmallIcon(R.drawable.app_icon);
+                            .setSmallIcon(R.drawable.jabbar);
 
 
                     notif.setContentText(username + " added new story");

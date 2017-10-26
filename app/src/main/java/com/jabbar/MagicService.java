@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.jabbar.Bll.UserBll;
 import com.jabbar.Utils.Config;
+import com.jabbar.Utils.Log;
 
 public class MagicService extends Service {
 
@@ -83,7 +84,7 @@ public class MagicService extends Service {
                     imgMagic.getViewTreeObserver().removeOnPreDrawListener(this);
                     int toY = -(imgMagic.getMeasuredHeight());
 
-                    System.out.println("==toY==" + toY);
+                    Log.print("==toY==" + toY);
                     Display display = windowManager.getDefaultDisplay();
                     TranslateAnimation animation = new TranslateAnimation(0, 0, toY, 0);
                     animation.setDuration(2500);

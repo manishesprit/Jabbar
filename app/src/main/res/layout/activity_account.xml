@@ -13,7 +13,8 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:contentInsetStartWithNavigation="0dp"
         app:layout_scrollFlags="scroll|snap"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"></android.support.v7.widget.Toolbar>
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,13 +22,13 @@
         android:orientation="vertical">
 
         <com.jabbar.Uc.JabbarTextView
-            android:tag="100"
             android:id="@+id/txtPrivacy"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackground"
             android:gravity="center_vertical"
             android:padding="@dimen/MarginFifteen"
+            android:tag="100"
 
             android:text="Privacy"
             android:textColor="@color/color_title"
@@ -39,13 +40,13 @@
             android:background="@color/color_gray"></View>
 
         <com.jabbar.Uc.JabbarTextView
-            android:tag="100"
             android:id="@+id/txtChange_number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackground"
             android:gravity="center_vertical"
             android:padding="@dimen/MarginFifteen"
+            android:tag="100"
             android:text="Change number"
             android:textColor="@color/color_title"
             android:textSize="@dimen/textMediumExtra" />
@@ -56,13 +57,13 @@
             android:background="@color/color_gray"></View>
 
         <com.jabbar.Uc.JabbarTextView
-            android:tag="100"
             android:id="@+id/txtRemove_account"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackground"
             android:gravity="center_vertical"
             android:padding="@dimen/MarginFifteen"
+            android:tag="100"
             android:text="Remove account"
             android:textColor="@color/color_title"
             android:textSize="@dimen/textMediumExtra" />

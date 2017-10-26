@@ -151,7 +151,7 @@ public class MessageBll {
 
             Notification.Builder notif = new Notification.Builder(context)
                     .setContentTitle(context.getResources().getString(R.string.app_name) + " Message")
-                    .setSmallIcon(R.drawable.app_icon);
+                    .setSmallIcon(R.drawable.jabbar);
 
             if (!isSilent) {
                 Uri uri = Uri.parse("android.resource://" + context.getPackageName() + "/raw/alert_tone");
