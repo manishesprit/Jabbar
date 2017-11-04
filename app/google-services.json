@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "935330984509-64oc6d10bjh96i3cngaivas7eppif55g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.jabbar",
+            "certificate_hash": "4d13684b816329c22f583dd01d4b7069f0b3f76b"
+          }
+        },
+        {
           "client_id": "935330984509-q8ofmjjd7a188sjor53d0u4r8eskvtb2.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
