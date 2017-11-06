@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000">
+
+    <SurfaceView
+        android:id="@+id/mysurface"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
+    <RelativeLayout
+        android:id="@+id/rlBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="@dimen/MarginSaven"
+        android:layout_marginTop="@dimen/MarginSaven">
+
+        <ImageView
+            android:id="@+id/imgBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:paddingLeft="@dimen/MarginFive"
+            app:srcCompat="@drawable/ic_arrow_back" />
+
+        <ImageView
+            android:id="@+id/conversation_contact_photo"
+            android:layout_width="@dimen/avatar"
+            android:layout_height="@dimen/avatar"
+            android:layout_toRightOf="@+id/imgBack"
+            android:scaleType="fitCenter"
+            android:src="@drawable/default_user" />
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/record_panel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/MarginTen"
+        android:background="@android:color/transparent"
+        android:visibility="visible">
+
+
+        <ImageView
+            android:id="@+id/imgCapture"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:padding="5dp"
+            android:src="@drawable/capture" />
+
+
+        <ImageView
+            android:id="@+id/camera_switcher"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/circle_frame_background_dark"
+            android:padding="@dimen/MarginSaven"
+            app:srcCompat="@drawable/ic_switch_camera" />
+
+
+    </RelativeLayout>
+
+    <GridView
+        android:id="@+id/rv_image_panel"
+        android:layout_width="match_parent"
+        android:layout_height="170dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/imgGallery"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_above="@+id/record_panel"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="@dimen/MarginTen"
+        android:layout_marginRight="20dp"
+        app:srcCompat="@drawable/ic_gallery" />
+
+
+</RelativeLayout>
+
+

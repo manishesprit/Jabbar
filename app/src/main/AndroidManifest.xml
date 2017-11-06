@@ -105,6 +105,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"></activity>
 
+
         <activity
             android:name=".Ui.PrivacyActivity"
             android:label="@string/privacy"
@@ -148,6 +149,11 @@
             android:theme="@style/ThemeFullscreen">
 
         </activity>
+
+        <activity
+            android:name=".MyCamera.MyCameraActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/ThemeFullscreen"></activity>
 
 
         <activity

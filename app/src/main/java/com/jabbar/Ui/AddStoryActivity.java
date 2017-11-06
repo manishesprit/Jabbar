@@ -54,6 +54,7 @@ import java.util.List;
 
 public class AddStoryActivity extends BaseActivity {
 
+    public int cameraId = 0;
 
     public static final int REQUEST_CAMERA_PERMISSIONS = 931;
     public static final String FRAGMENT_TAG = "camera";
@@ -71,7 +72,6 @@ public class AddStoryActivity extends BaseActivity {
     private ArrayList<ImageBean> imageArrayList;
     private RelativeLayout rlBack;
     private ImageView conversation_contact_photo;
-    //    private FFmpeg fFmpeg = null;
     private ProgressDialog progressDialog;
 
     @Override

@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.jabbar.MyCamera.MyCameraActivity;
 import com.jabbar.R;
 import com.jabbar.Utils.Config;
 import com.jabbar.Utils.Log;
@@ -112,7 +113,7 @@ public class HomeActivity extends BaseActivity {
                 if (viewPager.getCurrentItem() == 0) {
                     startActivity(new Intent(HomeActivity.this, BuddiesActivity.class));
                 } else if (viewPager.getCurrentItem() == 1) {
-                    startActivityForResult(new Intent(HomeActivity.this, AddStoryActivity.class), STORY_CODE);
+                    startActivityForResult(new Intent(HomeActivity.this, MyCameraActivity.class), STORY_CODE);
                 }
             }
         });
