@@ -13,8 +13,8 @@ import android.widget.TextView;
 
 import com.jabbar.Bean.StoryBean;
 import com.jabbar.Bll.StoryBll;
-import com.jabbar.MyCamera.MyCameraActivity;
 import com.jabbar.R;
+import com.jabbar.Ui.AddStoryActivity;
 import com.jabbar.Ui.ViewStoryActivity;
 import com.jabbar.Utils.Config;
 import com.jabbar.Utils.Log;
@@ -72,7 +72,7 @@ public class StoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             headerViewHolder.imgStatusPic.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ((Activity) context).startActivityForResult(new Intent(context, MyCameraActivity.class), STORY_CODE);
+                    ((Activity) context).startActivityForResult(new Intent(context, AddStoryActivity.class), STORY_CODE);
                 }
             });
 

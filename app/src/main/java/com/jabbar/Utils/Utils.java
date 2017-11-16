@@ -473,9 +473,6 @@ public class Utils {
 
             Log.print("===destWidth===" + destWidth + "======destHeight======" + destHeight);
 
-            if (origWidth > destWidth) {
-            } else {
-            }
             Bitmap b2 = Bitmap.createScaledBitmap(b, (int) destWidth, (int) destHeight, false);
             ByteArrayOutputStream outStream = new ByteArrayOutputStream();
             b2.compress(Bitmap.CompressFormat.JPEG, 60, outStream);

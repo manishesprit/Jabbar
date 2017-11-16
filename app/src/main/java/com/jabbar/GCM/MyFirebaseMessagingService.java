@@ -108,10 +108,7 @@ public class MyFirebaseMessagingService extends GcmListenerService {
 
                 }
             }
-        } catch (
-                Exception e)
-
-        {
+        } catch (Exception e) {
             Log.print("========Exception:======= " + e.toString());
         }
 

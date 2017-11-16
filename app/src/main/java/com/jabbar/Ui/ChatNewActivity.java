@@ -358,7 +358,6 @@ public class ChatNewActivity extends BaseActivity implements View.OnClickListene
                 break;
 
             case R.id.img_magic:
-
                 if (magicBox.getVisibility() == View.VISIBLE) {
                     magicBox.setVisibility(View.GONE);
                 } else {
@@ -384,10 +383,6 @@ public class ChatNewActivity extends BaseActivity implements View.OnClickListene
                     new SendMessageNewAPI(ChatNewActivity.this, null, data);
                     Toast.makeText(ChatNewActivity.this, "Sent Rain", Toast.LENGTH_SHORT).show();
                 }
-
-//                if (!Utils.isMyServiceRunning(MagicService.class, this)) {
-//                    startService(new Intent(ChatNewActivity.this, MagicService.class).putExtra("code", Config.magic_rain_jabbar_code));
-//                }
                 magicBox.setVisibility(View.GONE);
                 break;
 
@@ -396,12 +391,8 @@ public class ChatNewActivity extends BaseActivity implements View.OnClickListene
                 if (Utils.isOnline(ChatNewActivity.this)) {
                     String data = "{\"users\":[{\"friendid\":" + contactsBean.userid + ",\"messages\":[{\"id\":\"" + magic_jabbar_id + "\",\"msg\":\"" + Config.magic_heart_jabbar_code + "\"}]}]}";
                     new SendMessageNewAPI(ChatNewActivity.this, null, data);
-                    Toast.makeText(ChatNewActivity.this, "Sent Rain", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ChatNewActivity.this, "Sent Heart", Toast.LENGTH_SHORT).show();
                 }
-
-//                if (!Utils.isMyServiceRunning(MagicService.class, this)) {
-//                    startService(new Intent(ChatNewActivity.this, MagicService.class).putExtra("code", Config.magic_heart_jabbar_code));
-//                }
                 magicBox.setVisibility(View.GONE);
 
                 break;
